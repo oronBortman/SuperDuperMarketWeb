@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: lib/Logic.jar lib/Exceptions.jar
+Main-Class: mainClass
+
