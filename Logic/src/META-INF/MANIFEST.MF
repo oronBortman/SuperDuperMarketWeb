@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
-Class-Path: Exceptions.jar
+Main-Class: 
+Class-Path: Exceptions.jar Logic.jar SuperDuperMarket.zip
 
