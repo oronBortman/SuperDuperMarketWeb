@@ -243,7 +243,7 @@ public class BusinessLogic {
 
     }
 
-    public void addUserSerialIDMapFromXml(SDMCustomer user) throws DuplicateCustomerSerialIDException, JAXBException, FileNotFoundException, CustomerLocationIsIdenticalToCustomerException, CustomerLocationIsIdenticalToStoreException, InvalidCoordinateYOfCustomerException, InvalidCoordinateXOfCustomerException {
+   /* public void addUserSerialIDMapFromXml(SDMCustomer user) throws DuplicateCustomerSerialIDException, JAXBException, FileNotFoundException, CustomerLocationIsIdenticalToCustomerException, CustomerLocationIsIdenticalToStoreException, InvalidCoordinateYOfCustomerException, InvalidCoordinateXOfCustomerException {
 
         if(usersSerialIDMap != null  && usersSerialIDMap.containsKey(user.getId()))
         {
@@ -251,9 +251,12 @@ public class BusinessLogic {
         }
         else
         {
-            Customer customerToAddToMap = new Customer(user);
+
+            usersSerialIDMap.put(user.getId(), customerToAddToMap);
+
+           /* Customer customerToAddToMap = new Customer(user);
             SDMLocation customerLocation = customerToAddToMap.getLocation();
-            checkIfCustomerLocationIsValidAndThrowsExceptionIfNot(customerLocation, customerToAddToMap.getName(), customerToAddToMap.getSerialNumber());
+            checkIfCustomerLocationIsValidAndThrowsExceptionIfNot(customerLocation, customerToAddToMap.getUserName(), customerToAddToMap.getSerialNumber());
             if(usersLocationMap != null && usersLocationMap.containsKey(customerLocation))
             {
                 throw new CustomerLocationIsIdenticalToCustomerException(customerToAddToMap, usersLocationMap.get(customerLocation));
@@ -268,7 +271,7 @@ public class BusinessLogic {
                 usersLocationMap.put(customerToAddToMap.getLocation(), customerToAddToMap);
             }
         }
-    }
+    }*/
 
     public void checkIfCustomerLocationIsValidAndThrowsExceptionIfNot(SDMLocation location, String customerName, Integer serialID) throws InvalidCoordinateXOfCustomerException, InvalidCoordinateYOfCustomerException {
         int coordinateX = location.getX();
@@ -301,7 +304,7 @@ public class BusinessLogic {
         return ordersSerialIDMap.values().stream().collect(toCollection(ArrayList::new));
     }
 
-    public void addStoreSerialIDMapFromXml(SDMStore store) throws JAXBException, FileNotFoundException, DuplicateStoreSerialIDException, StoreLocationIsIdenticalToStoreException, StoreLocationIsIdenticalToCustomerException, InvalidCoordinateYOfStoreException, InvalidCoordinateXOfStoreException {
+    public void addStoreSerialIDMapFromXml(SDMStore store) throws DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, InvalidCoordinateXOfStoreException, StoreLocationIsIdenticalToStoreException {
 
         if(storesSerialIDMap != null  && storesSerialIDMap.containsKey(store.getId()))
         {
@@ -317,15 +320,15 @@ public class BusinessLogic {
 
                 throw new StoreLocationIsIdenticalToStoreException(storeToAddToMap, storesLocationMap.get(storeLocation));
             }
-            else if(usersLocationMap != null && usersLocationMap.containsKey(storeLocation))
+            /*else if(usersLocationMap != null && usersLocationMap.containsKey(storeLocation))
             {
                 throw new StoreLocationIsIdenticalToCustomerException(storeToAddToMap, usersLocationMap.get(storeLocation));
-            }
-            else
-            {
+            }*/
+           // else
+            //{
                 storesSerialIDMap.put(store.getId(), storeToAddToMap);
                 storesLocationMap.put(storeToAddToMap.getLocation(), storeToAddToMap);
-            }
+            //}
         }
     }
 
@@ -494,11 +497,11 @@ public class BusinessLogic {
     }
 
 
-    public OpenedCustomerOrder updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(Customer customer, LocalDate date, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity)
+    public OpenedCustomerOrder updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(Customer customer, LocalDate date, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer)
     {
         boolean isOrderStatic = false;
         List<Item> itemsList = new ArrayList<Item>();
-        OpenedCustomerOrder openedCustomerOrder = new OpenedCustomerOrder(date, customer,isOrderStatic);
+        OpenedCustomerOrder openedCustomerOrder = new OpenedCustomerOrder(date, customer,isOrderStatic, locationOfCustomer);
         ArrayList<Item> itemsListFromQuantityList = addQuantityItemsToItemListFromOrderedItemsMap(orderedItemsListByItemSerialIDAndQuantity);
         ArrayList<Item> itemsListFromWeightList = addWeightItemsToItemListFromOrderedItemsMap(orderedItemsListByItemSerialIDAndWeight);
         itemsList = Stream.concat(itemsList.stream(), itemsListFromQuantityList.stream()).collect(Collectors.toList());;
@@ -508,7 +511,8 @@ public class BusinessLogic {
         for (Map.Entry<Store, List<AvailableItemInStore>> entry : mapOfShopWithCheapestItems.entrySet()) {
             Store storeUsed = entry.getKey();
             List<AvailableItemInStore> availableItemInStoreList = entry.getValue();
-            OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, date, isOrderStatic, customer.getLocation());
+            //OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, date, isOrderStatic, customer.getLocation());
+            OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, date, isOrderStatic, locationOfCustomer);
 
             for (AvailableItemInStore itemInStore : availableItemInStoreList) {
                 if(itemInStore.getTypeOfMeasure() == Item.TypeOfMeasure.Weight) { addWeightItemToOpenedOrder(orderedItemsListByItemSerialIDAndWeight, itemInStore, openedStoreOrder);}
@@ -539,10 +543,10 @@ public class BusinessLogic {
         }
     }
 
-    public OpenedCustomerOrder updateItemsWithAmountAndCreateOpenedStaticCustomerOrder(Customer customer, LocalDate date, Store store, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity) {
+    public OpenedCustomerOrder updateItemsWithAmountAndCreateOpenedStaticCustomerOrder(Customer customer, LocalDate date, Store store, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer) {
         boolean isOrderStatic = true;
-        OpenedCustomerOrder openedCustomerOrder = new OpenedCustomerOrder(date, customer, isOrderStatic);
-        OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(store, date, isOrderStatic, customer.getLocation());
+        OpenedCustomerOrder openedCustomerOrder = new OpenedCustomerOrder(date, customer, isOrderStatic, locationOfCustomer);
+        OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(store, date, isOrderStatic, locationOfCustomer);
 
 
         for (Map.Entry<Integer, Double> entry : orderedItemsListByItemSerialIDAndWeight.entrySet()) {

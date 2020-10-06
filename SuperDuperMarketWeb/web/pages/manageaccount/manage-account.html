@@ -5,9 +5,10 @@
     <title>Online Chat</title>
     <script src="../../common/jquery-2.0.3.min.js"></script>
     <script src="../../common/context-path-helper.js"></script>
-    <script src="sdm-main-page.js"></script>
+    <script src="../sdmmainpage/sdm-main-page.js"></script>
+    <script src="manage-account.js"></script>
     <link rel="stylesheet" href="../../common/bootstrap.min.css">
-    <link rel="stylesheet" href="sdm-main-page.css">
+    <link rel="stylesheet" href="manage-account.css">
 </head>
 <body>
 <div class="container-fluid">
@@ -28,30 +29,11 @@
             <div class="content">
                 <div id="showAllUsers">
                     <h4>Show all users</h4>
-                    <table id="userstable">
-                    <thead>
-                    <tr class = "tableFirstRow">
-                        <th>name</th>
-                        <th>type</th>
-                    </tr>
-                    <tbody id="tbody">
-                    </tbody>
-                    </thead>
-                    </table>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-3">
-            <div class="content">
-                <div id="loadFromXml">
-                    <h4>Load from xml</h4>
-                </div>
-            </div>
+        <div id="loadFromXml">
         </div>
-    </div>
-    <div class="row">
         <div class="col-xs-3">
             <div class="content">
                 <div id="showRegion">
@@ -59,12 +41,10 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-xs-3">
             <div class="content">
                 <div id="menageAccount">
-                    <h4>Manage account</h4>
+                    <a href="../showallusers/show-all-users.html">manage Account</a>
                 </div>
             </div>
         </div>

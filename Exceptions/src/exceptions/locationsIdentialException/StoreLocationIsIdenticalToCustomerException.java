@@ -1,15 +1,22 @@
 package exceptions.locationsIdentialException;
 
 import logic.Customer;
+import logic.SDMLocation;
 import logic.Store;
 
 import javax.xml.stream.Location;
 
-public class StoreLocationIsIdenticalToCustomerException extends IdentialLocationException {
+public class StoreLocationIsIdenticalToCustomerException extends Exception{
 
-    public StoreLocationIsIdenticalToCustomerException(Store store, Customer customer)
+    Store store;
+    Customer customer;
+    SDMLocation locationOfCustomer;
+    public StoreLocationIsIdenticalToCustomerException(Store store, Customer customer, SDMLocation locationOfCustomer)
     {
-        super(store, customer);
+        this.store = store;
+        this.customer = customer;
+        this.locationOfCustomer = locationOfCustomer;
+       // super(store, locationOfCustomer);
     }
 
 }

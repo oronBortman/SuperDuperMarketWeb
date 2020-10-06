@@ -2,14 +2,14 @@ package exceptions.locationsIdentialException;
 
 import logic.Store;
 
-import javax.xml.stream.Location;
+public class StoreLocationIsIdenticalToStoreException extends Exception{
 
-public class StoreLocationIsIdenticalToStoreException extends IdentialLocationException {
-
-
+    Store firstStore;
+    Store secondStore;
     public StoreLocationIsIdenticalToStoreException(Store firstStore, Store secondStore)
     {
-       super(firstStore, secondStore);
+       this.firstStore = firstStore;
+       this.secondStore = secondStore;
     }
 
 }

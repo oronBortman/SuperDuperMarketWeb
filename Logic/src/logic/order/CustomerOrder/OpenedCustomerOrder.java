@@ -22,12 +22,14 @@ public class OpenedCustomerOrder extends Order {
 
     Map<Store, OpenedStoreOrder> openedStoresOrderMap;
     Customer customer;
+    SDMLocation locationOfCustomer;
     //Map<Integer, Integer> itemsAmountLeftToUseInSalesMap;
     //Map<String, Discount> availableDiscountsMap;
 
-    public OpenedCustomerOrder(LocalDate date, Customer customer, boolean isOrderStatic) {
+    public OpenedCustomerOrder(LocalDate date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer) {
         super(date, isOrderStatic);
         this.customer = customer;
+        this.locationOfCustomer = locationOfCustomer;
         openedStoresOrderMap = new HashMap<Store, OpenedStoreOrder>();
         //itemsAmountLeftToUseInSalesMap = new HashMap<Integer, Integer>() ;
         //availableDiscountsMap = new HashMap<String, Discount>();
@@ -160,7 +162,7 @@ public class OpenedCustomerOrder extends Order {
         return listOfValues;
     }
     public SDMLocation getCustomerLocation() {
-        return customer.getLocation();
+        return locationOfCustomer;
     }
 
     public Customer getCustomer()

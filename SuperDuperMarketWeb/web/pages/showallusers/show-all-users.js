@@ -1,7 +1,6 @@
 var chatVersion = 0;
 var refreshRate = 2000; //milli seconds
-var USER_LIST_URL = buildUrlWithContextPath("users-list");
-var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
+var USER_LIST_URL = buildUrlWithContextPath("userslist");
 var CHAT_LIST_URL = buildUrlWithContextPath("chat");
 
 
@@ -9,18 +8,17 @@ var CHAT_LIST_URL = buildUrlWithContextPath("chat");
 // ["moshe","nachum","nachche"...]
 function refreshUsersList(users) {
     //clear all current users
-    //$("#userstable").empty();
-    var tbodySelector = $("#tbody");
-    document.getElementById('tbody').innerHTML = '';
+    //$("#greeting").appendChild("Welcome user ")
+    $("<h2>Welcome user</h2>").appendTo($("#greeting"));
+    console.log("bbb");
+
     // rebuild the list of users: scan all users and add them to the list of users
-    $.each(users || [], function(index, user) {
-        var userName = user["userName"];
-        var userType = user["userType"];
-        console.log("Adding user #" + index + ": " + userName);
+   /* $.each(users || [], function(index, username) {
+        console.log("Adding user #" + index + ": " + username);
         //create a new <option> tag with a value in it and
         //appeand it to the #userslist (div with id=userslist) element
-        $("<tr><th>" + userName + "</th>" + "<th>" + userType + "</th>" + "</tr>").appendTo(tbodySelector);
-    });
+        $('<li>' + username + '</li>').appendTo($("#userslist"));
+    });*/
 }
 
 //entries = the added chat strings represented as a single string
@@ -48,7 +46,7 @@ function createChatEntry (entry){
 */
 function ajaxUsersList() {
     $.ajax({
-        url: USER_LIST_URL,
+       // url: USER_LIST_URL,
         success: function(users) {
             refreshUsersList(users);
         }
@@ -124,40 +122,20 @@ function triggerAjaxChatContent() {
     setTimeout(ajaxChatContent, refreshRate);
 }*/
 
-/*function createLoadFromXmlElements()
-{
-    $("<h4>Load xml file</h4>").appendTo($("#loadFromXml"));
-}*/
-
 //activate the timer calls after the page is loaded
-function addGreetingToUser(user)
-{
-    var userName = user["userName"];
-    var userType = user["userType"];
-    $("<h3>Welcome, " + userType + " " + userName + "</h3>").appendTo($("#greeting"));
-
-}
-
-function hideHTMLElementsByRole(user){
-    var userType = user["userType"];
-    if(userType === "seller")
-    {
-    }
-    else if(userType = "customer")
-    {
-        $("#loadFromXml").hide();
-    }
-}
-
 $(function() {
-    $.ajax({
-        url:  USERS_TYPE_AND_NAME_URL ,
-        success: function (user) {
-             hideHTMLElementsByRole(user);
-             addGreetingToUser(user);
-        }
-    });
-    //The users list is refreshed automatically every second
-    setInterval(ajaxUsersList, refreshRate);
-});
 
+    //The users list is refreshed automatically every second
+   // setInterval(ajaxUsersList, refreshRate);
+  //  console.log(request.getSession().getAttribute("username"));
+    //console.log(pageContext.getSession(true).getAttribute().getValue());
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const username = urlParams.get('name')
+    const userType = urlParams.get('userType')
+   // const usernameFromSession = SessionUtils.getUsername(request);
+    $("<h3>Welcome, " + userType + " " + username + "</h3>").appendTo($("#greeting"));
+    //The chat content is refreshed only once (using a timeout) but
+    //on each call it triggers another execution of itself later (1 second later)
+   // triggerAjaxChatContent();
+});

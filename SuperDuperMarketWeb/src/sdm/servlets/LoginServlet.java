@@ -1,8 +1,8 @@
 package sdm.servlets;
 
+import com.google.gson.Gson;
 import sdm.constants.Constants;
 import sdm.utils.ServletUtils;
-import sdm.utils.SessionUtils;
 import logic.users.UserManager;
 
 import javax.servlet.ServletException;
@@ -20,10 +20,10 @@ public class LoginServlet extends HttpServlet {
     // you can use absolute paths, but then you need to build them from scratch, starting from the context path
     // ( can be fetched from request.getContextPath() ) and then the 'absolute' path from it.
     // Each method with it's pros and cons...
-    private final String SDM_MAIN_PAGE_URL = "../sdmmainpage/sdm-main-page.html";
+    //private final String SDM_MAIN_PAGE_URL = "../sdmmainpage/sdm-main-page.html";
+
     private final String SIGN_UP_URL = "../signup/signup.html";
   //  private final String LOGIN_ERROR_URL = "/pages/loginerror/login_attempt_after_error.html";  // must start with '/' since will be used in request dispatcher...
-  private final String LOGIN_ERROR_URL = "../loginerror/login_attempt_after_error.html";  // must start with '/' since will be used in request dispatcher...
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,19 +36,23 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        final String SDM_MAIN_PAGE_URL = request.getContextPath() + "/pages/sdmmainpage/sdm-main-page.html";
+        final String LOGIN_ERROR_URL = request.getContextPath() + "/pages/loginerror/login_attempt_after_error.html";  // must start with '/' since will be used in request dispatcher...
+        Gson gson = new Gson();
         response.setContentType("text/html;charset=UTF-8");
-        String usernameFromSession = SessionUtils.getUsername(request);
+        //String usernameFromSession = SessionUtils.getUsername(request);
+        //System.out.println(usernameFromSession + " :)");
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
-        if (usernameFromSession == null) {
+       // if (usernameFromSession == null) {
             //user is not logged in yet
             String usernameFromParameter = request.getParameter(USERNAME);
-            String userType = request.getParameter("userType");
+            String userType = request.getParameter(Constants.USERTYPE);
             // check if user is customer or seller
-            if ("customer".equals(userType)) {
-                System.out.println("customer");
+            if (userType.equals(Constants.CUSTOMER)) {
+                System.out.println(Constants.CUSTOMER);
             }
-            else if("seller".equals(userType)) {
-                System.out.println("seller");
+            else if(userType.equals(Constants.SELLER)) {
+                System.out.println(Constants.SELLER);
             }
             if(userType == null)
             {
@@ -59,12 +63,10 @@ public class LoginServlet extends HttpServlet {
             }
             else
             {
-                System.out.println("aaaa");
                 if(usernameFromParameter == null || usernameFromParameter.isEmpty())
                 {
                     String errorMessage = "you didn't choose a name";
                     response.sendRedirect(LOGIN_ERROR_URL + "?errorMessage=" + errorMessage);
-                    //response.sendRedirect(SIGN_UP_URL);
                 }
                 else
                 {
@@ -78,25 +80,32 @@ public class LoginServlet extends HttpServlet {
                         }
                         else
                         {
-                            userManager.addUser(usernameFromParameter);
+                            userManager.addUser(usernameFromParameter, userType);
                             request.getSession(true).setAttribute(Constants.USERNAME, usernameFromParameter);
                             request.getSession(true).setAttribute(Constants.USERTYPE, userType);
 
                             System.out.println("On login, request URI is: " + request.getRequestURI());
-                            response.sendRedirect(SDM_MAIN_PAGE_URL + "?name=" + usernameFromParameter + "&userType=" + userType);
+                            response.sendRedirect(SDM_MAIN_PAGE_URL);
+                          //  response.sendRedirect( SDM_MAIN_PAGE_URL + "?" + Constants.USERNAME + "=" + usernameFromParameter + "&" + Constants.USERTYPE + "=" + userType);
                         }
                     }
-                }
+                //}
             }
         }
-        else {
+        /*else {
             //user is already logged in
+            System.out.println("User already loggen in");
+            //String usernameFromParameter = request.getParameter(Constants.USERNAME);
+            //String userTypeFromParameter = request.getParameter(Constants.USERTYPE);
             String userTypeFromSession = SessionUtils.getUserType(request);
             System.out.println(usernameFromSession);
             System.out.println(userTypeFromSession);
             //String userType = request.getParameter("userType");
-            response.sendRedirect(SDM_MAIN_PAGE_URL + "?name=" + usernameFromSession+ "&userType=" + userTypeFromSession);
-        }
+            //response.sendRedirect(SDM_MAIN_PAGE_URL);
+           // response.sendRedirect( SDM_MAIN_PAGE_URL  + "?" + Constants.USERNAME + "=" + usernameFromSession + "&" + Constants.USERTYPE + "=" + userTypeFromSession);
+            response.sendRedirect( SDM_MAIN_PAGE_URL);
+
+        }*/
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -1,23 +1,18 @@
 package logic;
 
 import logic.order.CustomerOrder.ClosedCustomerOrder;
+import logic.users.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Customer extends SDMObjectWithUniqueLocationAndUniqueSerialID {
+public class Customer extends User {
 
     Map<Integer, ClosedCustomerOrder> mapOfClosedCustomerOrders;
-    public Customer(Integer serialNumber, String name, SDMLocation location)
+    public Customer(String name)
     {
-        super(serialNumber, name, location);
-        mapOfClosedCustomerOrders = new HashMap<Integer, ClosedCustomerOrder>();
-    }
-
-    public Customer(jaxb.schema.generated.SDMCustomer user)
-    {
-        super(user.getId(), user.getName(), new SDMLocation(user.getLocation()));
-        mapOfClosedCustomerOrders = new HashMap<Integer, ClosedCustomerOrder>();
+        super(name, "customer");
+        mapOfClosedCustomerOrders = new HashMap<>();
     }
 
     public void addClosedCustomerOrderToMap(ClosedCustomerOrder closedCustomerOrder)
