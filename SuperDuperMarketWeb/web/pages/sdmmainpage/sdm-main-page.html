@@ -18,11 +18,13 @@
             </div>
         </div>
     </div>
+    <hr></hr>
     <div class="row">
         <div class="col-xs-6">
             <div id="greeting"></div>
         </div>
     </div>
+    <hr></hr>
     <div class="row">
         <div class="col-xs-3">
             <div class="content">
@@ -42,14 +44,25 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-3">
-            <div class="content">
-                <div id="loadFromXml">
+    <hr></hr>
+    <div id="loadFromXml">
+        <div class="row">
+            <div class="col-xs-3">
+                <div class="content">
                     <h4>Load from xml</h4>
+                    <form id="uploadForm" action="/load-xml-file" enctype="multipart/form-data" method="POST">
+                        Enter xml file:
+                        <br>
+                        <input type="file" name="file"><br>
+                        <br>
+                        <input type="Submit" value="Upload File"><br>
+                    </form>
+                    <div id="result">
+                    </div>
                 </div>
             </div>
         </div>
+        <hr></hr>
     </div>
     <div class="row">
         <div class="col-xs-3">
@@ -60,6 +73,7 @@
             </div>
         </div>
     </div>
+    <hr></hr>
     <div class="row">
         <div class="col-xs-3">
             <div class="content">
@@ -69,6 +83,7 @@
             </div>
         </div>
     </div>
+    <hr></hr>
 </div>
 </body>
 </html>

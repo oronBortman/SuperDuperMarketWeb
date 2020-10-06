@@ -2,6 +2,8 @@ var chatVersion = 0;
 var refreshRate = 2000; //milli seconds
 var USER_LIST_URL = buildUrlWithContextPath("users-list");
 var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
+var UPLOAD_XML_FILE = buildUrlWithContextPath("load-xml-file");
+
 var CHAT_LIST_URL = buildUrlWithContextPath("chat");
 
 
@@ -21,6 +23,39 @@ function refreshUsersList(users) {
         //appeand it to the #userslist (div with id=userslist) element
         $("<tr><th>" + userName + "</th>" + "<th>" + userType + "</th>" + "</tr>").appendTo(tbodySelector);
     });
+}
+
+
+function uploadFile() { // onload...do
+    $("#uploadForm").submit(function () {
+
+        var file = this[0].files[0];
+
+        var formData = new FormData();
+        formData.append("fake-key-1", file);
+        //formData.append("name", this[2].value);
+
+        $.ajax({
+            method: 'POST',
+            data: formData,
+           // url: this.action,
+            url: UPLOAD_XML_FILE,
+            processData: false, // Don't process the files
+            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+            timeout: 4000,
+            error: function (e) {
+                console.error("Failed to submit");
+                $("#result").text("Failed to get result from server " + e);
+            },
+            success: function (r) {
+                $("#result").text(r);
+            }
+        });
+
+        // return value of the submit operation
+        // by default - we'll always return false so it doesn't redirect the user.
+        return false;
+    })
 }
 
 //entries = the added chat strings represented as a single string
@@ -142,6 +177,7 @@ function hideHTMLElementsByRole(user){
     var userType = user["userType"];
     if(userType === "seller")
     {
+        uploadFile();
     }
     else if(userType = "customer")
     {

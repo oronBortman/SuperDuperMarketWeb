@@ -1,26 +1,25 @@
 package logic;
 
-import exceptions.*;
+import exceptions.DuplicateDiscountNameException;
 import exceptions.InvalidCoordinateException.InvalidCoordinateXOfCustomerException;
 import exceptions.InvalidCoordinateException.InvalidCoordinateXOfStoreException;
 import exceptions.InvalidCoordinateException.InvalidCoordinateYOfCustomerException;
 import exceptions.InvalidCoordinateException.InvalidCoordinateYOfStoreException;
-import exceptions.duplicateSerialID.DuplicateCustomerSerialIDException;
 import exceptions.duplicateSerialID.DuplicateItemSerialIDException;
 import exceptions.duplicateSerialID.DuplicateItemSerialIDInStoreException;
 import exceptions.duplicateSerialID.DuplicateStoreSerialIDException;
-import exceptions.locationsIdentialException.CustomerLocationIsIdenticalToCustomerException;
-import exceptions.locationsIdentialException.CustomerLocationIsIdenticalToStoreException;
-import exceptions.locationsIdentialException.StoreLocationIsIdenticalToCustomerException;
 import exceptions.locationsIdentialException.StoreLocationIsIdenticalToStoreException;
 import exceptions.notExistException.*;
-import jaxb.schema.generated.*;
+import jaxb.schema.generated.SDMDiscount;
+import jaxb.schema.generated.SDMItem;
+import jaxb.schema.generated.SDMSell;
+import jaxb.schema.generated.SDMStore;
+import logic.discount.Discount;
 import logic.order.CustomerOrder.ClosedCustomerOrder;
 import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.order.GeneralMethods;
 import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.order.StoreOrder.OpenedStoreOrder;
-import logic.discount.Discount;
 import logic.order.itemInOrder.OrderedItemFromStoreByQuantity;
 import logic.order.itemInOrder.OrderedItemFromStoreByWeight;
 
@@ -32,46 +31,24 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toCollection;
-import static jdk.nashorn.internal.objects.NativeMath.max;
 
-public class BusinessLogic {
+public class Zone {
 
+    private Seller zoneOwner;
     private Map<SDMLocation, Store> storesLocationMap;
     private Map<Integer, Store> storesSerialIDMap;
     private Map<Integer, Item> itemsSerialIDMap;
     private Map<Integer, ClosedCustomerOrder> ordersSerialIDMap;
-    private Map<Integer, Customer> usersSerialIDMap;
-    private Map<SDMLocation, Customer> usersLocationMap;
-
     private List<Discount> discounts;
     private static Integer currentOrderSerialIDInSDK = 1;
 
-    public BusinessLogic()
+    public Zone()
     {
         storesLocationMap = new HashMap<SDMLocation, Store>();
         storesSerialIDMap = new HashMap<Integer, Store>();
         itemsSerialIDMap = new HashMap<Integer, Item>();
         ordersSerialIDMap = new HashMap<Integer, ClosedCustomerOrder>();
-        usersSerialIDMap = new HashMap<Integer, Customer>();
-        usersLocationMap = new HashMap<SDMLocation, Customer>();
-
         currentOrderSerialIDInSDK = 1;
-    }
-
-    public Integer getMaxCoordinateXOfLocationOfUsersAndStores()
-    {
-        List<SDMLocation> locationList = Stream.concat(usersLocationMap.keySet().stream(), storesLocationMap.keySet().stream())
-                .collect(Collectors.toList());
-        return locationList.stream().mapToInt(SDMLocation::getX).max().orElseThrow(NoSuchElementException::new);
-
-    }
-
-    public Integer getMaxCoordinateYOfLocationOfUsersAndStores()
-    {
-        List<SDMLocation> locationList = Stream.concat(usersLocationMap.keySet().stream(), storesLocationMap.keySet().stream())
-                .collect(Collectors.toList());
-        return locationList.stream().mapToInt(SDMLocation::getY).max().orElseThrow(NoSuchElementException::new);
-
     }
 
     public static Integer getCurrentOrderSerialIDInSDK() {
@@ -100,11 +77,6 @@ public class BusinessLogic {
     {
         return new ArrayList<Item>(itemsSerialIDMap.values());
     }
-    public List<Customer> getUsersList()
-    {
-        return new ArrayList<Customer>(usersSerialIDMap.values());
-    }
-
 
     public List<Store> getStoresList()
     {
@@ -552,7 +524,7 @@ public class BusinessLogic {
     }
 
     public boolean checkIfLocationAlreadyExists(SDMLocation location) {
-        return usersLocationMap.containsKey(location) || storesLocationMap.containsKey(location);
+        return storesLocationMap.containsKey(location);
     }
 }
 

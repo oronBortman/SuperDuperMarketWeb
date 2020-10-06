@@ -150,9 +150,9 @@ public class ObjectFactory {
      * Create an instance of {@link SuperDuperMarketDescriptor.SDMZone }
      * 
      */
-    /*public SuperDuperMarketDescriptor.SDMZone createSuperDuperMarketDescriptorSDMZone() {
+    public SuperDuperMarketDescriptor.SDMZone createSuperDuperMarketDescriptorSDMZone() {
         return new SuperDuperMarketDescriptor.SDMZone();
-    }*/
+    }
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link Integer }{@code >}}

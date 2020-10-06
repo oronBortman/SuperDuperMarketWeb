@@ -1,7 +1,7 @@
 package logic.users;
 
-import static logic.common.SuperDuperMarketConstants.A;
-import static logic.common.SuperDuperMarketConstants.B;
+import static logic.common.SuperDuperMarketConstants.SELLER;
+import static logic.common.SuperDuperMarketConstants.CUSTOMER;
 
 import logic.Customer;
 import logic.Seller;
@@ -21,11 +21,11 @@ public class UserManager {
     }
 
     public synchronized void addUser(String username, String userType) {
-        if(userType.equals(A))
+        if(userType.equals(SELLER))
         {
             usersMap.put(username, new Seller(username));
         }
-        else if(userType.equals(B))
+        else if(userType.equals(CUSTOMER))
         {
             usersMap.put(username, new Customer(username));
         }
@@ -45,9 +45,6 @@ public class UserManager {
         usersMap.remove(username);
     }
 
-    //public synchronized Set<String> getUsers() {
-      //  return Collections.unmodifiableSet(usersMap);
-  //  }
 
     public boolean isUserExists(String username) {
         return usersMap.containsKey(username);
