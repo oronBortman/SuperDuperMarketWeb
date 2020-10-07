@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class OpenedCustomerOrder extends Order {
+public class OpenedCustomerOrder1 extends Order {
 
     Map<Store, OpenedStoreOrder> openedStoresOrderMap;
     Customer customer;
@@ -26,7 +26,7 @@ public class OpenedCustomerOrder extends Order {
     //Map<Integer, Integer> itemsAmountLeftToUseInSalesMap;
     //Map<String, Discount> availableDiscountsMap;
 
-    public OpenedCustomerOrder(LocalDate date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer) {
+    public OpenedCustomerOrder1(LocalDate date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer) {
         super(date, isOrderStatic);
         this.customer = customer;
         this.locationOfCustomer = locationOfCustomer;

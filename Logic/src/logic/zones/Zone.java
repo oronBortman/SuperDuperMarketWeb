@@ -1,26 +1,23 @@
-package logic;
+package logic.zones;
 
-import exceptions.*;
+import exceptions.DuplicateDiscountNameException;
 import exceptions.InvalidCoordinateException.InvalidCoordinateXOfCustomerException;
 import exceptions.InvalidCoordinateException.InvalidCoordinateXOfStoreException;
 import exceptions.InvalidCoordinateException.InvalidCoordinateYOfCustomerException;
 import exceptions.InvalidCoordinateException.InvalidCoordinateYOfStoreException;
-import exceptions.duplicateSerialID.DuplicateCustomerSerialIDException;
 import exceptions.duplicateSerialID.DuplicateItemSerialIDException;
 import exceptions.duplicateSerialID.DuplicateItemSerialIDInStoreException;
 import exceptions.duplicateSerialID.DuplicateStoreSerialIDException;
-import exceptions.locationsIdentialException.CustomerLocationIsIdenticalToCustomerException;
-import exceptions.locationsIdentialException.CustomerLocationIsIdenticalToStoreException;
-import exceptions.locationsIdentialException.StoreLocationIsIdenticalToCustomerException;
 import exceptions.locationsIdentialException.StoreLocationIsIdenticalToStoreException;
 import exceptions.notExistException.*;
 import jaxb.schema.generated.*;
+import logic.*;
+import logic.discount.Discount;
 import logic.order.CustomerOrder.ClosedCustomerOrder;
-import logic.order.CustomerOrder.OpenedCustomerOrder;
+import logic.order.CustomerOrder.OpenedCustomerOrder1;
 import logic.order.GeneralMethods;
 import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.order.StoreOrder.OpenedStoreOrder;
-import logic.discount.Discount;
 import logic.order.itemInOrder.OrderedItemFromStoreByQuantity;
 import logic.order.itemInOrder.OrderedItemFromStoreByWeight;
 
@@ -32,47 +29,77 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toCollection;
-import static jdk.nashorn.internal.objects.NativeMath.max;
 
-public class BusinessLogic {
+public class Zone {
 
+    String zoneName;
+    private Seller zoneOwner;
     private Map<SDMLocation, Store> storesLocationMap;
     private Map<Integer, Store> storesSerialIDMap;
     private Map<Integer, Item> itemsSerialIDMap;
     private Map<Integer, ClosedCustomerOrder> ordersSerialIDMap;
-    private Map<Integer, Customer> usersSerialIDMap;
-    private Map<SDMLocation, Customer> usersLocationMap;
-
     private List<Discount> discounts;
     private static Integer currentOrderSerialIDInSDK = 1;
 
-    public BusinessLogic()
-    {
+    public Zone(SuperDuperMarketDescriptor superDuperMarketDescriptor, Seller zoneOwner) throws FileNotFoundException, JAXBException, DuplicateItemSerialIDException, DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, StoreLocationIsIdenticalToStoreException, InvalidCoordinateXOfStoreException, ItemWithSerialIDNotExistInSDMException, StoreNotExistException, DuplicateItemSerialIDInStoreException, ItemIDInDiscountNotExistInAStoreException, ItemIDInDiscountNotExistInSDMException, DuplicateDiscountNameException, ItemIDNotExistInAStoreException {
+        this.zoneOwner = zoneOwner;
+        this.zoneName = superDuperMarketDescriptor.getSDMZone().getName();
         storesLocationMap = new HashMap<SDMLocation, Store>();
         storesSerialIDMap = new HashMap<Integer, Store>();
         itemsSerialIDMap = new HashMap<Integer, Item>();
         ordersSerialIDMap = new HashMap<Integer, ClosedCustomerOrder>();
-        usersSerialIDMap = new HashMap<Integer, Customer>();
-        usersLocationMap = new HashMap<SDMLocation, Customer>();
-
+        discounts = new ArrayList<Discount>();
         currentOrderSerialIDInSDK = 1;
+        List<SDMStore> sdmStoreList = superDuperMarketDescriptor.getSDMStores().getSDMStore();
+        List<SDMItem> sdmItemList = superDuperMarketDescriptor.getSDMItems().getSDMItem();
+        addListOfItemsToItemsSerialIDMapFromXml(sdmItemList);
+        addListOfStoreSToStoreSerialIDMapFromXml(sdmStoreList);
+        addListOfItemsToListOfStoreSFromXML(sdmStoreList);
+        //TODO
+       // addListOfDiscountsToListOfStoreSFromXML(sdmStoreList);
     }
 
-    public Integer getMaxCoordinateXOfLocationOfUsersAndStores()
+
+    public Map<SDMLocation, Store> getStoresLocationMap() {
+        return storesLocationMap;
+    }
+
+    public Map<Integer, ClosedCustomerOrder> getOrdersSerialIDMap() {
+        return ordersSerialIDMap;
+    }
+
+    public Seller getZoneOwner() {
+        return zoneOwner;
+    }
+
+    public String getZoneName() {
+        return zoneName;
+    }
+
+    public List<Discount> getDiscounts() {
+        return discounts;
+    }
+
+
+    public Integer calcTotalItemsTypeInZone()
     {
-        List<SDMLocation> locationList = Stream.concat(usersLocationMap.keySet().stream(), storesLocationMap.keySet().stream())
-                .collect(Collectors.toList());
-        return locationList.stream().mapToInt(SDMLocation::getX).max().orElseThrow(NoSuchElementException::new);
-
+        return itemsSerialIDMap.size();
     }
 
-    public Integer getMaxCoordinateYOfLocationOfUsersAndStores()
+    public Integer calcTotalStoresInZone()
     {
-        List<SDMLocation> locationList = Stream.concat(usersLocationMap.keySet().stream(), storesLocationMap.keySet().stream())
-                .collect(Collectors.toList());
-        return locationList.stream().mapToInt(SDMLocation::getY).max().orElseThrow(NoSuchElementException::new);
-
+        return storesSerialIDMap.size();
     }
+    public Integer calcTotalOrdersInZone()
+    {
+        return ordersSerialIDMap.size();
+    }
+
+    public Double calcAvgOfOrdersNotIncludingDeliveries()
+    {
+        return ( (ordersSerialIDMap.values().stream().mapToDouble(x->x.getTotalItemCostInOrder()).sum()) / ordersSerialIDMap.size() );
+    }
+
 
     public static Integer getCurrentOrderSerialIDInSDK() {
         return currentOrderSerialIDInSDK;
@@ -100,11 +127,6 @@ public class BusinessLogic {
     {
         return new ArrayList<Item>(itemsSerialIDMap.values());
     }
-    public List<Customer> getUsersList()
-    {
-        return new ArrayList<Customer>(usersSerialIDMap.values());
-    }
-
 
     public List<Store> getStoresList()
     {
@@ -229,7 +251,14 @@ public class BusinessLogic {
         return storesSerialIDMap.containsKey(storeSerialID);
     }
 
-    public void addItemsSerialIDMapFromXml(SDMItem item) throws DuplicateItemSerialIDException, JAXBException, FileNotFoundException {
+    public void addListOfItemsToItemsSerialIDMapFromXml(List<SDMItem> sdmItemList) throws FileNotFoundException, JAXBException, DuplicateItemSerialIDException {
+        for(SDMItem item : sdmItemList)
+        {
+            addItemToItemsSerialIDMapFromXml(item);
+        }
+    }
+
+    public void addItemToItemsSerialIDMapFromXml(SDMItem item) throws DuplicateItemSerialIDException, JAXBException, FileNotFoundException {
 
         if(itemsSerialIDMap != null  && itemsSerialIDMap.containsKey(item.getId()))
         {
@@ -242,6 +271,116 @@ public class BusinessLogic {
         }
 
     }
+
+    public void addListOfStoreSToStoreSerialIDMapFromXml(List<SDMStore> storeList) throws DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, InvalidCoordinateXOfStoreException, StoreLocationIsIdenticalToStoreException
+    {
+        for(SDMStore sdmStore : storeList)
+        {
+            addStoreToStoreSerialIDMapFromXml(sdmStore);
+        }
+    }
+
+
+    public void addStoreToStoreSerialIDMapFromXml(SDMStore store) throws DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, InvalidCoordinateXOfStoreException, StoreLocationIsIdenticalToStoreException {
+
+        if(storesSerialIDMap != null  && storesSerialIDMap.containsKey(store.getId()))
+        {
+            throw new DuplicateStoreSerialIDException(store.getId(), store.getName());
+        }
+        else
+        {
+            Store storeToAddToMap = new Store(store);
+            SDMLocation storeLocation = storeToAddToMap.getLocation();
+            checkIfStoreLocationIsValidAndThrowsExceptionIfNot(storeLocation, storeToAddToMap.getName(), storeToAddToMap.getSerialNumber());
+            if(storesLocationMap != null && storesLocationMap.containsKey(storeLocation))
+            {
+
+                throw new StoreLocationIsIdenticalToStoreException(storeToAddToMap, storesLocationMap.get(storeLocation));
+            }
+            /*else if(usersLocationMap != null && usersLocationMap.containsKey(storeLocation))
+            {
+                throw new StoreLocationIsIdenticalToCustomerException(storeToAddToMap, usersLocationMap.get(storeLocation));
+            }*/
+            // else
+            //{
+            storesSerialIDMap.put(store.getId(), storeToAddToMap);
+            storesLocationMap.put(storeToAddToMap.getLocation(), storeToAddToMap);
+            //}
+        }
+    }
+
+    public void addListOfDiscountsToListOfStoreSFromXML(List<SDMStore> sdmStoreList) throws ItemIDInDiscountNotExistInAStoreException, ItemIDNotExistInAStoreException, DuplicateDiscountNameException, ItemIDInDiscountNotExistInSDMException {
+        for(SDMStore sdmStore : sdmStoreList)
+        {
+            addListOfDiscountsToStoreFromXML(sdmStore.getId(), sdmStore.getSDMDiscounts().getSDMDiscount());
+        }
+    }
+
+    public void addListOfDiscountsToStoreFromXML(Integer storeID, List<SDMDiscount> sdmDiscounts) throws ItemIDInDiscountNotExistInAStoreException, ItemIDNotExistInAStoreException, DuplicateDiscountNameException, ItemIDInDiscountNotExistInSDMException {
+        for(SDMDiscount sdmDiscount : sdmDiscounts)
+        {
+            addDiscountToStoreFromXML(sdmDiscount, storeID);
+        }
+    }
+
+    public void addDiscountToStoreFromXML(SDMDiscount sdmDiscount, int storeID) throws DuplicateDiscountNameException, ItemIDNotExistInAStoreException, ItemIDInDiscountNotExistInAStoreException, ItemIDInDiscountNotExistInSDMException {
+        Store store = getStoreBySerialID(storeID);
+        int itemSerialId = sdmDiscount.getIfYouBuy().getItemId();
+        if(itemsSerialIDMap.containsKey(itemSerialId) == false)
+        {
+            throw new ItemIDInDiscountNotExistInSDMException(storesSerialIDMap.get(storeID),itemSerialId, sdmDiscount.getName());
+        }
+        else
+        {
+            store.addDiscountToStoreFromXML(sdmDiscount);
+        }
+    }
+
+    public void addListOfItemsToListOfStoreSFromXML(List<SDMStore> sdmStoreList) throws ItemWithSerialIDNotExistInSDMException, StoreNotExistException, DuplicateItemSerialIDInStoreException {
+        for (SDMStore store : sdmStoreList)
+        {
+            addListOfItemsToStoreFromXML(store);
+        }
+    }
+
+        public void addListOfItemsToStoreFromXML(SDMStore sdmStore) throws ItemWithSerialIDNotExistInSDMException, StoreNotExistException, DuplicateItemSerialIDInStoreException {
+        SDMPrices pricesInStore = sdmStore.getSDMPrices();
+        List<SDMSell> sdmSellList = pricesInStore.getSDMSell();
+
+        for (SDMSell sdmSell : sdmSellList) {
+            addItemToStoreFromSDMSell(sdmSell, sdmStore.getId());
+        }
+
+    }
+
+    public void addItemToStoreFromSDMSell(SDMSell sdmSell, int storeID) throws ItemWithSerialIDNotExistInSDMException, DuplicateItemSerialIDInStoreException, StoreNotExistException
+    {
+        int itemID = sdmSell.getItemId();
+        Store store = getStoreBySerialID(storeID);
+
+        if(checkIfItemIdExists(itemID) == false)
+        {
+            throw new ItemWithSerialIDNotExistInSDMException(itemID);
+        }
+        else if(store == null)
+        {
+            throw new StoreNotExistException(storeID);
+        }
+        else if(checkIfItemExistsInStore(storeID, itemID))
+        {
+            String itemName = getItemBySerialID(itemID).getName();
+            throw new DuplicateItemSerialIDInStoreException(storeID, store.getName(), itemID, itemName );
+        }
+        else
+        {
+            Item item = getItemBySerialID(itemID);
+            int priceOfItem = sdmSell.getPrice();
+            addItemToStore(storeID, itemID, priceOfItem);
+        }
+    }
+
+
+
 
     public void checkIfCustomerLocationIsValidAndThrowsExceptionIfNot(SDMLocation location, String customerName, Integer serialID) throws InvalidCoordinateXOfCustomerException, InvalidCoordinateYOfCustomerException {
         int coordinateX = location.getX();
@@ -274,33 +413,7 @@ public class BusinessLogic {
         return ordersSerialIDMap.values().stream().collect(toCollection(ArrayList::new));
     }
 
-    public void addStoreSerialIDMapFromXml(SDMStore store) throws DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, InvalidCoordinateXOfStoreException, StoreLocationIsIdenticalToStoreException {
 
-        if(storesSerialIDMap != null  && storesSerialIDMap.containsKey(store.getId()))
-        {
-            throw new DuplicateStoreSerialIDException(store.getId(), store.getName());
-        }
-        else
-        {
-            Store storeToAddToMap = new Store(store);
-            SDMLocation storeLocation = storeToAddToMap.getLocation();
-            checkIfStoreLocationIsValidAndThrowsExceptionIfNot(storeLocation, storeToAddToMap.getName(), storeToAddToMap.getSerialNumber());
-            if(storesLocationMap != null && storesLocationMap.containsKey(storeLocation))
-            {
-
-                throw new StoreLocationIsIdenticalToStoreException(storeToAddToMap, storesLocationMap.get(storeLocation));
-            }
-            /*else if(usersLocationMap != null && usersLocationMap.containsKey(storeLocation))
-            {
-                throw new StoreLocationIsIdenticalToCustomerException(storeToAddToMap, usersLocationMap.get(storeLocation));
-            }*/
-           // else
-            //{
-                storesSerialIDMap.put(store.getId(), storeToAddToMap);
-                storesLocationMap.put(storeToAddToMap.getLocation(), storeToAddToMap);
-            //}
-        }
-    }
 
 
     public void checkIfThereIsItemNotInStore() throws ItemNotExistInStoresException {
@@ -312,46 +425,6 @@ public class BusinessLogic {
             }
         }
     }
-
-    public void addItemToStoreFromSDMSell(SDMSell sdmSell, int storeID) throws ItemWithSerialIDNotExistInSDMException, DuplicateItemSerialIDInStoreException, StoreNotExistException
-    {
-        int itemID = sdmSell.getItemId();
-        Store store = getStoreBySerialID(storeID);
-
-        if(checkIfItemIdExists(itemID) == false)
-        {
-            throw new ItemWithSerialIDNotExistInSDMException(itemID);
-        }
-        else if(store == null)
-        {
-            throw new StoreNotExistException(storeID);
-        }
-        else if(checkIfItemExistsInStore(storeID, itemID))
-        {
-            String itemName = getItemBySerialID(itemID).getName();
-            throw new DuplicateItemSerialIDInStoreException(storeID, store.getName(), itemID, itemName );
-        }
-        else
-        {
-            Item item = getItemBySerialID(itemID);
-            int priceOfItem = sdmSell.getPrice();
-            addItemToStore(storeID, itemID, priceOfItem);
-        }
-    }
-
-    public void addDiscountToStoreFromSDMSell(SDMDiscount sdmDiscount, int storeID) throws DuplicateDiscountNameException, ItemIDNotExistInAStoreException, ItemIDInDiscountNotExistInAStoreException, ItemIDInDiscountNotExistInSDMException {
-        Store store = getStoreBySerialID(storeID);
-        int itemSerialId = sdmDiscount.getIfYouBuy().getItemId();
-        if(itemsSerialIDMap.containsKey(itemSerialId) == false)
-        {
-            throw new ItemIDInDiscountNotExistInSDMException(storesSerialIDMap.get(storeID),itemSerialId, sdmDiscount.getName());
-        }
-        else
-        {
-            store.addDiscountToStoreFromXML(sdmDiscount);
-        }
-    }
-
 
     public boolean checkIfItemExistsInStores(int itemSerialID)
     {
@@ -467,11 +540,10 @@ public class BusinessLogic {
     }
 
 
-    public OpenedCustomerOrder updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(Customer customer, LocalDate date, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer)
+    public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(Customer customer, LocalDate date, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer)
     {
-        boolean isOrderStatic = false;
-        List<Item> itemsList = new ArrayList<Item>();
-        OpenedCustomerOrder openedCustomerOrder = new OpenedCustomerOrder(date, customer,isOrderStatic, locationOfCustomer);
+        List<Item> itemsList = new ArrayList<>();
+        OpenedCustomerOrder1 openedCustomerOrder = new OpenedCustomerOrder1(date, customer, false, locationOfCustomer);
         ArrayList<Item> itemsListFromQuantityList = addQuantityItemsToItemListFromOrderedItemsMap(orderedItemsListByItemSerialIDAndQuantity);
         ArrayList<Item> itemsListFromWeightList = addWeightItemsToItemListFromOrderedItemsMap(orderedItemsListByItemSerialIDAndWeight);
         itemsList = Stream.concat(itemsList.stream(), itemsListFromQuantityList.stream()).collect(Collectors.toList());;
@@ -482,7 +554,7 @@ public class BusinessLogic {
             Store storeUsed = entry.getKey();
             List<AvailableItemInStore> availableItemInStoreList = entry.getValue();
             //OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, date, isOrderStatic, customer.getLocation());
-            OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, date, isOrderStatic, locationOfCustomer);
+            OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, date, false, locationOfCustomer);
 
             for (AvailableItemInStore itemInStore : availableItemInStoreList) {
                 if(itemInStore.getTypeOfMeasure() == Item.TypeOfMeasure.Weight) { addWeightItemToOpenedOrder(orderedItemsListByItemSerialIDAndWeight, itemInStore, openedStoreOrder);}
@@ -513,9 +585,9 @@ public class BusinessLogic {
         }
     }
 
-    public OpenedCustomerOrder updateItemsWithAmountAndCreateOpenedStaticCustomerOrder(Customer customer, LocalDate date, Store store, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer) {
+    public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedStaticCustomerOrder(Customer customer, LocalDate date, Store store, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer) {
         boolean isOrderStatic = true;
-        OpenedCustomerOrder openedCustomerOrder = new OpenedCustomerOrder(date, customer, isOrderStatic, locationOfCustomer);
+        OpenedCustomerOrder1 openedCustomerOrder = new OpenedCustomerOrder1(date, customer, isOrderStatic, locationOfCustomer);
         OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(store, date, isOrderStatic, locationOfCustomer);
 
 
@@ -552,7 +624,7 @@ public class BusinessLogic {
     }
 
     public boolean checkIfLocationAlreadyExists(SDMLocation location) {
-        return usersLocationMap.containsKey(location) || storesLocationMap.containsKey(location);
+        return storesLocationMap.containsKey(location);
     }
 }
 

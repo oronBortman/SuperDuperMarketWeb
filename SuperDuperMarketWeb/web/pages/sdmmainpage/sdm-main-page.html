@@ -50,15 +50,13 @@
             <div class="col-xs-3">
                 <div class="content">
                     <h4>Load from xml</h4>
-                    <form id="uploadForm" action="/load-xml-file" enctype="multipart/form-data" method="POST">
-                        Enter xml file:
-                        <br>
-                        <input type="file" name="file"><br>
-                        <br>
-                        <input type="Submit" value="Upload File"><br>
+                    <form id = "uploadXmlFile" name = "uploadXmlFile" action = "/SuperDuperMarketWeb_Web_exploded/load-xml-file" enctype = "multipart/form-data" method = "POST" class = "uploadXmlFile">
+                        <h3>Load xml file</h3>
+                        <h4>Add a new area to Super Duper Market!</h4>
+                        <input type = "file" id="file" name = "file" accept="xml" required>
+                        <button name="Submit" type="submit" id="contact-submit-xml">Upload file</button>
+                        <div id = "result"></div>
                     </form>
-                    <div id="result">
-                    </div>
                 </div>
             </div>
         </div>

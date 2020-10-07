@@ -1,5 +1,5 @@
 var chatVersion = 0;
-var refreshRate = 2000; //milli seconds
+var refreshRate = 5000; //milli seconds
 var USER_LIST_URL = buildUrlWithContextPath("users-list");
 var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
 var UPLOAD_XML_FILE = buildUrlWithContextPath("load-xml-file");
@@ -25,33 +25,46 @@ function refreshUsersList(users) {
     });
 }
 
+//TODO
+function refreshZonesList(zones) {
+    //clear all current users
+    //$("#userstable").empty();
+    var tbodySelector = $("#tbody");
+    document.getElementById('tbody').innerHTML = '';
+    // rebuild the list of users: scan all users and add them to the list of users
+    $.each(users || [], function(index, user) {
+        var userName = user["userName"];
+        var userType = user["userType"];
+        console.log("Adding user #" + index + ": " + userName);
+        //create a new <option> tag with a value in it and
+        //appeand it to the #userslist (div with id=userslist) element
+        $("<tr><th>" + userName + "</th>" + "<th>" + userType + "</th>" + "</tr>").appendTo(tbodySelector);
+    });
+}
+
 
 function uploadFile() { // onload...do
-    $("#uploadForm").submit(function () {
-
-        var file = this[0].files[0];
-
+    $("#uploadXmlFile").submit(function() {
+        var file1 = this[0].files[0];
         var formData = new FormData();
-        formData.append("fake-key-1", file);
-        //formData.append("name", this[2].value);
 
+        formData.append("file", file1);
+        //formData.append("mapName", this[1].value);
         $.ajax({
-            method: 'POST',
+            method:'POST',
             data: formData,
-           // url: this.action,
-            url: UPLOAD_XML_FILE,
+            url: Upload_XML_FILE_UTL,
             processData: false, // Don't process the files
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
             timeout: 4000,
-            error: function (e) {
+            error: function(e) {
                 console.error("Failed to submit");
                 $("#result").text("Failed to get result from server " + e);
             },
-            success: function (r) {
+            success: function(r) {
                 $("#result").text(r);
             }
         });
-
         // return value of the submit operation
         // by default - we'll always return false so it doesn't redirect the user.
         return false;

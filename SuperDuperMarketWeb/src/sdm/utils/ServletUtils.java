@@ -1,6 +1,7 @@
 package sdm.utils;
 
 //import engine.chat.ChatManager;
+import logic.zones.ZoneManager;
 import logic.users.UserManager;
 
 import javax.servlet.ServletContext;
@@ -11,7 +12,7 @@ import static sdm.constants.Constants.INT_PARAMETER_ERROR;
 public class ServletUtils {
 
 	private static final String USER_MANAGER_ATTRIBUTE_NAME = "userManager";
-	private static final String CHAT_MANAGER_ATTRIBUTE_NAME = "chatManager";
+	private static final String ZONE_MANAGER_ATTRIBUTE_NAME = "zoneManager";
 
 	/*
 	Note how the synchronization is done only on the question and\or creation of the relevant managers and once they exists -
@@ -28,6 +29,16 @@ public class ServletUtils {
 			}
 		}
 		return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
+	}
+
+	public static ZoneManager getZoneManager(ServletContext servletContext) {
+
+		synchronized (userManagerLock) {
+			if (servletContext.getAttribute(ZONE_MANAGER_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(ZONE_MANAGER_ATTRIBUTE_NAME, new ZoneManager());
+			}
+		}
+		return (ZoneManager) servletContext.getAttribute(ZONE_MANAGER_ATTRIBUTE_NAME);
 	}
 
 	/*public static ChatManager getChatManager(ServletContext servletContext) {

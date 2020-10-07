@@ -1,6 +1,6 @@
 package logic.order.StoreOrder;
 
-import logic.BusinessLogic;
+import logic.zones.Zone;
 
 public class ClosedStoreOrder extends StoreOrder{
 
@@ -14,7 +14,9 @@ public class ClosedStoreOrder extends StoreOrder{
 
     public ClosedStoreOrder(StoreOrder storeOrder) {
         super(storeOrder);
-        this.serialNumber = BusinessLogic.getCurrentOrderSerialIDInSDK();
+        //TODO
+        //Check if serial id is by zone or by all of the system
+        this.serialNumber = Zone.getCurrentOrderSerialIDInSDK();
     }
 
     public void setSerialNumber(Integer serialNumber) {

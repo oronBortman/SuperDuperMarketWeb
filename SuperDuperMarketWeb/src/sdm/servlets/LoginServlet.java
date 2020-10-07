@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.IOException;
 
 import static sdm.constants.Constants.USERNAME;
@@ -39,6 +40,8 @@ public class LoginServlet extends HttpServlet {
         final String SDM_MAIN_PAGE_URL = request.getContextPath() + "/pages/sdmmainpage/sdm-main-page.html";
         final String LOGIN_ERROR_URL = request.getContextPath() + "/pages/loginerror/login_attempt_after_error.html";  // must start with '/' since will be used in request dispatcher...
         Gson gson = new Gson();
+        //Part filePart = request.getPart("file1");
+        System.out.println("ASDFASDFASDF");
         response.setContentType("text/html;charset=UTF-8");
         //String usernameFromSession = SessionUtils.getUsername(request);
         //System.out.println(usernameFromSession + " :)");

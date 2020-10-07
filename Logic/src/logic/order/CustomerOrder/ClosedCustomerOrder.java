@@ -68,6 +68,11 @@ public class ClosedCustomerOrder extends Order {
         return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(x->x.calcTotalPriceOfItems()).sum();
     }
 
+    public Double getTotalOrderPriceWithoutDelivery()
+    {
+        return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(x->x.calcTotalPriceOfItems()).sum();
+    }
+
     public Double getTotalDeliveryPriceInOrder()
     {
         return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(x->x.calcTotalDeliveryPrice()).sum();
