@@ -21,7 +21,7 @@ public class LoginServlet extends HttpServlet {
     // you can use absolute paths, but then you need to build them from scratch, starting from the context path
     // ( can be fetched from request.getContextPath() ) and then the 'absolute' path from it.
     // Each method with it's pros and cons...
-    //private final String SDM_MAIN_PAGE_URL = "../sdmmainpage/sdm-main-page.html";
+    //private final String SDM_MAIN_PAGE_URL = "../sdmmainpage/sdm-main-stores-page.html";
 
     private final String SIGN_UP_URL = "../signup/signup.html";
   //  private final String LOGIN_ERROR_URL = "/pages/loginerror/login_attempt_after_error.html";  // must start with '/' since will be used in request dispatcher...
@@ -37,14 +37,9 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        final String SDM_MAIN_PAGE_URL = request.getContextPath() + "/pages/sdmmainpage/sdm-main-page.html";
+        final String SDM_MAIN_PAGE_URL = request.getContextPath() + "/pages/sdmmainpage/sdm-main-stores-page.html";
         final String LOGIN_ERROR_URL = request.getContextPath() + "/pages/loginerror/login_attempt_after_error.html";  // must start with '/' since will be used in request dispatcher...
-        Gson gson = new Gson();
-        //Part filePart = request.getPart("file1");
-        System.out.println("ASDFASDFASDF");
         response.setContentType("text/html;charset=UTF-8");
-        //String usernameFromSession = SessionUtils.getUsername(request);
-        //System.out.println(usernameFromSession + " :)");
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
        // if (usernameFromSession == null) {
             //user is not logged in yet

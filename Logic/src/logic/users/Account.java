@@ -13,7 +13,7 @@ public class Account {
         this.historyOfActionsOnAccountSet = new HashSet();
     }
 
-    public void transferMoney(Date date, User userToTransferMoneyTo, Double amountOfMoneyToTransfer)
+    public void transferMoney(String date, User userToTransferMoneyTo, Double amountOfMoneyToTransfer)
     {
         Double amountOfMoneyBeforeTransfer = amountOfMoneyInAccount;
         Double amountOfMoneyAfterTransfer = amountOfMoneyInAccount - amountOfMoneyToTransfer;
@@ -22,7 +22,7 @@ public class Account {
         createActionAndAddItToHistoryMap(date, amountOfMoneyToTransfer,amountOfMoneyBeforeTransfer, amountOfMoneyAfterTransfer, ActionOnAccount.TypeOfActionInAccount.TransferMoney);
     }
 
-    public void gettingMoney(Date date, Double amountOfMoneyTheUserGave)
+    public void gettingMoney(String date, Double amountOfMoneyTheUserGave)
     {
         Double amountOfMoneyBeforeGettingMoney = amountOfMoneyInAccount;
         Double amountOfMoneyAfterGettingMoney= amountOfMoneyInAccount + amountOfMoneyTheUserGave;
@@ -30,7 +30,7 @@ public class Account {
         createActionAndAddItToHistoryMap(date, amountOfMoneyTheUserGave,amountOfMoneyBeforeGettingMoney, amountOfMoneyAfterGettingMoney, ActionOnAccount.TypeOfActionInAccount.GettingMoney);
     }
 
-    public void chargingMoney(Date date, Double amountOfMoneyToAdd)
+    public void chargingMoney(String date, Double amountOfMoneyToAdd)
     {
         Double amountOfMoneyBeforeChargingMoney = amountOfMoneyInAccount;
         Double amountOfMoneyAfterChargingMoney= amountOfMoneyInAccount + amountOfMoneyToAdd;
@@ -38,7 +38,7 @@ public class Account {
         createActionAndAddItToHistoryMap(date, amountOfMoneyToAdd, amountOfMoneyBeforeChargingMoney, amountOfMoneyAfterChargingMoney, ActionOnAccount.TypeOfActionInAccount.ChargingMoney);
     }
 
-    public void createActionAndAddItToHistoryMap(Date date, Double amountOfMoneyInAction, Double amountOfMoneyBeforeAction, Double amountOfMoneyAfterAction, ActionOnAccount.TypeOfActionInAccount typeOfActionInAccount)
+    public void createActionAndAddItToHistoryMap(String date, Double amountOfMoneyInAction, Double amountOfMoneyBeforeAction, Double amountOfMoneyAfterAction, ActionOnAccount.TypeOfActionInAccount typeOfActionInAccount)
     {
         historyOfActionsOnAccountSet.add(new ActionOnAccount(date, amountOfMoneyInAction, amountOfMoneyBeforeAction, amountOfMoneyAfterAction, typeOfActionInAccount));
     }

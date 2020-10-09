@@ -3,6 +3,7 @@ var refreshRate = 5000; //milli seconds
 var USER_LIST_URL = buildUrlWithContextPath("users-list");
 var ZONE_LIST_URL = buildUrlWithContextPath("zones-list");
 var ACCOUNT_LIST_URL = buildUrlWithContextPath("accounts-list");
+var CHARGING_MONEY_URL = buildUrlWithContextPath("charging-money");
 
 var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
 var UPLOAD_XML_FILE = buildUrlWithContextPath("load-xml-file");
@@ -32,20 +33,20 @@ function refreshAccountsList(historyOfAccountsActions) {
     var tbodySelector = $("#tbodyOfManageAccountTable");
     document.getElementById('tbodyOfManageAccountTable').innerHTML = '';
     $.each(historyOfAccountsActions || [], function(index, acountAction) {
+        var typeOfActionInAccount = acountAction["typeOfActionInAccount"];
         var date = acountAction["date"];
         var amountOfMoneyInAction = acountAction["amountOfMoneyInAction"];
         var amountOfMoneyBeforeAction = acountAction["amountOfMoneyBeforeAction"];
         var amountOfMoneyAfterAction = acountAction["amountOfMoneyAfterAction"];
-        var typeOfActionInAccount = acountAction["typeOfActionInAccount"];
 
         console.log("Adding action #" + index);
         //create a new <option> tag with a value in it and
         //appeand it to the #userslist (div with id=userslist) element
-        $("<tr><th>" + date + "</th>" +
+        $("<tr><th>" + typeOfActionInAccount + "</th>" +
+            "<th>" + date + "</th>" +
             "<th>" + amountOfMoneyInAction + "</th>" +
             "<th>" + amountOfMoneyBeforeAction + "</th>" +
             "<th>" + amountOfMoneyAfterAction + "</th>" +
-            "<th>" + typeOfActionInAccount + "</th>" +
             "</tr>").appendTo(tbodySelector);    });
 }
 
@@ -103,33 +104,31 @@ function setUploadFileElement() { // onload...do
     })
 }
 
-function setChargingMoneyElement() { // onload...do
+/*function setChargingMoneyElement() { // onload...do
     $("#uploadXmlFile").submit(function() {
-        var file1 = this[0].files[0];
-        var formData = new FormData();
 
         formData.append("file", file1);
         //formData.append("mapName", this[1].value);
         $.ajax({
             method:'POST',
             data: formData,
-            url: Upload_XML_FILE_UTL,
+            url: CHARGING_MONEY_URL,
             processData: false, // Don't process the files
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
             timeout: 4000,
             error: function(e) {
                 console.error("Failed to submit");
-                $("#result").text("Failed to get result from server " + e);
+                $("#resultOfChargingMoney").text("Failed to get result from server " + e);
             },
             success: function(r) {
-                $("#result").text(r);
+                $("#resultOfChargingMoney").text(r);
             }
         });
         // return value of the submit operation
         // by default - we'll always return false so it doesn't redirect the user.
         return false;
     })
-}
+}*/
 
 function ajaxUsersList() {
     $.ajax({
@@ -143,8 +142,8 @@ function ajaxUsersList() {
 function ajaxAccountsList() {
     $.ajax({
         url: ACCOUNT_LIST_URL,
-        success: function(users) {
-            refreshAccountsList(users);
+        success: function(acounts) {
+            refreshAccountsList(acounts);
         }
     });
 }
@@ -175,7 +174,7 @@ function setActionBasedOnRole(user)
     }
     else if(userType === "customer")
     {
-        setChargingMoneyElement();
+        //setChargingMoneyElement();
     }
 }
 

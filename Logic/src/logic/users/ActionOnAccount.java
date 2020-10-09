@@ -42,13 +42,13 @@ public class ActionOnAccount {
 
     }
 
-    Date date;
+    String date;
     Double amountOfMoneyInAction;
     Double amountOfMoneyBeforeAction;
     Double amountOfMoneyAfterAction;
     TypeOfActionInAccount typeOfActionInAccount;
 
-    public ActionOnAccount(Date date, Double amountOfMoneyInAction, Double amountOfMoneyBeforeAction, Double amountOfMoneyAfterAction, TypeOfActionInAccount typeOfActionInAccount)
+    public ActionOnAccount(String date, Double amountOfMoneyInAction, Double amountOfMoneyBeforeAction, Double amountOfMoneyAfterAction, TypeOfActionInAccount typeOfActionInAccount)
     {
         this.date=date;
         this.amountOfMoneyInAction = amountOfMoneyInAction;
@@ -57,7 +57,7 @@ public class ActionOnAccount {
         this.typeOfActionInAccount=typeOfActionInAccount;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 

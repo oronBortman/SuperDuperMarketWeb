@@ -1,4 +1,4 @@
-package sdm.servlets;
+package sdm.servlets.pagetwo;
 
 import com.google.gson.Gson;
 import logic.users.Account;
@@ -10,6 +10,7 @@ import sdm.utils.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @WebServlet("/accounts-list")
-public class AccountsListServlet {
+public class AccountsListServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -32,9 +33,19 @@ public class AccountsListServlet {
             Set<ActionOnAccount> historyOfActionsOnAccountSet = user.getAccount().getHistoryOfActionsOnAccountSet();
             String json = gson.toJson(historyOfActionsOnAccountSet);
             out.println(json);
+            System.out.println("AAAAA");
             System.out.println(json);
             out.flush();
         }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request,response);
     }
 
 }

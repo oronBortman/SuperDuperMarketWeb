@@ -9,6 +9,7 @@ import logic.discount.IfYouBuySDM;
 import logic.discount.ThenYouGetSDM;
 import logic.order.GeneralMethods;
 import logic.order.StoreOrder.ClosedStoreOrder;
+import logic.order.StoreOrder.StoreOrder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,12 +19,13 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     private Map<Integer, AvailableItemInStore> ItemsSerialIDMap;
     private Map<Integer, ClosedStoreOrder> ordersSerialIDMap;
     private Map<String, Discount> discountNameDMap;
-
+    private Seller storeOwner;
     private Integer PPK;
 
-    public Store(Integer serialNumber, String name, int PPK, SDMLocation SDMLocationOfShop)
+    public Store(Integer serialNumber, String name, int PPK, SDMLocation SDMLocationOfShop, Seller storeOwner)
     {
         super(serialNumber, name, SDMLocationOfShop);
+        this.storeOwner =  storeOwner;
         ItemsSerialIDMap = new HashMap<Integer, AvailableItemInStore>();
         ordersSerialIDMap = new HashMap<Integer, ClosedStoreOrder>();
         discountNameDMap = new HashMap<String, Discount>();
@@ -31,9 +33,11 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         this.PPK = PPK;
     }
 
-    public Store(Integer serialNumber, String name, int PPK, SDMLocation SDMLocationOfShop, Map<Integer, AvailableItemInStore> itemsSerialIDMap)
+    public Store(Integer serialNumber, String name, int PPK, SDMLocation SDMLocationOfShop, Map<Integer, AvailableItemInStore> itemsSerialIDMap,Seller storeOwner)
     {
         super(serialNumber, name, SDMLocationOfShop);
+        this.storeOwner =  storeOwner;
+
         this.ItemsSerialIDMap = itemsSerialIDMap;
         ordersSerialIDMap = new HashMap<Integer, ClosedStoreOrder>();
         discountNameDMap = new HashMap<String, Discount>();
@@ -42,10 +46,10 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     }
 
 
-    public Store(SDMStore shop)
+    public Store(SDMStore shop, Seller storeOwner)
     {
         super(shop.getId(), shop.getName(), new SDMLocation(shop.getLocation()));
-
+        this.storeOwner = storeOwner;
         ItemsSerialIDMap = new HashMap<Integer, AvailableItemInStore>();
         ordersSerialIDMap = new HashMap<Integer, ClosedStoreOrder>();
         discountNameDMap = new HashMap<String, Discount>();
@@ -54,6 +58,9 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         this.PPK = shop.getDeliveryPpk();
     }
 
+    public Seller getStoreOwner() {
+        return storeOwner;
+    }
 
     public void addDiscountToStoreFromXML(SDMDiscount discountFromXML) throws DuplicateDiscountNameException, ItemIDNotExistInAStoreException, ItemIDInDiscountNotExistInAStoreException {
         IfYouBuy ifYouBuy = discountFromXML.getIfYouBuy();
@@ -175,6 +182,16 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     public void addItemToItemSSerialIDMap(AvailableItemInStore item)
     {
         ItemsSerialIDMap.put(item.getSerialNumber(), item);
+    }
+
+    public Integer calcTotalOrdersFromStore()
+    {
+        return ordersSerialIDMap.size();
+    }
+
+    public Double calcTotalProfitOfSoledItems()
+    {
+        return ordersSerialIDMap.values().stream().mapToDouble(StoreOrder::calcTotalPriceOfItems).sum();
     }
 
     public void addClosedOrderToHistory(ClosedStoreOrder order)

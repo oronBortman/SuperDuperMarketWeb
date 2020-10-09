@@ -6,23 +6,23 @@
     </servlet>
    <!--<servlet>
         <servlet-name>SdmMainPage</servlet-name>
-        <servlet-class>sdm.servlets.SdmMainPage</servlet-class>
+        <servlet-class>sdm.servlets.pagetwo.SdmMainPage</servlet-class>
    </servlet>-->
     <servlet>
         <servlet-name>showAllUsersServlet</servlet-name>
-        <servlet-class>sdm.servlets.ShowAllUsersServlet</servlet-class>
+        <servlet-class>sdm.servlets.pagetwo.ShowAllUsersServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>showRegionServlet</servlet-name>
-        <servlet-class>sdm.servlets.ZonesListServlet</servlet-class>
+        <servlet-class>sdm.servlets.pagetwo.ZonesListServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>loadXmlFile</servlet-name>
-        <servlet-class>sdm.servlets.LoadXmlFileServlet</servlet-class>
+        <servlet-class>sdm.servlets.pagetwo.LoadXmlFileServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>manageAccount</servlet-name>
-        <servlet-class>sdm.servlets.ManageAccountServlet</servlet-class>
+        <servlet-class>sdm.servlets.pagetwo.ManageAccountServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

@@ -1,4 +1,4 @@
-package sdm.servlets;
+package sdm.servlets.pagetwo;
 
 import logic.users.User;
 import sdm.utils.ServletUtils;

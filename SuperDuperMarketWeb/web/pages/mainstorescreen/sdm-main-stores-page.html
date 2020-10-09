@@ -5,38 +5,37 @@
     <title>Online Chat</title>
     <script src="../../common/jquery-2.0.3.min.js"></script>
     <script src="../../common/context-path-helper.js"></script>
-    <script src="sdm-main-page.js"></script>
+    <script src="sdm-main-stores-page.js"></script>
     <link rel="stylesheet" href="../../common/bootstrap.min.css">
-    <link rel="stylesheet" href="sdm-main-page.css">
+    <link rel="stylesheet" href="sdm-main-stores-page.css">
 </head>
 <body>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-6">
             <div class="sidebar">
-                <h1>Welcome to Super Duper Market</h1>
+                <h1>Details on the zone</h1>
             </div>
         </div>
     </div>
     <hr></hr>
-    <div class="row">
-        <div class="col-xs-6">
-            <div id="greeting"></div>
-        </div>
-    </div>
     <hr></hr>
     <div class="row">
         <div class="col-xs-3">
             <div class="content">
-                <div id="showAllUsers">
-                    <h4>Show all users</h4>
-                    <table id="userstable">
+                <div id="showAllItemsInZone">
+                    <h4>Show all items</h4>
+                    <table id="itemsTableInZone">
                     <thead>
                     <tr class = "tableFirstRow">
-                        <th>name</th>
-                        <th>type</th>
+                        <th>SerialID</th>
+                        <th>Name</th>
+                        <th>Type of buying</th>
+                        <th>Total stores that sell the item</th>
+                        <th>Average price of item</th>
+                        <th>How much times the items has been soled</th>
                     </tr>
-                    <tbody id="tbody">
+                    <tbody id="tbodyOfZoneItemsTable">
                     </tbody>
                     </thead>
                     </table>
@@ -45,45 +44,11 @@
         </div>
     </div>
     <hr>
-    <div id="loadFromXml">
-        <div class="row">
-            <div class="col-xs-3">
-                <div class="content">
-                    <form id = "uploadXmlFile" name = "uploadXmlFile" action = "/SuperDuperMarketWeb_Web_exploded/load-xml-file" enctype = "multipart/form-data" method = "POST" class = "uploadXmlFile">
-                        <h4>Load xml file</h4>
-                        <h5>Here you can add a zone to Super Duper Market</h5>
-                        <br>
-                        <br>
-                        <input type = "file" id="file" name = "file" accept="xml" required>
-                        <br>
-                        <button name="Submit" type="submit" id="contact-submit-xml">Upload file</button>
-                        <br>
-                        <div id = "result"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <hr>
-    </div>
     <div class="row">
         <div class="col-xs-3">
             <div class="content">
-                <div id="showZones">
-                    <h4>Show all zones</h4>
-                    <table id="zonesTable">
-                        <thead>
-                        <tr class = "tableFirstRow">
-                            <th>zoneOwner</th>
-                            <th>zoneName</th>
-                            <th>Total Items Types In Zone</th>
-                            <th>Total Stores In Zone</th>
-                            <th>Total Orders In Zone</th>
-                            <th>Average Price Of Orders (Not Including Deliveries)</th>
-                        </tr>
-                        <tbody id="tbodyOfZonesTable">
-                        </tbody>
-                        </thead>
-                    </table>
+                <div id="showAllStoresInZone">
+                    <h4>Details on all the Stores</h4>
                 </div>
             </div>
         </div>

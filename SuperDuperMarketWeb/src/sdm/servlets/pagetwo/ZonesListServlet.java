@@ -1,4 +1,4 @@
-package sdm.servlets;
+package sdm.servlets.pagetwo;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

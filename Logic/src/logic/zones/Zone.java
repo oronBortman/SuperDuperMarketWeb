@@ -43,7 +43,7 @@ public class Zone {
 
     public Zone(SuperDuperMarketDescriptor superDuperMarketDescriptor, Seller zoneOwner) throws FileNotFoundException, JAXBException, DuplicateItemSerialIDException, DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, StoreLocationIsIdenticalToStoreException, InvalidCoordinateXOfStoreException, ItemWithSerialIDNotExistInSDMException, StoreNotExistException, DuplicateItemSerialIDInStoreException, ItemIDInDiscountNotExistInAStoreException, ItemIDInDiscountNotExistInSDMException, DuplicateDiscountNameException, ItemIDNotExistInAStoreException {
         this.zoneOwner = zoneOwner;
-        this.zoneName = superDuperMarketDescriptor.getSDMZone().getName();
+        this.zoneName = superDuperMarketDescriptor.getSDMZone1().getName();
         storesLocationMap = new HashMap<SDMLocation, Store>();
         storesSerialIDMap = new HashMap<Integer, Store>();
         itemsSerialIDMap = new HashMap<Integer, Item>();
@@ -53,7 +53,7 @@ public class Zone {
         List<SDMStore> sdmStoreList = superDuperMarketDescriptor.getSDMStores().getSDMStore();
         List<SDMItem> sdmItemList = superDuperMarketDescriptor.getSDMItems().getSDMItem();
         addListOfItemsToItemsSerialIDMapFromXml(sdmItemList);
-        addListOfStoreSToStoreSerialIDMapFromXml(sdmStoreList);
+        addListOfStoreSToStoreSerialIDMapFromXml(sdmStoreList, zoneOwner);
         addListOfItemsToListOfStoreSFromXML(sdmStoreList);
         //TODO
          addListOfDiscountsToListOfStoreSFromXML(sdmStoreList);
@@ -277,16 +277,16 @@ public class Zone {
 
     }
 
-    public void addListOfStoreSToStoreSerialIDMapFromXml(List<SDMStore> storeList) throws DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, InvalidCoordinateXOfStoreException, StoreLocationIsIdenticalToStoreException
+    public void addListOfStoreSToStoreSerialIDMapFromXml(List<SDMStore> storeList, Seller storeOwner) throws DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, InvalidCoordinateXOfStoreException, StoreLocationIsIdenticalToStoreException
     {
         for(SDMStore sdmStore : storeList)
         {
-            addStoreToStoreSerialIDMapFromXml(sdmStore);
+            addStoreToStoreSerialIDMapFromXml(sdmStore, storeOwner);
         }
     }
 
 
-    public void addStoreToStoreSerialIDMapFromXml(SDMStore store) throws DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, InvalidCoordinateXOfStoreException, StoreLocationIsIdenticalToStoreException {
+    public void addStoreToStoreSerialIDMapFromXml(SDMStore store, Seller storeOwner ) throws DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, InvalidCoordinateXOfStoreException, StoreLocationIsIdenticalToStoreException {
 
         if(storesSerialIDMap != null  && storesSerialIDMap.containsKey(store.getId()))
         {
@@ -294,7 +294,7 @@ public class Zone {
         }
         else
         {
-            Store storeToAddToMap = new Store(store);
+            Store storeToAddToMap = new Store(store, storeOwner);
             SDMLocation storeLocation = storeToAddToMap.getLocation();
             checkIfStoreLocationIsValidAndThrowsExceptionIfNot(storeLocation, storeToAddToMap.getName(), storeToAddToMap.getSerialNumber());
             if(storesLocationMap != null && storesLocationMap.containsKey(storeLocation))

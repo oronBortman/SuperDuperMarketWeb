@@ -9,6 +9,7 @@ public class User {
     {
         this.userName = name;
         this.userType = userType;
+        this.account = new Account();
     }
 
     public String getUserName() {
