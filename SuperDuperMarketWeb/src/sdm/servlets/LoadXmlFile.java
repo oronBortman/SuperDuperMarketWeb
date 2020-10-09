@@ -28,6 +28,8 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
+import java.util.Scanner;
 import javax.servlet.http.Part;
 
 @WebServlet("/load-xml-file")
@@ -111,7 +113,6 @@ public class LoadXmlFile extends HttpServlet {
         else
         {
             System.out.println("G");
-
             message="User doesn't have a permission to upload an xml file to Super Duper Market";
         }
 
@@ -127,10 +128,55 @@ public class LoadXmlFile extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
+       /* response.setContentType("text/html;charset=UTF-8");
+        Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
+        //String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
+        InputStream fileContent = filePart.getInputStream();
+        String username = SessionUtils.getUsername(request);
+        //Part name = request.getPart("mapName");
+        //String nameValue = readFromInputStream(name.getInputStream());
+
+        // SDManager manager = ServletUtils.getSDMManager(getServletContext());
+
+        try {
+            // manager.loadInfoFromXML(fileContent,username);
+            System.out.println("AAAA");
+            response.getOutputStream().println("File load successfully!!!!");
+        } catch (Exception e) {
+            e.getMessage();
+            System.out.println("BBBBB");
+            response.getOutputStream().println("File load failll!!!!");
+        }*/
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        processRequest(request, response);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        /*resonse.setContentType("text/html;charset=UTF-8");
+        Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
+        //String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
+        InputStream fileContent = filePart.getInputStream();
+        String username = SessionUtils.getUsername(request);
+        Part name = request.getPart("mapName");
+        String nameValue = readFromInputStream(name.getInputStream());
+
+        //  SDManager manager = ServletUtils.getSDMManager(getServletContext());
+
+        try {
+            // manager.loadInfoFromXML(fileContent,username);
+            System.out.println("AAAA");
+            response.getOutputStream().println("File load successfully!!!!");
+        } catch (Exception e) {
+            e.getMessage();
+            System.out.println("BBBBB");
+            response.getOutputStream().println("File load failll!!!!");
+        }*/
+
     }
 
+    private String readFromInputStream(InputStream inputStream) {
+
+        return new Scanner(inputStream).useDelimiter("\\Z").next();
+
+    }
 }

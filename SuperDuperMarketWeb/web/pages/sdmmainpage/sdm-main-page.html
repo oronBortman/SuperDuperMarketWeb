@@ -49,12 +49,15 @@
         <div class="row">
             <div class="col-xs-3">
                 <div class="content">
-                    <h4>Load from xml</h4>
                     <form id = "uploadXmlFile" name = "uploadXmlFile" action = "/SuperDuperMarketWeb_Web_exploded/load-xml-file" enctype = "multipart/form-data" method = "POST" class = "uploadXmlFile">
-                        <h3>Load xml file</h3>
-                        <h4>Add a new area to Super Duper Market!</h4>
+                        <h4>Load xml file</h4>
+                        <h5>Here you can add a zone to Super Duper Market</h5>
+                        <br>
+                        <br>
                         <input type = "file" id="file" name = "file" accept="xml" required>
+                        <br>
                         <button name="Submit" type="submit" id="contact-submit-xml">Upload file</button>
+                        <br>
                         <div id = "result"></div>
                     </form>
                 </div>
@@ -65,8 +68,22 @@
     <div class="row">
         <div class="col-xs-3">
             <div class="content">
-                <div id="showRegion">
-                    <h4>Show Region</h4>
+                <div id="showZones">
+                    <h4>Show all zones</h4>
+                    <table id="zonesTable">
+                        <thead>
+                        <tr class = "tableFirstRow">
+                            <th>zoneOwner</th>
+                            <th>zoneName</th>
+                            <th>Total Items Types In Zone</th>
+                            <th>Total Stores In Zone</th>
+                            <th>Total Orders In Zone</th>
+                            <th>Average Price Of Orders (Not Including Deliveries)</th>
+                        </tr>
+                        <tbody id="tbodyOfZonesTable">
+                        </tbody>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>
@@ -77,6 +94,32 @@
             <div class="content">
                 <div id="menageAccount">
                     <h4>Manage account</h4>
+                    <table id="manageAccountTable">
+                        <thead>
+                        <tr class = "tableFirstRow">
+                            <th>Type of action</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Account balance before Action</th>
+                            <th>Account balance after Action</th>
+                        </tr>
+                        <tbody id="tbodyOfManageAccountTable">
+                        </tbody>
+                        </thead>
+                    </table>
+                    <br>
+                    <br>
+                    <form id = "chargingMoney" name = "chargingMoney" action = "/SuperDuperMarketWeb_Web_exploded/charging-money" method = "POST" class = "charging-money">
+                        <h5>Charging Money</h5>
+                        <br>
+                        <h6>Please add amount of money to charge</h6>
+                        <br>
+                        <input type = "text" id="chargingMoneyTextField" name = "chargingMoneyTextField">
+                        <br>
+                        <button name="Submit" type="submit" id="chargingMoneyButton" value="Charge money"></button>
+                        <br>
+                        <div id = "resultOfChargingMoney"></div>
+                    </form>
                 </div>
             </div>
         </div>

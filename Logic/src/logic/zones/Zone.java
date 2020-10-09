@@ -56,7 +56,7 @@ public class Zone {
         addListOfStoreSToStoreSerialIDMapFromXml(sdmStoreList);
         addListOfItemsToListOfStoreSFromXML(sdmStoreList);
         //TODO
-       // addListOfDiscountsToListOfStoreSFromXML(sdmStoreList);
+         addListOfDiscountsToListOfStoreSFromXML(sdmStoreList);
     }
 
 
@@ -97,7 +97,12 @@ public class Zone {
 
     public Double calcAvgOfOrdersNotIncludingDeliveries()
     {
-        return ( (ordersSerialIDMap.values().stream().mapToDouble(x->x.getTotalItemCostInOrder()).sum()) / ordersSerialIDMap.size() );
+        Double avg = 0.0;
+        if(ordersSerialIDMap.size() != 0)
+        {
+            avg =( ordersSerialIDMap.values().stream().mapToDouble(x->x.getTotalItemCostInOrder()).sum()) / ordersSerialIDMap.size();
+        }
+        return avg;
     }
 
 
@@ -312,8 +317,21 @@ public class Zone {
     public void addListOfDiscountsToListOfStoreSFromXML(List<SDMStore> sdmStoreList) throws ItemIDInDiscountNotExistInAStoreException, ItemIDNotExistInAStoreException, DuplicateDiscountNameException, ItemIDInDiscountNotExistInSDMException {
         for(SDMStore sdmStore : sdmStoreList)
         {
-            addListOfDiscountsToStoreFromXML(sdmStore.getId(), sdmStore.getSDMDiscounts().getSDMDiscount());
+            SDMDiscounts sdmDiscounts = sdmStore.getSDMDiscounts();
+            if(sdmDiscounts != null)
+            {
+                List<SDMDiscount> sdmDiscountList = sdmDiscounts.getSDMDiscount();
+                if(sdmDiscountList != null)
+                {
+                    addListOfDiscountsToStoreFromXML(sdmStore.getId(), sdmStore.getSDMDiscounts().getSDMDiscount());
+                }
+            }
+            else
+            {
+                System.out.println("There is no discount in store " + sdmStore.getName());
+            }
         }
+
     }
 
     public void addListOfDiscountsToStoreFromXML(Integer storeID, List<SDMDiscount> sdmDiscounts) throws ItemIDInDiscountNotExistInAStoreException, ItemIDNotExistInAStoreException, DuplicateDiscountNameException, ItemIDInDiscountNotExistInSDMException {

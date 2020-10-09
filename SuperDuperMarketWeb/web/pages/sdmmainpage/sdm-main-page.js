@@ -1,6 +1,8 @@
 var chatVersion = 0;
 var refreshRate = 5000; //milli seconds
 var USER_LIST_URL = buildUrlWithContextPath("users-list");
+var ZONE_LIST_URL = buildUrlWithContextPath("zones-list");
+
 var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
 var UPLOAD_XML_FILE = buildUrlWithContextPath("load-xml-file");
 
@@ -27,18 +29,26 @@ function refreshUsersList(users) {
 
 //TODO
 function refreshZonesList(zones) {
-    //clear all current users
-    //$("#userstable").empty();
-    var tbodySelector = $("#tbody");
-    document.getElementById('tbody').innerHTML = '';
+    var tbodySelector = $("#tbodyOfZonesTable");
+    document.getElementById('tbodyOfZonesTable').innerHTML = '';
     // rebuild the list of users: scan all users and add them to the list of users
-    $.each(users || [], function(index, user) {
-        var userName = user["userName"];
-        var userType = user["userType"];
-        console.log("Adding user #" + index + ": " + userName);
+    $.each(zones || [], function(index, zone) {
+        var zoneOwner = zone["zoneOwner"];
+        var zoneName = zone["zoneName"];
+        var totalItemsTypesInZone = zone["totalItemsTypesInZone"];
+        var totalStoresInZone = zone["totalStoresInZone"];
+        var totalOrdersInZone = zone["totalOrdersInZone"];
+        var avgOfOrdersNotIncludingDeliveries = zone["avgOfOrdersNotIncludingDeliveries"];
+        console.log("Adding zone #" + index + ": " + zoneName);
         //create a new <option> tag with a value in it and
         //appeand it to the #userslist (div with id=userslist) element
-        $("<tr><th>" + userName + "</th>" + "<th>" + userType + "</th>" + "</tr>").appendTo(tbodySelector);
+        $("<tr><th>" + zoneOwner + "</th>" +
+            "<th>" + zoneName + "</th>" +
+            "<th>" + totalItemsTypesInZone + "</th>" +
+            "<th>" + totalStoresInZone + "</th>" +
+            "<th>" + totalOrdersInZone + "</th>" +
+            "<th>" + avgOfOrdersNotIncludingDeliveries + "</th>" +
+            "</tr>").appendTo(tbodySelector);
     });
 }
 
@@ -99,6 +109,15 @@ function ajaxUsersList() {
         url: USER_LIST_URL,
         success: function(users) {
             refreshUsersList(users);
+        }
+    });
+}
+
+function ajaxZonesList() {
+    $.ajax({
+        url: ZONE_LIST_URL,
+        success: function(zones) {
+            refreshZonesList(zones);
         }
     });
 }
@@ -208,5 +227,6 @@ $(function() {
     });
     //The users list is refreshed automatically every second
     setInterval(ajaxUsersList, refreshRate);
+    setInterval(ajaxZonesList, refreshRate);
 });
 
