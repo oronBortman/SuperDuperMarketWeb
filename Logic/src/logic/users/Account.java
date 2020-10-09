@@ -5,43 +5,49 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Account {
-    int amountOfMoneyInAccount;
+    Double amountOfMoneyInAccount;
     Set<ActionOnAccount> historyOfActionsOnAccountSet;
     Account()
     {
-        amountOfMoneyInAccount=0;
+        amountOfMoneyInAccount=0.0;
         this.historyOfActionsOnAccountSet = new HashSet();
     }
 
-    public void transferMoney(Date date, User userToTransferMoneyTo, int amountOfMoneyToTransfer)
+    public void transferMoney(Date date, User userToTransferMoneyTo, Double amountOfMoneyToTransfer)
     {
-        int amountOfMoneyBeforeTransfer = amountOfMoneyInAccount;
-        int amountOfMoneyAfterTransfer = amountOfMoneyInAccount - amountOfMoneyToTransfer;
+        Double amountOfMoneyBeforeTransfer = amountOfMoneyInAccount;
+        Double amountOfMoneyAfterTransfer = amountOfMoneyInAccount - amountOfMoneyToTransfer;
         amountOfMoneyInAccount=amountOfMoneyAfterTransfer;
         userToTransferMoneyTo.getAccount().gettingMoney(date, amountOfMoneyToTransfer);
         createActionAndAddItToHistoryMap(date, amountOfMoneyToTransfer,amountOfMoneyBeforeTransfer, amountOfMoneyAfterTransfer, ActionOnAccount.TypeOfActionInAccount.TransferMoney);
     }
 
-    public void gettingMoney(Date date, int amountOfMoneyTheUserGave)
+    public void gettingMoney(Date date, Double amountOfMoneyTheUserGave)
     {
-        int amountOfMoneyBeforeGettingMoney = amountOfMoneyInAccount;
-        int amountOfMoneyAfterGettingMoney= amountOfMoneyInAccount + amountOfMoneyTheUserGave;
+        Double amountOfMoneyBeforeGettingMoney = amountOfMoneyInAccount;
+        Double amountOfMoneyAfterGettingMoney= amountOfMoneyInAccount + amountOfMoneyTheUserGave;
         amountOfMoneyInAccount=amountOfMoneyAfterGettingMoney;
         createActionAndAddItToHistoryMap(date, amountOfMoneyTheUserGave,amountOfMoneyBeforeGettingMoney, amountOfMoneyAfterGettingMoney, ActionOnAccount.TypeOfActionInAccount.GettingMoney);
     }
 
-    public void chargingMoney(Date date, int amountOfMoneyToAdd)
+    public void chargingMoney(Date date, Double amountOfMoneyToAdd)
     {
-        int amountOfMoneyBeforeChargingMoney = amountOfMoneyInAccount;
-        int amountOfMoneyAfterChargingMoney= amountOfMoneyInAccount + amountOfMoneyToAdd;
+        Double amountOfMoneyBeforeChargingMoney = amountOfMoneyInAccount;
+        Double amountOfMoneyAfterChargingMoney= amountOfMoneyInAccount + amountOfMoneyToAdd;
         amountOfMoneyInAccount=amountOfMoneyAfterChargingMoney;
         createActionAndAddItToHistoryMap(date, amountOfMoneyToAdd, amountOfMoneyBeforeChargingMoney, amountOfMoneyAfterChargingMoney, ActionOnAccount.TypeOfActionInAccount.ChargingMoney);
     }
 
-    public void createActionAndAddItToHistoryMap(Date date, int amountOfMoneyInAction, int amountOfMoneyBeforeAction, int amountOfMoneyAfterAction, ActionOnAccount.TypeOfActionInAccount typeOfActionInAccount)
+    public void createActionAndAddItToHistoryMap(Date date, Double amountOfMoneyInAction, Double amountOfMoneyBeforeAction, Double amountOfMoneyAfterAction, ActionOnAccount.TypeOfActionInAccount typeOfActionInAccount)
     {
         historyOfActionsOnAccountSet.add(new ActionOnAccount(date, amountOfMoneyInAction, amountOfMoneyBeforeAction, amountOfMoneyAfterAction, typeOfActionInAccount));
     }
 
+    public Set<ActionOnAccount> getHistoryOfActionsOnAccountSet() {
+        return historyOfActionsOnAccountSet;
+    }
 
+    public Double getAmountOfMoneyInAccount() {
+        return amountOfMoneyInAccount;
+    }
 }

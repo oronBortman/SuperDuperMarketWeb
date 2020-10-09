@@ -34,7 +34,7 @@ import javax.servlet.http.Part;
 
 @WebServlet("/load-xml-file")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
-public class LoadXmlFile extends HttpServlet {
+public class LoadXmlFileServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

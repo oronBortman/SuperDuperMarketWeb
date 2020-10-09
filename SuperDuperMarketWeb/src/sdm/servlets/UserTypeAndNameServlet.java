@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet("/user-type-and-name")
-public class UserTypeAndName extends HttpServlet {
+public class UserTypeAndNameServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

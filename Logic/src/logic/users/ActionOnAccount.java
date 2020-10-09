@@ -43,12 +43,12 @@ public class ActionOnAccount {
     }
 
     Date date;
-    int amountOfMoneyInAction;
-    int amountOfMoneyBeforeAction;
-    int amountOfMoneyAfterAction;
+    Double amountOfMoneyInAction;
+    Double amountOfMoneyBeforeAction;
+    Double amountOfMoneyAfterAction;
     TypeOfActionInAccount typeOfActionInAccount;
 
-    public ActionOnAccount(Date date, int amountOfMoneyInAction, int amountOfMoneyBeforeAction, int amountOfMoneyAfterAction, TypeOfActionInAccount typeOfActionInAccount)
+    public ActionOnAccount(Date date, Double amountOfMoneyInAction, Double amountOfMoneyBeforeAction, Double amountOfMoneyAfterAction, TypeOfActionInAccount typeOfActionInAccount)
     {
         this.date=date;
         this.amountOfMoneyInAction = amountOfMoneyInAction;
@@ -61,11 +61,11 @@ public class ActionOnAccount {
         return date;
     }
 
-    public int getAmountOfMoneyAfterAction() {
+    public Double getAmountOfMoneyAfterAction() {
         return amountOfMoneyAfterAction;
     }
 
-    public int getAmountOfMoneyBeforeAction() {
+    public Double getAmountOfMoneyBeforeAction() {
         return amountOfMoneyBeforeAction;
     }
 
