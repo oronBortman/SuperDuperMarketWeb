@@ -4,6 +4,10 @@ public class Constants {
     public static final String USERNAME = "username";
     public static final String USER_NAME_ERROR = "username_error";
     public static final String USERTYPE = "usertype";
+    public static final String ZONENAME = "zoneName";
+    public static final String STATIC = "static";
+    public static final String DYNAMIC = "dynamic";
+
     public static final String SELLER = "seller";
     public static final String CUSTOMER = "customer";
 

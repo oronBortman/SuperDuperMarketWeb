@@ -45,3 +45,29 @@ table tr:hover
 {
     background-color:#ccc
 }
+
+/*
+Need to check, it's for order
+ */
+
+th { text-align: left;}
+#minus {
+    text-align: right;
+}
+.tableOfEnteringAmountOfItem{
+    margin-left: 55px;
+    margin-top: 20px;
+}
+p {text-align: center;}
+tr {text-align: left;, height:inherit}
+th{white-space: nowrap}
+
+.square {
+    height: 100%;
+    width: 30%;
+    background-color: #FAEBD7;
+    border-radius: 25px;
+}
+table,tr,th{
+    height: inherit
+}

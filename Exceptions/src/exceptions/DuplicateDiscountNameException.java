@@ -1,6 +1,5 @@
 package exceptions;
 
-import javafx.beans.property.StringProperty;
 import logic.Store;
 
 public class DuplicateDiscountNameException extends Exception{

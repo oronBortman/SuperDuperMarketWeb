@@ -4,7 +4,7 @@ var USER_LIST_URL = buildUrlWithContextPath("users-list");
 var ZONE_LIST_URL = buildUrlWithContextPath("zones-list");
 var ACCOUNT_LIST_URL = buildUrlWithContextPath("accounts-list");
 var CHARGING_MONEY_URL = buildUrlWithContextPath("charging-money");
-
+var MOVE_TO_ZONE_URL = buildUrlWithContextPath("move-to-zone");
 var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
 var UPLOAD_XML_FILE = buildUrlWithContextPath("load-xml-file");
 
@@ -22,7 +22,7 @@ function refreshUsersList(users) {
     $.each(users || [], function(index, user) {
         var userName = user["userName"];
         var userType = user["userType"];
-        console.log("Adding user #" + index + ": " + userName);
+       // console.log("Adding user #" + index + ": " + userName);
         //create a new <option> tag with a value in it and
         //appeand it to the #userslist (div with id=userslist) element
         $("<tr><th>" + userName + "</th>" + "<th>" + userType + "</th>" + "</tr>").appendTo(tbodySelector);
@@ -39,7 +39,7 @@ function refreshAccountsList(historyOfAccountsActions) {
         var amountOfMoneyBeforeAction = acountAction["amountOfMoneyBeforeAction"];
         var amountOfMoneyAfterAction = acountAction["amountOfMoneyAfterAction"];
 
-        console.log("Adding action #" + index);
+       // console.log("Adding action #" + index);
         //create a new <option> tag with a value in it and
         //appeand it to the #userslist (div with id=userslist) element
         $("<tr><th>" + typeOfActionInAccount + "</th>" +
@@ -53,6 +53,7 @@ function refreshAccountsList(historyOfAccountsActions) {
 //TODO
 function refreshZonesList(zones) {
     var tbodySelector = $("#tbodyOfZonesTable");
+   // var showAllItemsInZone = $("#showAllItemsInZone")
     document.getElementById('tbodyOfZonesTable').innerHTML = '';
     // rebuild the list of users: scan all users and add them to the list of users
     $.each(zones || [], function(index, zone) {
@@ -62,7 +63,9 @@ function refreshZonesList(zones) {
         var totalStoresInZone = zone["totalStoresInZone"];
         var totalOrdersInZone = zone["totalOrdersInZone"];
         var avgOfOrdersNotIncludingDeliveries = zone["avgOfOrdersNotIncludingDeliveries"];
-        console.log("Adding zone #" + index + ": " + zoneName);
+      //  console.log("Adding zone #" + index + ": " + zoneName);
+        var idOfMoveToZoneForm = "moveToZone" + index;
+     //   console.log("idOfMoveToZoneForm " + idOfMoveToZoneForm);
         //create a new <option> tag with a value in it and
         //appeand it to the #userslist (div with id=userslist) element
         $("<tr><th>" + zoneOwner + "</th>" +
@@ -71,10 +74,54 @@ function refreshZonesList(zones) {
             "<th>" + totalStoresInZone + "</th>" +
             "<th>" + totalOrdersInZone + "</th>" +
             "<th>" + avgOfOrdersNotIncludingDeliveries + "</th>" +
-            "</tr>").appendTo(tbodySelector);
+            "<th>" +
+                "<form id = \"moveToZone" + index + "\"" +
+                        "name  = \"moveToZone" + index + "\"" +
+                        "action = \"/SuperDuperMarketWeb_Web_exploded/move-to-zone\" method = \"GET\" class = \"move-to-zone\">" +
+                        "<button name=\"Move to zone\" type=\"submit\" id=\"moveToZoneButton" + index + "\"" + "value=\"Move to zone\">Move to zone</button>" +
+                         "<br>" +
+                "</form>" +
+            "</th></tr>").appendTo(tbodySelector);
+        setMoveToZoneButton(zoneName, idOfMoveToZoneForm);
     });
+    /*
+
+     */
 }
 
+function setMoveToZoneButton(zoneNameInput, idOfMoveToZoneForm) { // onload...do
+    var idOfMoveToZoneFormWithSharp = "#" + idOfMoveToZoneForm
+    console.log(zoneNameInput + " in setMoveToZoneButton");
+    var dataString = "zoneName="+zoneNameInput;
+    // console.log(idOfMoveToZoneFormWithSharp)
+    $(idOfMoveToZoneFormWithSharp).click(function() {
+        $.ajax({
+            method:'GET',
+            data: dataString,
+            url: MOVE_TO_ZONE_URL,
+            dataType: "json",
+            //action: MOVE_TO_ZONE_URL,
+            //contentType: 'application/json; charset=utf-8',
+           // processData: false, // Don't process the files
+            //contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+            timeout: 4000,
+            error: function(e) {
+                console.error(e);
+                //$("#result").text("Failed to get result from server " + e);
+            },
+            success: function(r) {
+                console.log("Succesfully!!!");
+                console.log(r);
+                localStorage.setItem('detailsOnZone',JSON.stringify(r));
+                window.location.replace("../mainstorescreen/sdm-main-stores-page.html");
+                // $("#result").text(r);
+            }
+        });
+        // return value of the submit operation
+        // by default - we'll always return false so it doesn't redirect the user.
+        return false;
+    })
+}
 
 function setUploadFileElement() { // onload...do
     $("#uploadXmlFile").submit(function() {

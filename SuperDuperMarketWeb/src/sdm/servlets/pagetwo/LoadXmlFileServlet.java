@@ -1,6 +1,5 @@
 package sdm.servlets.pagetwo;
 
-import com.google.gson.Gson;
 import exceptions.DuplicateDiscountNameException;
 import exceptions.DuplicateZoneName;
 import exceptions.InvalidCoordinateException.InvalidCoordinateXOfStoreException;
@@ -27,8 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.nio.file.Paths;
 import java.util.Scanner;
 import javax.servlet.http.Part;
 

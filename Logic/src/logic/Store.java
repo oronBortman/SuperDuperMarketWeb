@@ -33,7 +33,7 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         this.PPK = PPK;
     }
 
-    public Store(Integer serialNumber, String name, int PPK, SDMLocation SDMLocationOfShop, Map<Integer, AvailableItemInStore> itemsSerialIDMap,Seller storeOwner)
+    public Store(Integer serialNumber, String name, int PPK, SDMLocation SDMLocationOfShop, Map<Integer, AvailableItemInStore> itemsSerialIDMap, Seller storeOwner)
     {
         super(serialNumber, name, SDMLocationOfShop);
         this.storeOwner =  storeOwner;

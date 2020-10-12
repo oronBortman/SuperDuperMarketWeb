@@ -4,6 +4,8 @@ import sdm.constants.Constants;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static sdm.constants.Constants.ZONENAME;
+
 public class SessionUtils {
 
     public static String getUsername (HttpServletRequest request) {
@@ -20,7 +22,7 @@ public class SessionUtils {
 
     public static String getZoneName (HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        Object sessionAttribute = session != null ? session.getAttribute("zoneName") : null;
+        Object sessionAttribute = session != null ? session.getAttribute(ZONENAME) : null;
         return sessionAttribute != null ? sessionAttribute.toString() : null;
     }
 

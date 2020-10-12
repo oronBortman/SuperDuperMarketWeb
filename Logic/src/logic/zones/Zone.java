@@ -43,7 +43,7 @@ public class Zone {
 
     public Zone(SuperDuperMarketDescriptor superDuperMarketDescriptor, Seller zoneOwner) throws FileNotFoundException, JAXBException, DuplicateItemSerialIDException, DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, StoreLocationIsIdenticalToStoreException, InvalidCoordinateXOfStoreException, ItemWithSerialIDNotExistInSDMException, StoreNotExistException, DuplicateItemSerialIDInStoreException, ItemIDInDiscountNotExistInAStoreException, ItemIDInDiscountNotExistInSDMException, DuplicateDiscountNameException, ItemIDNotExistInAStoreException {
         this.zoneOwner = zoneOwner;
-        this.zoneName = superDuperMarketDescriptor.getSDMZone1().getName();
+        this.zoneName = superDuperMarketDescriptor.getSDMZone().getName();
         storesLocationMap = new HashMap<SDMLocation, Store>();
         storesSerialIDMap = new HashMap<Integer, Store>();
         itemsSerialIDMap = new HashMap<Integer, Item>();
@@ -232,6 +232,11 @@ public class Zone {
     public Double getTotalAmountOfSoledItem(Integer itemID)
     {
         return ordersSerialIDMap.values().stream().filter(closedOrder -> closedOrder.checkIfItemAlreadyExistsInOrder(itemID)).mapToDouble(x -> x.getTotalAmountOfItemTypesOfStoreOrderBySerialIDOfItem(itemID)).sum();
+    }
+
+    public long getHowMuchTimesTheItemHasBeenOrdered(Integer itemID)
+    {
+        return ordersSerialIDMap.values().stream().filter(closedOrder -> closedOrder.checkIfItemAlreadyExistsInOrder(itemID)).count();
     }
     public void setStoresSerialIDMap(Map<Integer, Store> shopsSerialIdMap)
     {

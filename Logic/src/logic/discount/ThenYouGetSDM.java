@@ -2,7 +2,6 @@ package logic.discount;
 
 import jaxb.schema.generated.SDMOffer;
 import jaxb.schema.generated.ThenYouGet;
-import logic.Store;
 
 import java.util.ArrayList;
 import java.util.List;

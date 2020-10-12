@@ -3,8 +3,6 @@ package sdm.servlets.pagethree;
 import com.google.gson.Gson;
 import logic.AvailableItemInStore;
 import logic.Store;
-import logic.users.User;
-import logic.users.UserManager;
 import logic.zones.Zone;
 import logic.zones.ZoneManager;
 import org.json.simple.JSONArray;
@@ -13,33 +11,43 @@ import sdm.utils.ServletUtils;
 import sdm.utils.SessionUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
+import static sdm.constants.Constants.ZONENAME;
+
+@WebServlet("/stores-in-zone-list")
 public class ShowAllStoresInZoneServlet extends HttpServlet {
-
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
+        System.out.println("In showAllStoresInZoneServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
-            Zone zone = zoneManager.getZoneByName(SessionUtils.getZoneName(request));
-            List<Store> storeList = zone.getStoresList();
-            JSONArray jsonArray = readingFromStoresListToJsonObject(storeList);
-            String json = gson.toJson(jsonArray);
-            out.println(json);
-            System.out.println(json);
-            out.flush();
+            String zoneName = request.getParameter(ZONENAME);
+            Zone zone = zoneManager.getZoneByName(zoneName);
+            if(zoneName != null)
+            {
+                List<Store> storeList = zone.getStoresList();
+                JSONArray jsonArray = readingFromStoresListToJsonObject(storeList);
+                String json = gson.toJson(jsonArray);
+                out.println(json);
+                System.out.println("This is the list of stores!!");
+                System.out.println(json);
+                out.flush();
+            }
+            else
+            {
+                System.out.println("zoneName is null!!");
+            }
         }
     }
 
@@ -52,7 +60,7 @@ public class ShowAllStoresInZoneServlet extends HttpServlet {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("serialNumber", store.getSerialNumber());
             jsonObject.put("name", store.getName());
-            jsonObject.put("ownerName", store.getStoreOwner());
+            jsonObject.put("ownerName", store.getStoreOwner().getUserName());
             jsonObject.put("totalOrdersFromStore", store.calcTotalOrdersFromStore());
             jsonObject.put("totalProfitOfSoledItems", store.calcTotalProfitOfSoledItems());
             jsonObject.put("PPK", store.getPPK());

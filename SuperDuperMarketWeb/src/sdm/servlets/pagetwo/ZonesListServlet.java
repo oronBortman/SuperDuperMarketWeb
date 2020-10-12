@@ -37,7 +37,7 @@ public class ZonesListServlet extends HttpServlet {
             Set<Zone> zonesList = zoneManager.getZonesMap().values().stream().collect(Collectors.toCollection(HashSet<Zone>::new));
             JSONArray jsonArray = readingFromZonesListToJsonObject(zonesList);
             out.println(jsonArray);
-            System.out.println(jsonArray);
+            //System.out.println(jsonArray);
             out.flush();
         }
     }

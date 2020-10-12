@@ -4,8 +4,6 @@ import logic.Customer;
 import logic.SDMLocation;
 import logic.Store;
 
-import javax.xml.stream.Location;
-
 public class StoreLocationIsIdenticalToCustomerException extends Exception{
 
     Store store;

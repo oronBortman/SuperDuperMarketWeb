@@ -29,7 +29,7 @@ public class UsersListServlet extends HttpServlet {
             Set<User> usersList = userManager.getUsersMap().values().stream().collect(Collectors.toCollection(HashSet<User>::new));
             String json = gson.toJson(usersList);
             out.println(json);
-            System.out.println(json);
+            //System.out.println(json);
             out.flush();
         }
     }
