@@ -1,8 +1,9 @@
 import { initiateTheChoosingItemDropDownInStaticOrder } from './choosing-item-drop-down-in-staticOrder.js';
 import {emptyMakeOrderBody} from "./general-make-an-order-functions.js";
+import {initiateTheChoosingItemDropDownInDynamicOrder} from "./choosing-item-drop-down-in-dynamicOrder.js";
 
-var CREATE_DYNAMIC_ORDER_URL = buildUrlWithContextPath("create-dynamic-order-servlet");
-var CREATE_STATIC_ORDER_URL = buildUrlWithContextPath("create-static-order-servlet");
+var CREATE_DYNAMIC_ORDER_URL = buildUrlWithContextPath("create-dynamic-order");
+var CREATE_STATIC_ORDER_URL = buildUrlWithContextPath("create-static-order");
 var STORES_LIST_URL = buildUrlWithContextPath("stores-in-zone-list");
 var ITEMS_LIST_URL = buildUrlWithContextPath("items-in-zone-list");
 var CHOOSE_ITEMS_IN_ORDER_UTL = buildUrlWithContextPath("choose-item-in-order");
@@ -20,11 +21,13 @@ var ID_OF_VALUE_OF_COORDINATE_X_CHOSEN = "valueOfSelectedCoordX";
 var ID_OF_PLUS_BUTTON_IN_SELECT_COORIDNATE_X = "plusButtonInSelectCoordX";
 var ID_OF_MINUS_BUTTON_IN_SELECT_COORIDNATE_Y = "minusButtonInSelectCoordY";
 var ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN = "valueOfSelectedCoordY"
-var ID_OF_PLUS_BUTTON_IN_SELECT_COORIDNATE_Y = "minusButtonInSelectCoordY";
+var ID_OF_PLUS_BUTTON_IN_SELECT_COORIDNATE_Y = "plusButtonInSelectCoordY";
 var ID_OF_TABLE_OF_ENTERING_COORDINATE_X = "tableOfEnteringCoordX";
 var ID_OF_TABLE_OF_ENTERING_COORDINATE_Y = "tableOfEnteringCoordY";
 var COORDINATE_X = 'x';
 var COORDINATE_Y = 'y';
+var INITIAL_VALUE_OF_COORDINATE = '0';
+
 
 function emptyChooseStoresDropDownListElement()
 {
@@ -44,6 +47,10 @@ export function setMakeANewOrderButton() { // onload...do
         var chooseStoresDropDownList = '<div id=' + ID_OF_CHOOSE_STORES_DROP_DOWN_LIST_ELEMENT + '></div>';
         $(selectOrderTypeHTML + selectDateHTML + selectCoordinateXHTML + selectCoordinateYHTML + chooseStoresDropDownList + nextButtonHTML).appendTo(makeOrderBody);
         setTypeOfOrderRadioButtonEvent();
+        setMinusButtonOnCoordinate(COORDINATE_X);
+        setPlusButtonOnCoordinate(COORDINATE_X);
+        setMinusButtonOnCoordinate(COORDINATE_Y);
+        setPlusButtonOnCoordinate(COORDINATE_Y);
         setNextButtonInMakeAnOrderElement();
         return false;
     })
@@ -72,11 +79,11 @@ function getSelectedCoordinateHTML(typeOfCoordinate)
         idOfValueCoordinateChosen = ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN;
     }
 
-    return '<p Please Enter Cooridnate ' + typeOfCoordinate +
+    return '<p>Please Enter Cooridnate ' + typeOfCoordinate +'</p> ' +
         '<table class =' + idOfTableOfEnteringCoordinate + '>' +
         '<tr>' +
         '<th><button type="button" id=' + idOfMinusButtonOfCoordinate + '>-</button></th>' +
-        '<th><p id=' + idOfValueCoordinateChosen + '></p></th>' +
+        '<th><p id=' + idOfValueCoordinateChosen + '>' + INITIAL_VALUE_OF_COORDINATE + '</p></th>' +
         '<th><button type="button" id=' + idOfPlusOfCoordinate + '>+</button></th>' +
         '</tr>' +
         '</table>';
@@ -84,10 +91,12 @@ function getSelectedCoordinateHTML(typeOfCoordinate)
 
 
 //TODO
-export function setMinusButton(typeOfCoordinate)
+export function setMinusButtonOnCoordinate(typeOfCoordinate)
 {
+    console.log("inside setMinusButtonOnCoordinate function")
     var idOfMinusButtonOfCoordinate;
     var idOfValueCoordinateChosen;
+    var coordinateValue;
     if(typeOfCoordinate === COORDINATE_X)
     {
         idOfMinusButtonOfCoordinate = ID_OF_MINUS_BUTTON_IN_SELECT_COORIDNATE_X;
@@ -99,15 +108,29 @@ export function setMinusButton(typeOfCoordinate)
         idOfValueCoordinateChosen = ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN;
     }
     $("#" + idOfMinusButtonOfCoordinate).click(function() {
+        var coordinateValueStr = $("#" + idOfValueCoordinateChosen).text();
+        var coordinateValueNum = parseInt(coordinateValueStr);
+        console.log("Coordinate value before checking the value: " + coordinateValueNum);
+        if(coordinateValueNum > 0)
+        {
+           // alert($("#" + idOfValueCoordinateChosen).text());
+            console.log("Coordinate value before changing the value: " + coordinateValueNum);
+            coordinateValueNum=coordinateValueNum-1;
+            console.log("Coordinate value after clicking on minus button: " + coordinateValueNum);
+            $("#" + idOfValueCoordinateChosen).text(coordinateValueNum);
+           // alert($("#" + idOfValueCoordinateChosen).text());
 
+        }
     });
 }
 
 //TODO
-export function setPlusButton(typeOfCoordinate)
+export function setPlusButtonOnCoordinate(typeOfCoordinate)
 {
+    console.log("inside setPlusButtonOnCoordinate");
     var idOfPlusButtonOfCoordinate;
     var idOfValueCoordinateChosen;
+    var coordinateValue;
     if(typeOfCoordinate === COORDINATE_X)
     {
         idOfPlusButtonOfCoordinate = ID_OF_PLUS_BUTTON_IN_SELECT_COORIDNATE_X;
@@ -119,7 +142,19 @@ export function setPlusButton(typeOfCoordinate)
         idOfValueCoordinateChosen = ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN;
     }
     $("#" + idOfPlusButtonOfCoordinate).click(function() {
+        var coordinateValueStr = $("#" + idOfValueCoordinateChosen).text();
+        var coordinateValueNum = parseInt(coordinateValueStr);
+        console.log("Coordinate value before checking the value: " + coordinateValueNum);
+        if(coordinateValueNum < 50)
+        {
+            // alert($("#" + idOfValueCoordinateChosen).text());
+            console.log("Coordinate value before changing the value: " + coordinateValueNum);
+            coordinateValueNum=coordinateValueNum+1;
+            console.log("Coordinate value after clicking on minus button: " + coordinateValueNum);
+            $("#" + idOfValueCoordinateChosen).text(coordinateValueNum);
+            // alert($("#" + idOfValueCoordinateChosen).text());
 
+        }
     });
 }
 
@@ -210,19 +245,34 @@ function getChooseStoresDropDownListHTML()
 //TODO
 //Need to pass if static or dynamic
 function setNextButtonInMakeAnOrderElement() { // onload...do
-    var date = document.getElementById(ID_OF_DATE_OF_ORDER).value;
+    var date;
     var chooseStoresDropDownListElement;
     var storeIDSelected=null;
-    $("#nextButtonInMakeAnOrderFirstScreen").submit(function() {
+    var coordinateX;
+    var coordinateY;
+
+    $("#nextButtonInMakeAnOrderFirstScreen").click(function() {
         //Getting selected ordertype,date and store if it's static
+        alert("clicked on nextButtonInMakeAnOrderFirstScreen");
         if (document.getElementById(ID_OF_STATIC_RADIO_BUTTON).checked) {
+            date = document.getElementById(ID_OF_DATE_OF_ORDER).value;
+            coordinateX=$("#" + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
+            coordinateY=$("#" + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
             chooseStoresDropDownListElement = document.getElementById(ID_OF_CHOOSE_STORES_DROP_DOWN_LIST);
             storeIDSelected = chooseStoresDropDownListElement.options[chooseStoresDropDownListElement.selectedIndex].value;
-            OpeningANewStaticOrderInServer(date, storeIDSelected);
+            alert('Inside clicked on next button static\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
+            alert("Clicked on Next button and the order type is static");
+            OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coordinateY);
             initiateTheChoosingItemDropDownInStaticOrder(storeIDSelected);
         }
         if (document.getElementById(ID_OF_DYNAMIC_RADIO_BUTTON).checked) {
-            OpeningANewDynamicOrderInServer(date);
+            // alert("Clicked on Next button and the order type is dynamic");
+            //storeIDSelected=
+            date = document.getElementById(ID_OF_DATE_OF_ORDER).value;
+            coordinateX=$("#" + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
+            coordinateY=$("#" + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
+            alert('Inside clicked on next button dynamic\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
+            OpeningANewDynamicOrderInServer(date, coordinateX, coordinateY);
             initiateTheChoosingItemDropDownInDynamicOrder();
         }
         // return value of the submit operation
@@ -231,12 +281,14 @@ function setNextButtonInMakeAnOrderElement() { // onload...do
     })
 }
 
-function OpeningANewStaticOrderInServer(date, storeIDSelected)
+function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coordinateY)
 {
-    var dataString = "date="+date + ",storeIDSelected="+storeIDSelected;
+   // var dataString = "date="+date + ",storeIDSelected="+storeIDSelected + ",coordinateX=" + coordinateX + ",coordinateY=" + coordinateY;
+    alert('Inside OpeningANewStaticOrderInServer\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ' + storeIDSelected);
     $.ajax({
         method:'GET',
-        data: dataString,
+       // data: dataString,
+        data:{"date":date,"storeIDSelected":"storeIDSelected","coordinateX":"coordinateX","coordinateY":coordinateY},
         url: CREATE_STATIC_ORDER_URL,
         dataType: "json",
         //action: MOVE_TO_ZONE_URL,
@@ -256,12 +308,16 @@ function OpeningANewStaticOrderInServer(date, storeIDSelected)
     });
 }
 
-function OpeningANewDynamicOrderInServer(date)
+function OpeningANewDynamicOrderInServer(date,coordinateX, coordinateY)
 {
-    var dataString = "date="+date;
+   // alert(" in OpeningANewDynamicOrderInServer");
+    alert('Inside OpeningANewDynamicOrderInServer\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
+
+   // var dataString = "date=" + date + ",coordinateX=" + coordinateX + ",coordinateY=" + coordinateY;
     $.ajax({
         method:'GET',
-        data: dataString,
+        //data: dataString,
+        data:{"date":date,"coordinateX":coordinateX,"coordinateY":coordinateY},
         url: CREATE_DYNAMIC_ORDER_URL,
         dataType: "json",
         //action: MOVE_TO_ZONE_URL,

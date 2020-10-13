@@ -17,7 +17,7 @@ public class ClosedCustomerOrder extends Order {
     Integer SerialNumber;
     Map<Integer, ClosedStoreOrder> closedStoresOrderMapByStoreSerialID;
 
-    public ClosedCustomerOrder(LocalDate date, Map<Integer, ClosedStoreOrder> closedStoresOrderMapByStoreSerialID , boolean isOrderStatic, Customer customer)
+    public ClosedCustomerOrder(String date, Map<Integer, ClosedStoreOrder> closedStoresOrderMapByStoreSerialID , boolean isOrderStatic, Customer customer)
     {
         super(date, isOrderStatic);
         this.closedStoresOrderMapByStoreSerialID = closedStoresOrderMapByStoreSerialID;

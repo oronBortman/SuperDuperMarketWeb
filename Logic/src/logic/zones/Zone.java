@@ -23,7 +23,6 @@ import logic.order.itemInOrder.OrderedItemFromStoreByWeight;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -43,7 +42,7 @@ public class Zone {
 
     public Zone(SuperDuperMarketDescriptor superDuperMarketDescriptor, Seller zoneOwner) throws FileNotFoundException, JAXBException, DuplicateItemSerialIDException, DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, StoreLocationIsIdenticalToStoreException, InvalidCoordinateXOfStoreException, ItemWithSerialIDNotExistInSDMException, StoreNotExistException, DuplicateItemSerialIDInStoreException, ItemIDInDiscountNotExistInAStoreException, ItemIDInDiscountNotExistInSDMException, DuplicateDiscountNameException, ItemIDNotExistInAStoreException {
         this.zoneOwner = zoneOwner;
-        this.zoneName = superDuperMarketDescriptor.getSDMZone1().getName();
+        this.zoneName = superDuperMarketDescriptor.getSDMZone().getName();
         storesLocationMap = new HashMap<SDMLocation, Store>();
         storesSerialIDMap = new HashMap<Integer, Store>();
         itemsSerialIDMap = new HashMap<Integer, Item>();
@@ -563,7 +562,7 @@ public class Zone {
     }
 
 
-    public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(Customer customer, LocalDate date, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer)
+    public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(Customer customer, String date, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer)
     {
         List<Item> itemsList = new ArrayList<>();
         OpenedCustomerOrder1 openedCustomerOrder = new OpenedCustomerOrder1(date, customer, false, locationOfCustomer);
@@ -608,7 +607,7 @@ public class Zone {
         }
     }
 
-    public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedStaticCustomerOrder(Customer customer, LocalDate date, Store store, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer) {
+    public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedStaticCustomerOrder(Customer customer, String date, Store store, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer) {
         boolean isOrderStatic = true;
         OpenedCustomerOrder1 openedCustomerOrder = new OpenedCustomerOrder1(date, customer, isOrderStatic, locationOfCustomer);
         OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(store, date, isOrderStatic, locationOfCustomer);

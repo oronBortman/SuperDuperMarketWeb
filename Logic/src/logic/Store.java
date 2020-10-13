@@ -45,7 +45,6 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         this.PPK = PPK;
     }
 
-
     public Store(SDMStore shop, Seller storeOwner)
     {
         super(shop.getId(), shop.getName(), new SDMLocation(shop.getLocation()));

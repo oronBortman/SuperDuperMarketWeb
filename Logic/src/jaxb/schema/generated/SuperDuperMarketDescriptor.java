@@ -67,7 +67,7 @@ public class SuperDuperMarketDescriptor {
      *     {@link SDMZone }
      *     
      */
-    public SDMZone getSDMZone1() {
+    public SDMZone getSDMZone() {
         return sdmZone;
     }
 

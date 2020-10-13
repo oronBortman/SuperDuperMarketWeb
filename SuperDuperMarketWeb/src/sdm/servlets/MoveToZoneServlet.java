@@ -1,4 +1,4 @@
-package sdm.servlets.pagethree;
+package sdm.servlets;
 
 import com.google.gson.Gson;
 import logic.Item;
@@ -23,8 +23,6 @@ import static sdm.constants.Constants.ZONENAME;
 
 @WebServlet("/move-to-zone")
 public class MoveToZoneServlet extends HttpServlet {
-
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //returning JSON objects, not HTML
@@ -42,7 +40,9 @@ public class MoveToZoneServlet extends HttpServlet {
             Gson gson = new Gson();
             ZoneManager sdManager = ServletUtils.getZoneManager(getServletContext());
             Zone zone = sdManager.getZoneByName(zoneName);
+            System.out.println(zone.getZoneName() + "????");
             String json = gson.toJson(zone);
+            System.out.println(json + "!!!!");
             out.println(json);
             out.flush();
         }

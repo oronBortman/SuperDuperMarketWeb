@@ -16,7 +16,7 @@ public class OpenedStoreOrder extends StoreOrder{
     Map<String, Discount> discountsInStoresThatAreValidInOrder = new HashMap<String, Discount>();
     Map<Integer, Double> itemsAmountLeftToUseInSalesMap = new HashMap<Integer, Double>();
 
-    public OpenedStoreOrder(Store store, LocalDate date, boolean isOrderStatic, SDMLocation customerLocation)
+    public OpenedStoreOrder(Store store, String date, boolean isOrderStatic, SDMLocation customerLocation)
     {
         super(store, date, isOrderStatic, customerLocation);
 

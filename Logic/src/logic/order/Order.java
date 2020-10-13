@@ -1,23 +1,20 @@
 package logic.order;
 
-import java.time.LocalDate;
-import java.util.Date;
-
 public abstract class Order {
 
-    private LocalDate date;
+    private String date;
     private boolean isOrderStatic;
     private boolean isOrderDynamic;
 
 
-    public Order(LocalDate date, boolean isOrderStatic)
+    public Order(String date, boolean isOrderStatic)
     {
         this.date = date;
         this.isOrderStatic = isOrderStatic;
         this.isOrderDynamic = !isOrderStatic;
 
     }
-    public LocalDate getDate()
+    public String getDate()
     {
         return date;
     }

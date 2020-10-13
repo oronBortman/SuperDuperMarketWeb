@@ -20,7 +20,7 @@ import java.util.List;
 
 import static sdm.constants.Constants.ZONENAME;
 
-@WebServlet("/stores-in-zone-list")
+@WebServlet("/get-store-in-zone-by-store-id")
 public class GetStoreInZoneByStoreIDServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)

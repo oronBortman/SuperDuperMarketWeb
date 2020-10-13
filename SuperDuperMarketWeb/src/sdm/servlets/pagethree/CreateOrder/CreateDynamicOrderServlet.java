@@ -1,13 +1,17 @@
 package sdm.servlets.pagethree.CreateOrder;
 
 import com.google.gson.Gson;
+import logic.Customer;
 import logic.Item;
+import logic.SDMLocation;
 import logic.order.CustomerOrder.OpenedCustomerOrder1;
+import logic.users.User;
+import logic.users.UserManager;
 import logic.zones.Zone;
-import logic.zones.ZoneManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import sdm.utils.ServletUtils;
+import sdm.utils.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,59 +22,54 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import static sdm.constants.Constants.ZONENAME;
-
-@WebServlet("/create-dynamic-order-servlet")
+@WebServlet("/create-dynamic-order")
 public class CreateDynamicOrderServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In show all items in zone servlet");
+        System.out.println("In create-dynamic-order servlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
 
-            ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
+            UserManager userManager = ServletUtils.getUserManager(getServletContext());
+            User user = userManager.getUserByName(SessionUtils.getUsername(request));
             String date = request.getParameter("date");
+            String coordinateX = request.getParameter("coordinateX");
+            String coordinateY = request.getParameter("coordinateY");
 
-            if(date != null)
+            System.out.println("There are the parameters of the order:");
+            System.out.println(date);
+            System.out.println(coordinateX);
+            System.out.println(coordinateY);
+            System.out.println("\n\n\n\n\n\n\n");
+
+            if(date != null && coordinateX != null && coordinateY != null)
             {
-               // OpenedCustomerOrder1 openedCustomerOrder1()
+                int coordinateXInt = Integer.parseInt(coordinateX);
+                int coordinateYInt = Integer.parseInt(coordinateY);
+
+                //LocalDate date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer
+                //TODO
+                //Need to check if there is no store in this coordinates
+                OpenedCustomerOrder1 openedCustomerOrder1 = new OpenedCustomerOrder1(date, (Customer)user, false, new SDMLocation(coordinateXInt, coordinateYInt));
                 //Zone zone = zoneManager.getZoneByName(zoneName);
-                /*List<Item> itemsList = zone.getItemsList();
-                JSONArray jsonArray = readingFromItemsListToJsonObject(itemsList, zone);
-                String json = gson.toJson(jsonArray);
+               // JSONArray jsonArray = readingFromItemsListToJsonObject(itemsList, zone);
+                user.setCurrentOpenedOrder(openedCustomerOrder1);
+                String json = gson.toJson(openedCustomerOrder1);
                 out.println(json);
+                System.out.println("About to print json of the dynamic order");
                 System.out.println(json);
-                out.flush();*/
+                out.flush();
             }
             else
             {
-                System.out.println("Zone name is null!");
+                System.out.println("one of the parameters is null");
             }
         }
     }
 
-    public JSONArray readingFromItemsListToJsonObject(List<Item> itemsList, Zone zone)
-    {
-        JSONArray jsonArray = new JSONArray();
-        int i=0;
-        for(Item item : itemsList)
-        {
-            Integer itemSerialNumber = item.getSerialNumber();
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("serialNumber", item.getSerialNumber());
-            jsonObject.put("name", item.getName());
-            jsonObject.put("typeOfMeasureBy", item.getTypeOfMeasureStr());
-            jsonObject.put("howManyShopsSellesAnItem", zone.getHowManyShopsSellesAnItem(itemSerialNumber));
-            jsonObject.put("avgPriceOfItemInSK", zone.getAvgPriceOfItemInSDK(itemSerialNumber));
-            jsonObject.put("howMuchTimesTheItemHasBeenOrdered", zone.getHowMuchTimesTheItemHasBeenOrdered(itemSerialNumber));
-            jsonArray.add(i,jsonObject);
-            i++;
-        }
-        return jsonArray;
-    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request,response);

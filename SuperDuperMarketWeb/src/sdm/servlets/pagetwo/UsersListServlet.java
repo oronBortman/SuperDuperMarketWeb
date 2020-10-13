@@ -13,24 +13,39 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @WebServlet("/users-list")
 public class UsersListServlet extends HttpServlet {
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
+        //System.out.println("In UsersListServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             UserManager userManager = ServletUtils.getUserManager(getServletContext());
-            Set<User> usersList = userManager.getUsersMap().values().stream().collect(Collectors.toCollection(HashSet<User>::new));
+            /*for(Map.Entry<String, User> entry : userManager.getUsersMap().entrySet())
+            {
+                System.out.println(entry.getValue().getUserName());
+            }*/
+            //            Set<User> usersList = userManager.getUsersMap().values().stream().collect(Collectors.toCollection(HashSet<User>::new));
+            Set<User> usersList = new HashSet<>(userManager.getUsersMap().values());
+            /*for(User entry : usersList)
+            {
+                System.out.println(entry.getUserName() + "111");
+            }*/
             String json = gson.toJson(usersList);
+            //System.out.println("1");
+            System.out.println("1" + json);
             out.println(json);
-            //System.out.println(json);
             out.flush();
+        }
+        catch(Exception e)
+        {
+            System.out.println("There was error in UsersListServlet");
         }
     }
 

@@ -26,11 +26,11 @@ public class OpenedCustomerOrder1 extends Order {
     //Map<Integer, Integer> itemsAmountLeftToUseInSalesMap;
     //Map<String, Discount> availableDiscountsMap;
 
-    public OpenedCustomerOrder1(LocalDate date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer) {
+    public OpenedCustomerOrder1(String date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer) {
         super(date, isOrderStatic);
         this.customer = customer;
         this.locationOfCustomer = locationOfCustomer;
-        openedStoresOrderMap = new HashMap<Store, OpenedStoreOrder>();
+        openedStoresOrderMap = new HashMap<>();
         //itemsAmountLeftToUseInSalesMap = new HashMap<Integer, Integer>() ;
         //availableDiscountsMap = new HashMap<String, Discount>();
     }
@@ -184,7 +184,7 @@ public class OpenedCustomerOrder1 extends Order {
 
     public ClosedCustomerOrder closeCustomerOrder()
     {
-        Map<Integer, ClosedStoreOrder> closedStoresOrderMapByStoreSerialID = new HashMap<Integer, ClosedStoreOrder>();
+        Map<Integer, ClosedStoreOrder> closedStoresOrderMapByStoreSerialID = new HashMap<>();
 
         for(OpenedStoreOrder openedStoreOrder : openedStoresOrderMap.values())
         {

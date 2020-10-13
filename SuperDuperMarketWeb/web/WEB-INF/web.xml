@@ -1,52 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_1.xsd">
+<web-app version="3.0"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>sdm.servlets.LoginServlet</servlet-class>
     </servlet>
-   <!--<servlet>
-        <servlet-name>SdmMainPage</servlet-name>
-        <servlet-class>sdm.servlets.pagetwo.SdmMainPage</servlet-class>
-   </servlet>-->
-    <servlet>
-        <servlet-name>showAllUsersServlet</servlet-name>
-        <servlet-class>sdm.servlets.pagetwo.ShowAllUsersServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>showRegionServlet</servlet-name>
-        <servlet-class>sdm.servlets.pagetwo.ZonesListServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>loadXmlFile</servlet-name>
-        <servlet-class>sdm.servlets.pagetwo.LoadXmlFileServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>manageAccount</servlet-name>
-        <servlet-class>sdm.servlets.pagetwo.ManageAccountServlet</servlet-class>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/pages/signup/login</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>showAllUsersServlet</servlet-name>
-        <url-pattern>/pages/showallusers/showallusers</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>showRegionServlet</servlet-name>
-        <url-pattern>/pages/showregion/showregion</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>loadXmlFile</servlet-name>
-        <url-pattern>/pages/loadxmlfile/loadxmlfile</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>manageAccount</servlet-name>
-        <url-pattern>/pages/manageaccount/manageaccount</url-pattern>
-    </servlet-mapping>
-  <!-- <servlet-mapping>
-        <servlet-name>sdmMainPage</servlet-name>
-        <url-pattern>/pages/sdmmainpage</url-pattern>
-    </servlet-mapping> -->
 </web-app>

@@ -182,6 +182,13 @@ function ajaxUsersList() {
         url: USER_LIST_URL,
         success: function(users) {
             refreshUsersList(users);
+            console.log("Succeed to read users list");
+            console.log(users);
+        },
+        error:function(e)
+        {
+            console.error(e);
+            console.log("There was error while trying to read users")
         }
     });
 }
@@ -244,6 +251,10 @@ $(function() {
              hideHTMLElementsByRole(user);
             setActionBasedOnRole(user);
              addGreetingToUser(user);
+        },
+        error:function(e)
+        {
+            console.log(e);
         }
     });
     //The users list is refreshed automatically every second

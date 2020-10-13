@@ -21,7 +21,7 @@ public class StoreOrder extends Order {
     private Map<Integer, OrderedItemFromStore> orderedItemsNotFromSale;
     private Map<String, Map<Integer, OrderedItemFromStore>> orderedItemsFromSale;
 
-    public StoreOrder(Store store, LocalDate date, boolean isOrderStatic, SDMLocation customerLocation)
+    public StoreOrder(Store store, String date, boolean isOrderStatic, SDMLocation customerLocation)
     {
         super(date, isOrderStatic);
         this.customerLocation = customerLocation;
@@ -30,7 +30,7 @@ public class StoreOrder extends Order {
         orderedItemsFromSale = new HashMap<String,Map<Integer, OrderedItemFromStore>>();
     }
 
-    public StoreOrder(LocalDate date, boolean isOrderStatic, SDMLocation customerLocation)
+    public StoreOrder(String date, boolean isOrderStatic, SDMLocation customerLocation)
     {
         super(date, isOrderStatic);
         this.customerLocation=customerLocation;
@@ -38,7 +38,7 @@ public class StoreOrder extends Order {
         orderedItemsFromSale = new HashMap<String,Map<Integer, OrderedItemFromStore>>();
     }
 
-    public StoreOrder(LocalDate date, boolean isOrderStatic) {
+    public StoreOrder(String date, boolean isOrderStatic) {
         super(date, isOrderStatic);
     }
     public StoreOrder(StoreOrder storeOrder)

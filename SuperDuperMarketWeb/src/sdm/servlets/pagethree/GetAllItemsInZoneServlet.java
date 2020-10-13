@@ -47,6 +47,10 @@ public class GetAllItemsInZoneServlet extends HttpServlet {
                 System.out.println("Zone name is null!");
             }
         }
+        catch(Exception error)
+        {
+            System.out.println("There was error while reading zone");
+        }
     }
 
     public JSONArray readingFromItemsListToJsonObject(List<Item> itemsList, Zone zone)

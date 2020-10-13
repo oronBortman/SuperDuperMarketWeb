@@ -19,7 +19,7 @@ import java.util.List;
 
 import static sdm.constants.Constants.ZONENAME;
 
-@WebServlet("/get-items-that-are-available-in-dynamic-order")
+@WebServlet("/add-item-to-order-servlet")
 public class AddItemToOrderServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)

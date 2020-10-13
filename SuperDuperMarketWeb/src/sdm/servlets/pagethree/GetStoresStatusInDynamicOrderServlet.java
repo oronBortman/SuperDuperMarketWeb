@@ -20,7 +20,7 @@ import java.util.List;
 
 import static sdm.constants.Constants.ZONENAME;
 
-@WebServlet("/stores-in-zone-list")
+@WebServlet("/get-stores-status-in-dynamic-order")
 public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
