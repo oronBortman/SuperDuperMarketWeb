@@ -1,35 +1,33 @@
-var chatVersion = 0;
-var refreshRate = 5000; //milli seconds
+import { initiateTheChoosingItemDropDownInDynamicOrder } from 'choosing-item-drop-down-in-dynamicOrder';
+import { initiateTheChoosingItemDropDownInStaticOrder } from 'choosing-item-drop-down-in-staticOrder';
+import {emptyMakeOrderBody} from "./general-make-an-order-functions";
+
 var STORES_LIST_URL = buildUrlWithContextPath("stores-in-zone-list");
 var ITEMS_LIST_URL = buildUrlWithContextPath("items-in-zone-list");
 var CHOOSE_ITEMS_IN_ORDER_UTL = buildUrlWithContextPath("choose-item-in-order");
 var detailsOnZoneJSONFormat = JSON.parse(localStorage.getItem('detailsOnZone'));
 var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
 var zoneName = detailsOnZoneJSONFormat.zoneName;
+var ID_OF_STATIC_RADIO_BUTTON = "staticRadioButton";
+var ID_OF_DYNAMIC_RADIO_BUTTON = "staticRadioButton";
+var ID_OF_DATE_OF_ORDER = 'dateOfOrder';
+var ID_OF_CHOOSE_STORES_DROP_DOWN_LIST_ELEMENT = 'chooseStoresDropDownListElement';
+var ID_OF_CHOOSE_STORES_DROP_DOWN_LIST = 'chooseStoresDropDownList'
 
-import { initiateTheChoosingItemDropDownInDynamicOrder } from 'choosing-item-drop-down-in-dynamicOrder';
-import { initiateTheChoosingItemDropDownInStaticOrder } from 'choosing-item-drop-down-in-staticOrder';
+function emptyChooseStoresDropDownListElement()
+{
+    document.getElementById(ID_OF_CHOOSE_STORES_DROP_DOWN_LIST_ELEMENT).innerHTML = '';
+}
 
 export function setMakeANewOrderButton() { // onload...do
     console.log("In setMakeANewOrderButtonInJS");
     $("#makeANewOrder").submit(function() {
+        emptyMakeOrderBody();
         var makeOrderBody = $("#makeOrderBody");
-       //makeOrderBody.innerHTML = '';
-        document.getElementById('makeOrderBody').innerHTML = '';
-        console.log("In setMakeANewOrderButtonInJS")
-        var selectOrderTypeHTML = '<p>Please select your type:</p>' +
-            '<input type="radio" id="staticRadioButton" name="ordertype" value="static">'+
-            '<label for="static">static</label><br>' +
-            '<input type="radio" id="dynamicRadioButton" name="ordertype" value="dynamic">' +
-            '<label for="dynamic">dynamic</label><br>';
-        var selectDateHTML = '<p>Enter the date</p>' +
-            '<input type="date" id="dateOfOrder" name="dateOfOrder">' +
-             '<br>';
-      //  var nextButtonHTML = '<form id = "makeANewOrder" name = "makeANewOrder" action = "/SuperDuperMarketWeb_Web_exploded/make-a-new-order">' +
-        var nextButtonHTML = '<form id = "makeANewOrder" name = "makeANewOrder">' +
-        '<button name="Submit" type="submit" id="nextButtonInMakeAnOrderFirstScreen">next</button>' +
-             '</form>';
-        var chooseStoresDropDownList = '<div id="chooseStoresDropDownListElement"></div>';
+        var selectOrderTypeHTML = getSelectOrderTypeHTML();
+        var selectDateHTML = getSelectDateHTML();
+        var nextButtonHTML = getNextButtonHTML();
+        var chooseStoresDropDownList = '<div id=' + ID_OF_CHOOSE_STORES_DROP_DOWN_LIST_ELEMENT + '></div>';
         $(selectOrderTypeHTML + selectDateHTML + chooseStoresDropDownList + nextButtonHTML).appendTo(makeOrderBody);
         setTypeOfOrderRadioButtonEvent();
         setNextButtonInMakeAnOrderElement();
@@ -37,14 +35,28 @@ export function setMakeANewOrderButton() { // onload...do
     })
 }
 
+function setTypeOfOrderRadioButtonEvent()
+{
+    $("#staticRadioButton").click(function() {
+        emptyChooseStoresDropDownListElement();
+        initiateChooseStoresDropDownListElement();
+    });
+    $("#dynamicRadioButton").click(function() {
+        emptyChooseStoresDropDownListElement();
+    });
+}
+
+
 function initiateChooseStoresDropDownListElement()
 {
-    var chooseStoresDropDownListElement = $("#chooseStoresDropDownListElement");
-    $('<form>' +
-        '<label for="stores">Choose store:</label>'+
-        '<select name="chooseStoresDropDownList" id="chooseStoresDropDownList">' +
-        '</select>' +
-        '</form>').appendTo(chooseStoresDropDownListElement);
+    $(getChooseStoresDropDownListHTML()).appendTo($("#" + ID_OF_CHOOSE_STORES_DROP_DOWN_LIST_ELEMENT));
+    getStoresListFromServerAndSetTheStoresList();
+}
+
+function getStoresListFromServerAndSetTheStoresList()
+{
+    var dataString = "zoneName="+zoneName;
+
     $.ajax({
         method:'GET',
         data: dataString,
@@ -53,7 +65,6 @@ function initiateChooseStoresDropDownListElement()
         timeout: 4000,
         error: function(e) {
             console.error(e);
-            //$("#result").text("Failed to get result from server " + e);
         },
         success: function(r) {
             setStoresListInStoreDropDownInOrder(r);
@@ -61,40 +72,68 @@ function initiateChooseStoresDropDownListElement()
     });
 }
 
-function setTypeOfOrderRadioButtonEvent()
+function setStoresListInStoreDropDownInOrder(detailsOnStoresInZone)
 {
-    $("#staticRadioButton").click(function() {
-        document.getElementById('chooseStoresDropDownListElement').innerHTML = '';
-        initiateChooseStoresDropDownListElement();
+    console.log("in setStoresListInStoreDropDownInOrder");
+    var chooseStoresDropDownList = $("#"+ ID_OF_CHOOSE_STORES_DROP_DOWN_LIST);
+    $.each(detailsOnStoresInZone || [], function(index, storeInZone) {
+        var storeID = storeInZone["serialNumber"];
+        var storeName = storeInZone["name"];
+        console.log("Adding store #" + storeID + ": " + storeName);
+        $('<option value=' + storeID + '>' + 'storeID: ' + storeID + ', store Name: ' + storeName + '</option>').appendTo(chooseStoresDropDownList);
+
     });
-    $("#dynamicRadioButton").click(function() {
-        document.getElementById('chooseStoresDropDownListElement').innerHTML = '';
-    });
+}
+
+function getSelectOrderTypeHTML()
+{
+    return '<p>Please select your type:</p>' +
+        '<input type="radio" id=' + ID_OF_STATIC_RADIO_BUTTON + ' name="ordertype" value="static">'+
+        '<label for="static">static</label><br>' +
+        '<input type="radio" id=' + ID_OF_DYNAMIC_RADIO_BUTTON + ' name="ordertype" value="dynamic">' +
+        '<label for="dynamic">dynamic</label><br>';
+}
+
+function getSelectDateHTML()
+{
+    return '<p>Enter the date</p>' +
+        '<input type="date" id='+ ID_OF_DATE_OF_ORDER + ' name=' + ID_OF_DATE_OF_ORDER + '>' +
+        '<br>';
+}
+
+function getNextButtonHTML()
+{
+    return '<form id = "makeANewOrder" name = "makeANewOrder">' +
+        '<button name="Submit" type="submit" id="nextButtonInMakeAnOrderFirstScreen">next</button>' +
+        '</form>';
+}
+
+function getChooseStoresDropDownListHTML()
+{
+    return '<form>' +
+        '<label for="stores">Choose store:</label>'+
+        '<select name="chooseStoresDropDownList" id=' + ID_OF_CHOOSE_STORES_DROP_DOWN_LIST + '>' +
+        '</select>' +
+        '</form>';
 }
 
 //TODO
 //Need to pass if static or dynamic
 function setNextButtonInMakeAnOrderElement() { // onload...do
-    // console.log(idOfMoveToZoneFormWithSharp)
-    var orderType;
-    var date = document.getElementById("dateOfOrder").value;
+    var date = document.getElementById(ID_OF_DATE_OF_ORDER).value;
     var chooseStoresDropDownListElement;
     var storeIDSelected=null;
     $("#nextButtonInMakeAnOrderFirstScreen").submit(function() {
         //Getting selected ordertype,date and store if it's static
-        if (document.getElementById('staticRadioButton').checked) {
-            orderType='static';
-            chooseStoresDropDownListElement = document.getElementById("chooseStoresDropDownList");
+        if (document.getElementById(ID_OF_STATIC_RADIO_BUTTON).checked) {
+            chooseStoresDropDownListElement = document.getElementById(ID_OF_CHOOSE_STORES_DROP_DOWN_LIST);
             storeIDSelected = chooseStoresDropDownListElement.options[chooseStoresDropDownListElement.selectedIndex].value;
             OpeningANewStaticOrderInServer(date, storeIDSelected);
             initiateTheChoosingItemDropDownInStaticOrder(storeIDSelected);
-
         }
-        if (document.getElementById('dynamicRadioButton').checked) {
-            orderType='dynamic';
+        if (document.getElementById(ID_OF_DYNAMIC_RADIO_BUTTON).checked) {
             OpeningANewDynamicOrderInServer(date);
             initiateTheChoosingItemDropDownInDynamicOrder();
-
         }
         // return value of the submit operation
         // by default - we'll always return false so it doesn't redirect the user.
@@ -153,26 +192,12 @@ function OpeningANewDynamicOrderInServer()
         }
     });
 }
-function setStoresListInStoreDropDownInOrder(detailsOnStoresInZone)
-{
-    console.log("in refreshStoresInZoneList");
-    var chooseStoresDropDownList = $("#chooseStoresDropDownList");
-    document.getElementById('tbodyOfDetailsOnStoresInZone').innerHTML = '';
-    // rebuild the list of users: scan all users and add them to the list of users
-    $.each(detailsOnStoresInZone || [], function(index, storeInZone) {
-        var storeID = storeInZone["serialNumber"];
-        var storeName = storeInZone["name"];
-        console.log("Adding store #" + storeID + ": " + storeName);
-        //$('<option value="storeToChooseFromList">' + 'storeID:' + storeID + 'store Name' + storeName + '</option').appendTo(chooseStoresDropDownList);
-        $('<option value=' + storeID + '>' + 'storeID: ' + storeID + ', store Name: ' + storeName + '</option>').appendTo(chooseStoresDropDownList);
 
-    });
-}
 
 function setNextButtonInShowStoresStatusInDynamicOrderElement() { // onload...do
     $("#makeANewOrder").submit(function() {
         var makeOrderBody = $("#makeOrderBody");
-        document.getElementById('makeOrderBody').innerHTML = '';
+        emptyMakeOrderBody();
         var selectOrderTypeHTML = '<p>Please select your type:</p>' +
             '<input type="radio" id="static" name="ordertype" value="static">'+
             '<label for="static">static</label><br>' +
@@ -188,7 +213,7 @@ function setNextButtonInShowStoresStatusInDynamicOrderElement() { // onload...do
 function setNextButtonInSalesScreenInOrderElement() { // onload...do
     $("#makeANewOrder").submit(function() {
         var makeOrderBody = $("#makeOrderBody");
-        document.getElementById('makeOrderBody').innerHTML = '';
+        emptyMakeOrderBody();
         var selectOrderTypeHTML = '<p>Please select your type:</p>' +
             '<input type="radio" id="static" name="ordertype" value="static">'+
             '<label for="static">static</label><br>' +
@@ -204,7 +229,7 @@ function setNextButtonInSalesScreenInOrderElement() { // onload...do
 function setFinishButtonInShowStatusOfOrderInOrderElement() { // onload...do
     $("#makeANewOrder").submit(function() {
         var makeOrderBody = $("#makeOrderBody");
-        document.getElementById('makeOrderBody').innerHTML = '';
+        emptyMakeOrderBody();
         var selectOrderTypeHTML = '<p>Please select your type:</p>' +
             '<input type="radio" id="static" name="ordertype" value="static">'+
             '<label for="static">static</label><br>' +
