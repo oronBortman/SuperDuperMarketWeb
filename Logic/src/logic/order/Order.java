@@ -2,21 +2,21 @@ package logic.order;
 
 public abstract class Order {
 
-    private String date;
+    private String dateStr;
     private boolean isOrderStatic;
     private boolean isOrderDynamic;
 
 
     public Order(String date, boolean isOrderStatic)
     {
-        this.date = date;
+        this.dateStr = date;
         this.isOrderStatic = isOrderStatic;
         this.isOrderDynamic = !isOrderStatic;
 
     }
-    public String getDate()
+    public String getDateStr()
     {
-        return date;
+        return dateStr;
     }
 
     public boolean isOrderDynamic() {

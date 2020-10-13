@@ -1,6 +1,7 @@
 package logic.order.CustomerOrder;
 
 import logic.Customer;
+import logic.SDMLocation;
 import logic.order.Order;
 import logic.order.StoreOrder.ClosedStoreOrder;
 
@@ -13,15 +14,17 @@ import static java.util.stream.Collectors.toCollection;
 
 public class ClosedCustomerOrder extends Order {
 
-    Customer customer;
+    SDMLocation locationOfCustomer;
+    String customerName;
     Integer SerialNumber;
     Map<Integer, ClosedStoreOrder> closedStoresOrderMapByStoreSerialID;
 
-    public ClosedCustomerOrder(String date, Map<Integer, ClosedStoreOrder> closedStoresOrderMapByStoreSerialID , boolean isOrderStatic, Customer customer)
+    public ClosedCustomerOrder(String date, Map<Integer, ClosedStoreOrder> closedStoresOrderMapByStoreSerialID , boolean isOrderStatic, String customerName, SDMLocation locationOfCustomer)
     {
         super(date, isOrderStatic);
         this.closedStoresOrderMapByStoreSerialID = closedStoresOrderMapByStoreSerialID;
-        this.customer = customer;
+        this.customerName = customerName;
+        this.locationOfCustomer = locationOfCustomer;
     }
 
     public Map<Integer, ClosedStoreOrder> getClosedStoresOrderMapByStoreSerialID() {
@@ -85,9 +88,14 @@ public class ClosedCustomerOrder extends Order {
 
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public String getCustomerName() {
+        return customerName;
     }
+
+    public SDMLocation getLocationOfCustomer() {
+        return locationOfCustomer;
+    }
+    
 
     public Integer getSerialNumber() {
         return SerialNumber;

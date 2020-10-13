@@ -287,8 +287,8 @@ function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coor
     alert('Inside OpeningANewStaticOrderInServer\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ' + storeIDSelected);
     $.ajax({
         method:'GET',
-       // data: dataString,
-        data:{"date":date,"storeIDSelected":"storeIDSelected","coordinateX":"coordinateX","coordinateY":coordinateY},
+        //data: dataString,
+        data:{"date":date,"storeIDSelected":storeIDSelected,"coordinateX":coordinateX,"coordinateY":coordinateY},
         url: CREATE_STATIC_ORDER_URL,
         dataType: "json",
         //action: MOVE_TO_ZONE_URL,
@@ -298,11 +298,13 @@ function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coor
         timeout: 4000,
         error: function(e) {
             console.error(e);
+            alert('error in OpeningANewDynamic\n' + e);
             //$("#result").text("Failed to get result from server " + e);
         },
         success: function(r) {
             console.log("Succesfully!!!");
             console.log(r);
+            alert('added a dynamic order succesfully');
             // $("#result").text(r);
         }
     });
@@ -327,11 +329,13 @@ function OpeningANewDynamicOrderInServer(date,coordinateX, coordinateY)
         timeout: 4000,
         error: function(e) {
             console.error(e);
+            alert('error in OpeningANewDynamic\n' + e);
             //$("#result").text("Failed to get result from server " + e);
         },
         success: function(r) {
             console.log("Succesfully!!!");
             console.log(r);
+            alert('added a dynamic order succesfully');
             // $("#result").text(r);
         }
     });

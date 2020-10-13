@@ -169,7 +169,7 @@ function hideHTMLElementsByRole(user){
     var userType = user["userType"];
     if(userType === "seller")
     {
-        // $("#manageAccount").hide();
+         $("#makeANewOrder").hide();
     }
     else if(userType === "customer")
     {

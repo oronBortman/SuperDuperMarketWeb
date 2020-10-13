@@ -26,9 +26,9 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     {
         super(serialNumber, name, SDMLocationOfShop);
         this.storeOwner =  storeOwner;
-        ItemsSerialIDMap = new HashMap<Integer, AvailableItemInStore>();
-        ordersSerialIDMap = new HashMap<Integer, ClosedStoreOrder>();
-        discountNameDMap = new HashMap<String, Discount>();
+        ItemsSerialIDMap = new HashMap<>();
+        ordersSerialIDMap = new HashMap<>();
+        discountNameDMap = new HashMap<>();
 
         this.PPK = PPK;
     }

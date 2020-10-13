@@ -46,8 +46,6 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         System.out.println("In LoginServlet");
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
-        // if (usernameFromSession == null) {
-        //user is not logged in yet
         String usernameFromSession = SessionUtils.getUsername(request);
         String userType = request.getParameter(Constants.USERTYPE);
         // check if user is customer or seller

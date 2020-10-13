@@ -20,6 +20,7 @@ import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.order.StoreOrder.OpenedStoreOrder;
 import logic.order.itemInOrder.OrderedItemFromStoreByQuantity;
 import logic.order.itemInOrder.OrderedItemFromStoreByWeight;
+import logic.users.UserManager;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
@@ -43,11 +44,11 @@ public class Zone {
     public Zone(SuperDuperMarketDescriptor superDuperMarketDescriptor, Seller zoneOwner) throws FileNotFoundException, JAXBException, DuplicateItemSerialIDException, DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, StoreLocationIsIdenticalToStoreException, InvalidCoordinateXOfStoreException, ItemWithSerialIDNotExistInSDMException, StoreNotExistException, DuplicateItemSerialIDInStoreException, ItemIDInDiscountNotExistInAStoreException, ItemIDInDiscountNotExistInSDMException, DuplicateDiscountNameException, ItemIDNotExistInAStoreException {
         this.zoneOwner = zoneOwner;
         this.zoneName = superDuperMarketDescriptor.getSDMZone().getName();
-        storesLocationMap = new HashMap<SDMLocation, Store>();
-        storesSerialIDMap = new HashMap<Integer, Store>();
-        itemsSerialIDMap = new HashMap<Integer, Item>();
-        ordersSerialIDMap = new HashMap<Integer, ClosedCustomerOrder>();
-        discounts = new ArrayList<Discount>();
+        storesLocationMap = new HashMap<>();
+        storesSerialIDMap = new HashMap<>();
+        itemsSerialIDMap = new HashMap<>();
+        ordersSerialIDMap = new HashMap<>();
+        discounts = new ArrayList<>();
         currentOrderSerialIDInSDK = 1;
         List<SDMStore> sdmStoreList = superDuperMarketDescriptor.getSDMStores().getSDMStore();
         List<SDMItem> sdmItemList = superDuperMarketDescriptor.getSDMItems().getSDMItem();
@@ -174,7 +175,9 @@ public class Zone {
             closedStoreOrder.setSerialNumber(currentOrderSerialIDInSDK);
         }
         order.setSerialNumber(currentOrderSerialIDInSDK);
-        order.getCustomer().addClosedCustomerOrderToMap(order);
+        //TODO
+        //Need to add closed order to customer
+        //order.getCustomerName().addClosedCustomerOrderToMap(order);
         ordersSerialIDMap.put(currentOrderSerialIDInSDK, order);
         currentOrderSerialIDInSDK++;
     }
@@ -565,7 +568,7 @@ public class Zone {
     public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(Customer customer, String date, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer)
     {
         List<Item> itemsList = new ArrayList<>();
-        OpenedCustomerOrder1 openedCustomerOrder = new OpenedCustomerOrder1(date, customer, false, locationOfCustomer);
+        OpenedCustomerOrder1 openedCustomerOrder = new OpenedCustomerOrder1(date, customer.getUserName(), false, locationOfCustomer);
         ArrayList<Item> itemsListFromQuantityList = addQuantityItemsToItemListFromOrderedItemsMap(orderedItemsListByItemSerialIDAndQuantity);
         ArrayList<Item> itemsListFromWeightList = addWeightItemsToItemListFromOrderedItemsMap(orderedItemsListByItemSerialIDAndWeight);
         itemsList = Stream.concat(itemsList.stream(), itemsListFromQuantityList.stream()).collect(Collectors.toList());;
@@ -609,7 +612,7 @@ public class Zone {
 
     public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedStaticCustomerOrder(Customer customer, String date, Store store, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer) {
         boolean isOrderStatic = true;
-        OpenedCustomerOrder1 openedCustomerOrder = new OpenedCustomerOrder1(date, customer, isOrderStatic, locationOfCustomer);
+        OpenedCustomerOrder1 openedCustomerOrder = new OpenedCustomerOrder1(date, customer.getUserName(), isOrderStatic, locationOfCustomer);
         OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(store, date, isOrderStatic, locationOfCustomer);
 
 

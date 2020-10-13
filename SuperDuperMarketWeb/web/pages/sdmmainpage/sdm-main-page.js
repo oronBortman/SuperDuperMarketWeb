@@ -84,9 +84,6 @@ function refreshZonesList(zones) {
             "</th></tr>").appendTo(tbodySelector);
         setMoveToZoneButton(zoneName, idOfMoveToZoneForm);
     });
-    /*
-
-     */
 }
 
 function setMoveToZoneButton(zoneNameInput, idOfMoveToZoneForm) { // onload...do
@@ -100,10 +97,6 @@ function setMoveToZoneButton(zoneNameInput, idOfMoveToZoneForm) { // onload...do
             data: dataString,
             url: MOVE_TO_ZONE_URL,
             dataType: "json",
-            //action: MOVE_TO_ZONE_URL,
-            //contentType: 'application/json; charset=utf-8',
-           // processData: false, // Don't process the files
-            //contentType: false, // Set content type to false as jQuery will tell the server its a query string request
             timeout: 4000,
             error: function(e) {
                 console.error(e);
@@ -133,15 +126,17 @@ function setUploadFileElement() { // onload...do
         $.ajax({
             method:'POST',
             data: formData,
-            url: Upload_XML_FILE_UTL,
+            url: UPLOAD_XML_FILE,
             processData: false, // Don't process the files
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
             timeout: 4000,
             error: function(e) {
                 console.error("Failed to submit");
+               // alert('failedToSumbit');
                 $("#result").text("Failed to get result from server " + e);
             },
             success: function(r) {
+                //alert('succeedToSumbit');
                 $("#result").text(r);
             }
         });
@@ -250,7 +245,7 @@ $(function() {
         success: function (user) {
              hideHTMLElementsByRole(user);
             setActionBasedOnRole(user);
-             addGreetingToUser(user);
+            addGreetingToUser(user);
         },
         error:function(e)
         {

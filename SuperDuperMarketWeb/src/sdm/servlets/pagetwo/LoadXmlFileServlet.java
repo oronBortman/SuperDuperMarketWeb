@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import javax.servlet.http.Part;
 
@@ -41,8 +42,7 @@ public class LoadXmlFileServlet extends HttpServlet {
 
             response.setContentType("text/html;charset=UTF-8");
             Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
-            // String submittedFileName = getSubmittedFileName(filePart);
-            // String fileName = Paths.get(submittedFileName).getFileName().toString(); // MSIE fix.
+           // String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
             InputStream fileContent = filePart.getInputStream();
             String username = SessionUtils.getUsername(request);
             // System.out.println("In load xml file servlet");
@@ -110,12 +110,12 @@ public class LoadXmlFileServlet extends HttpServlet {
                             "Details on the store:\n" +
                             "Store name:" + store.getName() + ", Store serialID:" + store.getSerialNumber();
                 }
-            }
+           }
             else
             {
-                // System.out.println("G");
+                 System.out.println("G");
                 message="User doesn't have a permission to upload an xml file to Super Duper Market";
-            }
+           }
 
             try {
                 response.getOutputStream().print(message);

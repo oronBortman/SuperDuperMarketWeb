@@ -53,20 +53,23 @@ public class CreateDynamicOrderServlet extends HttpServlet {
                 //LocalDate date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer
                 //TODO
                 //Need to check if there is no store in this coordinates
-                OpenedCustomerOrder1 openedCustomerOrder1 = new OpenedCustomerOrder1(date, (Customer)user, false, new SDMLocation(coordinateXInt, coordinateYInt));
-                //Zone zone = zoneManager.getZoneByName(zoneName);
-               // JSONArray jsonArray = readingFromItemsListToJsonObject(itemsList, zone);
+                OpenedCustomerOrder1 openedCustomerOrder1 = new OpenedCustomerOrder1(date, user.getUserName(), false, new SDMLocation(coordinateXInt, coordinateYInt));
                 user.setCurrentOpenedOrder(openedCustomerOrder1);
+                System.out.println("About to print json of the dynamic order!!!");
                 String json = gson.toJson(openedCustomerOrder1);
-                out.println(json);
-                System.out.println("About to print json of the dynamic order");
+                System.out.println("About to print json of the dynamic order!!!");
                 System.out.println(json);
+                out.println(json);
                 out.flush();
             }
             else
             {
                 System.out.println("one of the parameters is null");
             }
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error in creating opedCustomerOrder\n" + e.getMessage());
         }
     }
 

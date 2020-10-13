@@ -2,7 +2,6 @@ package logic.order.CustomerOrder;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import logic.Customer;
 import logic.SDMLocation;
 import logic.Store;
 import logic.discount.Discount;
@@ -13,7 +12,6 @@ import logic.order.StoreOrder.OpenedStoreOrder;
 import logic.order.itemInOrder.OrderedItemFromSale;
 import logic.order.itemInOrder.OrderedItemFromStore;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,14 +19,14 @@ import java.util.stream.Stream;
 public class OpenedCustomerOrder1 extends Order {
 
     Map<Store, OpenedStoreOrder> openedStoresOrderMap;
-    Customer customer;
     SDMLocation locationOfCustomer;
+    String customerName;
     //Map<Integer, Integer> itemsAmountLeftToUseInSalesMap;
     //Map<String, Discount> availableDiscountsMap;
 
-    public OpenedCustomerOrder1(String date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer) {
+    public OpenedCustomerOrder1(String date, String customerName, boolean isOrderStatic, SDMLocation locationOfCustomer) {
         super(date, isOrderStatic);
-        this.customer = customer;
+        this.customerName = customerName;
         this.locationOfCustomer = locationOfCustomer;
         openedStoresOrderMap = new HashMap<>();
         //itemsAmountLeftToUseInSalesMap = new HashMap<Integer, Integer>() ;
@@ -165,9 +163,9 @@ public class OpenedCustomerOrder1 extends Order {
         return locationOfCustomer;
     }
 
-    public Customer getCustomer()
+    public String getCustomerName()
     {
-        return customer;
+        return customerName;
     }
     /*public Double calcTotalPriceOfItemsNotFromSale() {
         return 0.0;
@@ -193,7 +191,7 @@ public class OpenedCustomerOrder1 extends Order {
             closedStoresOrderMapByStoreSerialID.put(serialNumber, closedStoreOrder);
         }
 
-        ClosedCustomerOrder closedCustomerOrder = new ClosedCustomerOrder(getDate(), closedStoresOrderMapByStoreSerialID, isOrderStatic(), customer);
+        ClosedCustomerOrder closedCustomerOrder = new ClosedCustomerOrder(getDateStr(), closedStoresOrderMapByStoreSerialID, isOrderStatic(), customerName,locationOfCustomer);
         return closedCustomerOrder;
     }
 

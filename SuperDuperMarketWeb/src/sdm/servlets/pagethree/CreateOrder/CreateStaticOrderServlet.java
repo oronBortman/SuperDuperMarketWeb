@@ -34,7 +34,7 @@ public class CreateStaticOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In create-dynamic-order servlet");
+        System.out.println("In create-static-order servlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
 
@@ -60,8 +60,8 @@ public class CreateStaticOrderServlet extends HttpServlet {
                 //LocalDate date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer
                 //TODO
                 //Need to check if there is no store in this coordinates
-                SDMLocation orderLocation = new SDMLocation(coordinateXInt, coordinateYInt)
-                OpenedCustomerOrder1 openedCustomerOrder1 = new OpenedCustomerOrder1(date, (Customer) user, true, orderLocation);
+                SDMLocation orderLocation = new SDMLocation(coordinateXInt, coordinateYInt);
+                OpenedCustomerOrder1 openedCustomerOrder1 = new OpenedCustomerOrder1(date, user.getUserName(), true, orderLocation);
 
                 ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
                 Zone zone = zoneManager.getZoneByName(SessionUtils.getZoneName(request));
@@ -77,6 +77,10 @@ public class CreateStaticOrderServlet extends HttpServlet {
             } else {
                 System.out.println("one of the parameters is null");
             }
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error in creating opedCustomerOrder\n" + e.getMessage());
         }
     }
 
