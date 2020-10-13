@@ -1,7 +1,8 @@
-package sdm.servlets.pagethree;
+package sdm.servlets.pagethree.CreateOrder;
 
 import com.google.gson.Gson;
 import logic.Item;
+import logic.order.CustomerOrder.OpenedCustomerOrder1;
 import logic.zones.Zone;
 import logic.zones.ZoneManager;
 import org.json.simple.JSONArray;
@@ -19,8 +20,8 @@ import java.util.List;
 
 import static sdm.constants.Constants.ZONENAME;
 
-@WebServlet("/choose-item-in-order")
-public class ChooseItemsInOrder extends HttpServlet {
+@WebServlet("/create-dynamic-order-servlet")
+public class CreateDynamicOrderServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -29,17 +30,20 @@ public class ChooseItemsInOrder extends HttpServlet {
         System.out.println("In show all items in zone servlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
+
             ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
-            String zoneName = request.getParameter(ZONENAME);
-            if(zoneName != null)
+            String date = request.getParameter("date");
+
+            if(date != null)
             {
-                Zone zone = zoneManager.getZoneByName(zoneName);
-                List<Item> itemsList = zone.getItemsList();
+               // OpenedCustomerOrder1 openedCustomerOrder1()
+                //Zone zone = zoneManager.getZoneByName(zoneName);
+                /*List<Item> itemsList = zone.getItemsList();
                 JSONArray jsonArray = readingFromItemsListToJsonObject(itemsList, zone);
                 String json = gson.toJson(jsonArray);
                 out.println(json);
                 System.out.println(json);
-                out.flush();
+                out.flush();*/
             }
             else
             {

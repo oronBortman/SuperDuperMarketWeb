@@ -1,4 +1,4 @@
-import {initiateChoosingItemDropDownHTMLInOrder} from "./general-functions-in-choosing-item-drop-down.js";
+import {initiateChoosingItemDropDownHTMLInOrder} from "./general-functions-in-choosing-item-drop-down";
 
 var detailsOnZoneJSONFormat = JSON.parse(localStorage.getItem('detailsOnZone'));
 var zoneName = detailsOnZoneJSONFormat.zoneName;

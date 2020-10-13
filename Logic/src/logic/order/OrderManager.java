@@ -1,6 +1,7 @@
-package logic.zones;
+package logic.order;
 
-import exceptions.*;
+import exceptions.DuplicateDiscountNameException;
+import exceptions.DuplicateZoneName;
 import exceptions.InvalidCoordinateException.InvalidCoordinateXOfStoreException;
 import exceptions.InvalidCoordinateException.InvalidCoordinateYOfStoreException;
 import exceptions.duplicateSerialID.DuplicateItemSerialIDException;
@@ -8,22 +9,22 @@ import exceptions.duplicateSerialID.DuplicateItemSerialIDInStoreException;
 import exceptions.duplicateSerialID.DuplicateStoreSerialIDException;
 import exceptions.locationsIdentialException.StoreLocationIsIdenticalToStoreException;
 import exceptions.notExistException.*;
-import jaxb.schema.generated.*;
+import jaxb.schema.generated.SuperDuperMarketDescriptor;
 import logic.Seller;
+import logic.zones.Zone;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import static jdk.nashorn.internal.objects.NativeMath.max;
-
-public class ZoneManager {
+public class OrderManager {
     private final static String JAXB_XML_GAME_PACKAGE_NAME = "jaxb.schema.generated";
     Map<String, Zone> zonesMap;
-    public ZoneManager()
+    public OrderManager()
     {
         zonesMap = new HashMap<>();
     }

@@ -1,4 +1,4 @@
-package sdm.servlets.pagethree;
+package sdm.servlets.pagethree.ChoosingItemsForOrder;
 
 import com.google.gson.Gson;
 import logic.Item;
@@ -7,7 +7,6 @@ import logic.zones.ZoneManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import sdm.utils.ServletUtils;
-import sdm.utils.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,8 +19,8 @@ import java.util.List;
 
 import static sdm.constants.Constants.ZONENAME;
 
-@WebServlet("/items-in-zone-list")
-public class ShowAllItemsInZoneServlet extends HttpServlet {
+@WebServlet("/get-items-that-are-available-in-dynamic-order")
+public class GetItemsThatAreAvailableInDynamicOrderServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

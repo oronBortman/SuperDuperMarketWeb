@@ -1,9 +1,13 @@
 package logic.users;
 
+import logic.order.CustomerOrder.OpenedCustomerOrder;
+import logic.order.Order;
+
 public class User {
     String userName;
     String userType;
     Account account;
+    OpenedCustomerOrder currentOrder;
     
     public User(String name, String userType)
     {
@@ -23,4 +27,10 @@ public class User {
     public Account getAccount() {
         return account;
     }
+    public void setCurrentOrder(OpenedCustomerOrder openedCustomerOrder)
+    {
+        this.currentOrder = openedCustomerOrder;
+    }
+
+    public OpenedCustomerOrder getCurrentOrder() {return currentOrder;};
 }
