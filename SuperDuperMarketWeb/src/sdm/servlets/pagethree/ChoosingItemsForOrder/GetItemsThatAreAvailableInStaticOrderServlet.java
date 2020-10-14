@@ -30,20 +30,37 @@ public class GetItemsThatAreAvailableInStaticOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In show all items in zone servlet");
+        System.out.println("In get-items-that-are-available-in-static-order\n\n\n\n\n\n\n");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
+            System.out.println("A1");
             String storeID = request.getParameter("storeID");
+            System.out.println(storeID);
+            System.out.println("A2");
             Integer storeIDInt = Integer.parseInt(storeID);
+            System.out.println("A3");
             UserManager userManager = ServletUtils.getUserManager(getServletContext());
+            System.out.println("A4");
             OpenedCustomerOrder1 openedCustomerOrder1 = userManager.getUserByName(SessionUtils.getUsername(request)).getCurrentOrder();
+            System.out.println("A5");
             List<AvailableItemInStore> availableItemInStoreList = openedCustomerOrder1.generateListsOfItemsInStoreThatAreNotInOrderAndNotFromSale(storeIDInt);
+            System.out.println("A6");
             String json = gson.toJson(availableItemInStoreList);
+            System.out.println("About to print Available item list");
+            for(AvailableItemInStore availableItemInStore : availableItemInStoreList)
+            {
+                System.out.println("Available item id: " + availableItemInStore.getSerialNumber());
+            };
             out.println(json);
             System.out.println(json);
             out.flush();
         }
+        catch (Exception e)
+        {
+            System.out.println("There was an error:\n" + e.getMessage());
+        }
     }
+
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request,response);

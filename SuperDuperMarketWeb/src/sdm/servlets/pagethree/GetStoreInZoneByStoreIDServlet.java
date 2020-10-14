@@ -48,6 +48,10 @@ public class GetStoreInZoneByStoreIDServlet extends HttpServlet {
                 System.out.println("zoneName is null!!");
             }
         }
+        catch (Exception e)
+        {
+            System.out.println("Error inget store in zone\n" + e);
+        }
     }
 
     public JSONArray readingFromStoresListToJsonObject(List<Store> storeList)

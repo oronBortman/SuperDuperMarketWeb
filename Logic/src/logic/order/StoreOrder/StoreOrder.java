@@ -41,7 +41,7 @@ public class StoreOrder extends Order {
     }*/
     public StoreOrder(StoreOrder storeOrder)
     {
-        super(storeOrder.getDateStr(), storeOrder.isOrderStatic());
+        super(storeOrder.getDateStr1(), storeOrder.isOrderStatic());
         this.storeUsed = storeOrder.storeUsed;
         this.customerLocation = storeOrder.customerLocation;;
         this.orderedItemsFromSale = storeOrder.orderedItemsFromSale;;

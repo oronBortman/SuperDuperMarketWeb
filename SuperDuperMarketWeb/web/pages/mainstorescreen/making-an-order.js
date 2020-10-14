@@ -253,15 +253,15 @@ function setNextButtonInMakeAnOrderElement() { // onload...do
 
     $("#nextButtonInMakeAnOrderFirstScreen").click(function() {
         //Getting selected ordertype,date and store if it's static
-        alert("clicked on nextButtonInMakeAnOrderFirstScreen");
+      //  alert("clicked on nextButtonInMakeAnOrderFirstScreen");
         if (document.getElementById(ID_OF_STATIC_RADIO_BUTTON).checked) {
             date = document.getElementById(ID_OF_DATE_OF_ORDER).value;
             coordinateX=$("#" + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
             coordinateY=$("#" + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
             chooseStoresDropDownListElement = document.getElementById(ID_OF_CHOOSE_STORES_DROP_DOWN_LIST);
             storeIDSelected = chooseStoresDropDownListElement.options[chooseStoresDropDownListElement.selectedIndex].value;
-            alert('Inside clicked on next button static\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
-            alert("Clicked on Next button and the order type is static");
+          //  alert('Inside clicked on next button static\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
+           // alert("Clicked on Next button and the order type is static");
             OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coordinateY);
             initiateTheChoosingItemDropDownInStaticOrder(storeIDSelected);
         }
@@ -271,7 +271,7 @@ function setNextButtonInMakeAnOrderElement() { // onload...do
             date = document.getElementById(ID_OF_DATE_OF_ORDER).value;
             coordinateX=$("#" + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
             coordinateY=$("#" + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
-            alert('Inside clicked on next button dynamic\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
+         //   alert('Inside clicked on next button dynamic\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
             OpeningANewDynamicOrderInServer(date, coordinateX, coordinateY);
             initiateTheChoosingItemDropDownInDynamicOrder();
         }
@@ -284,7 +284,7 @@ function setNextButtonInMakeAnOrderElement() { // onload...do
 function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coordinateY)
 {
    // var dataString = "date="+date + ",storeIDSelected="+storeIDSelected + ",coordinateX=" + coordinateX + ",coordinateY=" + coordinateY;
-    alert('Inside OpeningANewStaticOrderInServer\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ' + storeIDSelected);
+  //  alert('Inside OpeningANewStaticOrderInServer\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ' + storeIDSelected);
     $.ajax({
         method:'GET',
         //data: dataString,
@@ -299,13 +299,13 @@ function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coor
         timeout: 4000,
         error: function(e) {
             console.error(e);
-            alert('error in OpeningANewDynamic\n' + e);
+         //   alert('error in OpeningANewDynamic\n' + e);
             //$("#result").text("Failed to get result from server " + e);
         },
         success: function(r) {
             console.log("Succesfully!!!");
             console.log(r);
-            alert('added a static order succesfully');
+         //   alert('added a static order succesfully');
             // $("#result").text(r);
         }
     });
@@ -314,7 +314,8 @@ function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coor
 function OpeningANewDynamicOrderInServer(date,coordinateX, coordinateY)
 {
    // alert(" in OpeningANewDynamicOrderInServer");
-    alert('Inside OpeningANewDynamicOrderInServer\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
+    //
+    //alert('Inside OpeningANewDynamicOrderInServer\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
 
    // var dataString = "date=" + date + ",coordinateX=" + coordinateX + ",coordinateY=" + coordinateY;
     $.ajax({
@@ -336,7 +337,7 @@ function OpeningANewDynamicOrderInServer(date,coordinateX, coordinateY)
         success: function(r) {
             console.log("Succesfully!!!");
             console.log(r);
-            alert('added a dynamic order succesfully');
+           // alert('added a dynamic order succesfully');
             // $("#result").text(r);
         }
     });

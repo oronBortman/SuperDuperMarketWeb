@@ -6,7 +6,6 @@ public abstract class Order {
     private boolean isOrderStatic;
     private boolean isOrderDynamic;
 
-
     public Order(String date, boolean isOrderStatic)
     {
         this.dateStr = date;
@@ -14,7 +13,7 @@ public abstract class Order {
         this.isOrderDynamic = !isOrderStatic;
 
     }
-    public String getDateStr()
+    public String getDateStr1()
     {
         return dateStr;
     }
