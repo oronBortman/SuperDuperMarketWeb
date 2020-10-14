@@ -31,7 +31,7 @@ public class MoveToZoneServlet extends HttpServlet {
         System.out.println("In move to zone servlet");
         String zoneName = request.getParameter(ZONENAME);
         System.out.println("Zone name=" + zoneName);
-       // request.getSession(true).setAttribute(ZONENAME, zoneName);
+        request.getSession(true).setAttribute(ZONENAME, zoneName);
         System.out.println("C");
        // response.sendRedirect(SDM_MAIN_STORES_PAGE_URL);
         System.out.println("D" + zoneName);

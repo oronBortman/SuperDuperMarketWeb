@@ -289,6 +289,7 @@ function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coor
         method:'GET',
         //data: dataString,
         data:{"date":date,"storeIDSelected":storeIDSelected,"coordinateX":coordinateX,"coordinateY":coordinateY},
+       // data:{"date":date,"coordinateX":coordinateX,"coordinateY":coordinateY},
         url: CREATE_STATIC_ORDER_URL,
         dataType: "json",
         //action: MOVE_TO_ZONE_URL,
@@ -304,7 +305,7 @@ function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coor
         success: function(r) {
             console.log("Succesfully!!!");
             console.log(r);
-            alert('added a dynamic order succesfully');
+            alert('added a static order succesfully');
             // $("#result").text(r);
         }
     });
@@ -319,7 +320,7 @@ function OpeningANewDynamicOrderInServer(date,coordinateX, coordinateY)
     $.ajax({
         method:'GET',
         //data: dataString,
-        data:{"date":date,"coordinateX":coordinateX,"coordinateY":coordinateY},
+        data:{},
         url: CREATE_DYNAMIC_ORDER_URL,
         dataType: "json",
         //action: MOVE_TO_ZONE_URL,

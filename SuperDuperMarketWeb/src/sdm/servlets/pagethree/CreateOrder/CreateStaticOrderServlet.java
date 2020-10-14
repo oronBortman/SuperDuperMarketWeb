@@ -57,21 +57,20 @@ public class CreateStaticOrderServlet extends HttpServlet {
                 int coordinateYInt = Integer.parseInt(coordinateY);
                 int storeIDSelectedInt = Integer.parseInt(storeIDSelected);
 
+                System.out.println("After parsing:" + date + " " + coordinateX + " " + coordinateY + " " + storeIDSelectedInt);
                 //LocalDate date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer
                 //TODO
                 //Need to check if there is no store in this coordinates
                 SDMLocation orderLocation = new SDMLocation(coordinateXInt, coordinateYInt);
                 OpenedCustomerOrder1 openedCustomerOrder1 = new OpenedCustomerOrder1(date, user.getUserName(), true, orderLocation);
-
                 ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
                 Zone zone = zoneManager.getZoneByName(SessionUtils.getZoneName(request));
                 Store storeSelected = zone.getStoreBySerialID(storeIDSelectedInt);
                 openedCustomerOrder1.addStoreOrder(new OpenedStoreOrder(storeSelected,date,true,orderLocation));
-
                 user.setCurrentOpenedOrder(openedCustomerOrder1);
                 String json = gson.toJson(openedCustomerOrder1);
                 out.println(json);
-                System.out.println("About to print json of the dynamic order");
+                System.out.println("About to print json of the stqtaic order");
                 System.out.println(json);
                 out.flush();
             } else {

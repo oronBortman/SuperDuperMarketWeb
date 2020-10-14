@@ -2,6 +2,7 @@ package logic.order.CustomerOrder;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import logic.AvailableItemInStore;
 import logic.SDMLocation;
 import logic.Store;
 import logic.discount.Discount;
@@ -87,6 +88,30 @@ public class OpenedCustomerOrder1 extends Order {
             orderedItemNotFromSaleFromStoresList = Stream.concat(orderedItemNotFromSaleFromStoresList.stream(), orderedItemFromStoreListNotFromSale.stream()).collect(Collectors.toList());;
         }
         return orderedItemNotFromSaleFromStoresList;
+    }
+
+    public List<AvailableItemInStore> generateListsOfItemsInStoreThatAreNotInOrderAndNotFromSale(Integer serialIDOfStore)
+    {
+        List<AvailableItemInStore> availableItemInStoreList = null;
+        for(OpenedStoreOrder openedStoreOrder : openedStoresOrderMap.values())
+        {
+            Store store = openedStoreOrder.getStoreUsed();
+            if(store.getSerialNumber() == serialIDOfStore)
+            {
+                Map<Integer, AvailableItemInStore> availableItemInStoreMap = new HashMap<>(store.getItemsSerialIDMap());
+                List<OrderedItemFromStore> orderedItemFromStoreList = generateListsOfItemNotFromSale();
+                for(OrderedItemFromStore orderedItemFromStore : orderedItemFromStoreList)
+                {
+                    Integer serialIDOfOrderedItemFromStore = orderedItemFromStore.getSerialNumber();
+                    if(availableItemInStoreMap.containsKey(serialIDOfOrderedItemFromStore))
+                    {
+                        availableItemInStoreMap.remove(serialIDOfOrderedItemFromStore);
+                    }
+                }
+                availableItemInStoreList = new ArrayList<>(availableItemInStoreMap.values());
+            }
+        }
+        return availableItemInStoreList;
     }
 
     public void initializeAvailableDiscountMapInOpenedStoreOrders()

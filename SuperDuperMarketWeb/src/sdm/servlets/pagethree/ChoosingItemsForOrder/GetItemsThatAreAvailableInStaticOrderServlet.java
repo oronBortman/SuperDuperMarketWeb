@@ -1,12 +1,16 @@
 package sdm.servlets.pagethree.ChoosingItemsForOrder;
 
 import com.google.gson.Gson;
+import logic.AvailableItemInStore;
 import logic.Item;
+import logic.order.CustomerOrder.OpenedCustomerOrder1;
+import logic.users.UserManager;
 import logic.zones.Zone;
 import logic.zones.ZoneManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import sdm.utils.ServletUtils;
+import sdm.utils.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,43 +33,16 @@ public class GetItemsThatAreAvailableInStaticOrderServlet extends HttpServlet {
         System.out.println("In show all items in zone servlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
-            ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
-            String zoneName = request.getParameter(ZONENAME);
-            if(zoneName != null)
-            {
-                Zone zone = zoneManager.getZoneByName(zoneName);
-                List<Item> itemsList = zone.getItemsList();
-                JSONArray jsonArray = readingFromItemsListToJsonObject(itemsList, zone);
-                String json = gson.toJson(jsonArray);
-                out.println(json);
-                System.out.println(json);
-                out.flush();
-            }
-            else
-            {
-                System.out.println("Zone name is null!");
-            }
+            String storeID = request.getParameter("storeID");
+            Integer storeIDInt = Integer.parseInt(storeID);
+            UserManager userManager = ServletUtils.getUserManager(getServletContext());
+            OpenedCustomerOrder1 openedCustomerOrder1 = userManager.getUserByName(SessionUtils.getUsername(request)).getCurrentOrder();
+            List<AvailableItemInStore> availableItemInStoreList = openedCustomerOrder1.generateListsOfItemsInStoreThatAreNotInOrderAndNotFromSale(storeIDInt);
+            String json = gson.toJson(availableItemInStoreList);
+            out.println(json);
+            System.out.println(json);
+            out.flush();
         }
-    }
-
-    public JSONArray readingFromItemsListToJsonObject(List<Item> itemsList, Zone zone)
-    {
-        JSONArray jsonArray = new JSONArray();
-        int i=0;
-        for(Item item : itemsList)
-        {
-            Integer itemSerialNumber = item.getSerialNumber();
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("serialNumber", item.getSerialNumber());
-            jsonObject.put("name", item.getName());
-            jsonObject.put("typeOfMeasureBy", item.getTypeOfMeasureStr());
-            jsonObject.put("howManyShopsSellesAnItem", zone.getHowManyShopsSellesAnItem(itemSerialNumber));
-            jsonObject.put("avgPriceOfItemInSK", zone.getAvgPriceOfItemInSDK(itemSerialNumber));
-            jsonObject.put("howMuchTimesTheItemHasBeenOrdered", zone.getHowMuchTimesTheItemHasBeenOrdered(itemSerialNumber));
-            jsonArray.add(i,jsonObject);
-            i++;
-        }
-        return jsonArray;
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

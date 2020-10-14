@@ -1,5 +1,6 @@
 import {initiateChoosingItemDropDownHTMLInOrder} from "./general-functions-in-choosing-item-drop-down.js";
-
+var ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT = "chooseItemsInDropDownListElement";
+var ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
 
 export function initiateTheChoosingItemDropDownInDynamicOrder()
 {

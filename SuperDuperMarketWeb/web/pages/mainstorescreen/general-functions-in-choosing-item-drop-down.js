@@ -1,13 +1,14 @@
+import {emptyMakeOrderBody} from "./general-make-an-order-functions.js";
 
 var ID_OF_MINUS_BUTTON = "minusButton";
 var ID_OF_PLUS_BUTTON = "plusButton";
 var ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN = 'valueOfAmountOfItemChosen';
-
+var ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
 export function initiateChoosingItemDropDownHTMLInOrder()
 {
-    var makeOrderBody = $("#makeOrderBody");
-    document.getElementById('makeOrderBody').innerHTML = '';
-    console.log("In nextButtonInMakeAnOrderFirstScreen")
+    var makeOrderBody = $("#" + ID_OF_MAKE_ORDER_BODY);
+    emptyMakeOrderBody();
+    console.log("In function initiateChoosingItemDropDownHTMLInOrder()\n")
     var chooseItemsDropDownList = '<div id="chooseItemsInDropDownListElement"></div>';
     $(chooseItemsDropDownList).appendTo(makeOrderBody);
 }
