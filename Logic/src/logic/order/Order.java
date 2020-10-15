@@ -3,6 +3,7 @@ package logic.order;
 public abstract class Order {
 
     private String dateStr;
+
     private boolean isOrderStatic;
     private boolean isOrderDynamic;
 

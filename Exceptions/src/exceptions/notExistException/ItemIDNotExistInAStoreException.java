@@ -3,19 +3,26 @@ package exceptions.notExistException;
 import logic.Store;
 
 public class ItemIDNotExistInAStoreException extends Exception{
-    Store store;
-    int serialId;
-    public ItemIDNotExistInAStoreException(int serialId, Store store)
+    Integer serialIDOfStore;
+    String storeName;
+    Integer serialIDOfItem;
+    public ItemIDNotExistInAStoreException(Integer serialIDOfItem, Integer serialIDOfStore, String storeName)
     {
-        this.serialId = serialId;
-        this.store = store;
+        this.serialIDOfItem=serialIDOfItem;
+        this.serialIDOfStore=serialIDOfStore;
+        this.storeName = storeName;
+
     }
 
-    public Store getStore() {
-        return store;
+    public Integer getSerialIDOfItem() {
+        return serialIDOfItem;
     }
 
-    public int getSerialId() {
-        return serialId;
+    public Integer getSerialIDOfStore() {
+        return serialIDOfStore;
+    }
+
+    public String getStoreName() {
+        return storeName;
     }
 }

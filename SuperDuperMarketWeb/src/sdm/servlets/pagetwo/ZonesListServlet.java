@@ -1,12 +1,6 @@
 package sdm.servlets.pagetwo;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import logic.Seller;
-import logic.users.User;
-import logic.users.UserManager;
 import logic.zones.Zone;
 import logic.zones.ZoneManager;
 import org.json.simple.JSONArray;

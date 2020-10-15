@@ -1,7 +1,5 @@
 package logic.order.CustomerOrder;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import logic.AvailableItemInStore;
 import logic.Item;
 import logic.SDMLocation;
@@ -31,12 +29,21 @@ public class OpenedCustomerOrder1 extends Order {
 
     public OpenedCustomerOrder1(String date, String customerName, boolean isOrderStatic, SDMLocation locationOfCustomer) {
         super(date, isOrderStatic);
+
         this.customerName = customerName;
         this.locationOfCustomer = locationOfCustomer;
         openedStoresOrderMap = new HashMap<>();
         itemsChosenForDynamicOrder = new HashMap<>();
         //itemsAmountLeftToUseInSalesMap = new HashMap<Integer, Integer>() ;
         //availableDiscountsMap = new HashMap<String, Discount>();
+    }
+
+    public SDMLocation getLocationOfCustomer() {
+        return locationOfCustomer;
+    }
+
+    public Map<Integer, Double> getItemsChosenForDynamicOrder() {
+        return itemsChosenForDynamicOrder;
     }
 
     public void generateListOfSales()

@@ -89,26 +89,31 @@ public class LoadXmlFileServlet extends HttpServlet {
                 } catch (JAXBException e) {
                     e.printStackTrace();
                 } catch (ItemIDInDiscountNotExistInAStoreException e) {
-                    Store store = e.getStore();
+                    Integer storeID = e.getStoreSerialID();
+                    String storeName = e.getStoreName();
                     message = "Item with serial id " + e.getSerialIdOfItem() + " in the discount " + "\"" + e.getDiscountName() + "\"\n" +
-                            "doesn't exist in it's store(store's name: " + store.getName() + ", store's serialID: " + store.getSerialNumber();
+                            "doesn't exist in it's store(store's name: " + storeName + ", store's serialID: " + storeID;
 
                 } catch (ItemIDInDiscountNotExistInSDMException e) {
-                    Store store = e.getStore();
+                    Integer storeID = e.getStoreSerialID();
+                    String storeName = e.getStoreName();
                     message = "Item with serial id " + e.getSerialIdOfItem() + " in the discount " + "\"" + e.getDiscountName() + "\"\n" +
                             "doesn't exist in Super Duper Market\n" +
                             "Details on the store that has the discount:\n" +
-                            "Store name:" + store.getName() + ", Store serialID:" + store.getSerialNumber();
+                            "Store name:" + storeName + ", Store serialID:" + storeID;
                 } catch (DuplicateDiscountNameException e) {
-                    Store store = e.getStore();
+                    Integer storeID = e.getStoreID();
+                    String storeName = e.getStoreName();
                     message = "Discount with name " + e.getDiscountName() + " already exist in store\n" +
                             "Details on the store that has the discount:\n" +
-                            "Store name:" + store.getName() + ", Store serialID:" + store.getSerialNumber();
+                            "Store name:" + storeName + ", Store serialID:" +storeID;
                 } catch (ItemIDNotExistInAStoreException e) {
-                    Store store = e.getStore();
-                    message = "Item with serial id " + e.getSerialId() + " doesn't exist in store.\n" +
+                    Integer storeID = e.getSerialIDOfStore();
+                    String storeName = e.getStoreName();
+                    Integer itemID = e.getSerialIDOfItem();
+                    message = "Item with serial id " + itemID + " doesn't exist in store.\n" +
                             "Details on the store:\n" +
-                            "Store name:" + store.getName() + ", Store serialID:" + store.getSerialNumber();
+                            "Store name:" + storeName + ", Store serialID:" + storeID;
                 }
            }
             else

@@ -3,12 +3,14 @@ package exceptions.notExistException;
 import logic.Store;
 
 public class ItemIDInDiscountNotExistInAStoreException extends Exception{
-    Store store;
+    Integer storeSerialID;
+    String storeName;
     int serialIdOfItem;
     String discountName;
-    public ItemIDInDiscountNotExistInAStoreException(Store store, int serialIdOfItem, String discountName)
+    public ItemIDInDiscountNotExistInAStoreException(Integer storeSerialID, String storeName,  int serialIdOfItem, String discountName)
     {
-        this.store = store;
+        this.storeSerialID = storeSerialID;
+        this.storeName = storeName;
         this.serialIdOfItem = serialIdOfItem;
         this.discountName = discountName;
     }
@@ -17,8 +19,12 @@ public class ItemIDInDiscountNotExistInAStoreException extends Exception{
         return discountName;
     }
 
-    public Store getStore() {
-        return store;
+    public Integer getStoreSerialID() {
+        return storeSerialID;
+    }
+
+    public String getStoreName() {
+        return storeName;
     }
 
     public int getSerialIdOfItem() {

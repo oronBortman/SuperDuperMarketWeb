@@ -1,10 +1,8 @@
 package sdm.servlets.pagetwo;
 
 import com.google.gson.Gson;
-import com.sun.tools.internal.jxc.ap.Const;
 import logic.users.User;
 import logic.users.UserManager;
-import sdm.constants.Constants;
 import sdm.utils.ServletUtils;
 import sdm.utils.SessionUtils;
 

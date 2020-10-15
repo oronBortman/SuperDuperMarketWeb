@@ -7,17 +7,45 @@ import javax.xml.stream.Location;
 
 public class CustomerLocationIsIdenticalToCustomerException extends Exception{
 
-    Customer firstCustomer;
-    SDMLocation firstCustomerLocation;
-    Customer secondCustomer;
-    SDMLocation secondCustomerLocation;
+    String  firstCustomerName;
+    Integer firstCustomerCoordinateX;
+    Integer firstCustomerCoordinateY;
+    String  secondCustomerName;
+    Integer secondCustomerCoordinateX;
+    Integer secondtCustomerCoordinateY;
 
-    public CustomerLocationIsIdenticalToCustomerException(Customer firstCustomer, SDMLocation firstCustomerLocation, Customer secondCustomer, SDMLocation secondCustomerLocation)
+    public CustomerLocationIsIdenticalToCustomerException(String firstCustomerName, Integer firstCustomerCoordinateX, Integer firstCustomerCoordinateY, String secondCustomerName, Integer secondCustomerCoordinateX, Integer secondtCustomerCoordinateY)
     {
-        this.firstCustomer = firstCustomer;
-        this.firstCustomerLocation = firstCustomerLocation;
-        this.secondCustomer = secondCustomer;
-        this.secondCustomerLocation = secondCustomerLocation;
+        this.firstCustomerName = firstCustomerName;
+        this.firstCustomerCoordinateX = firstCustomerCoordinateX;
+        this.firstCustomerCoordinateY = firstCustomerCoordinateY;
+
+        this.secondCustomerName = secondCustomerName;
+        this.secondCustomerCoordinateX = secondCustomerCoordinateX;
+        this.secondtCustomerCoordinateY = secondtCustomerCoordinateY;
     }
 
+    public Integer getFirstCustomerCoordinateX() {
+        return firstCustomerCoordinateX;
+    }
+
+    public Integer getFirstCustomerCoordinateY() {
+        return firstCustomerCoordinateY;
+    }
+
+    public Integer getSecondCustomerCoordinateX() {
+        return secondCustomerCoordinateX;
+    }
+
+    public Integer getSecondtCustomerCoordinateY() {
+        return secondtCustomerCoordinateY;
+    }
+
+    public String getFirstCustomerName() {
+        return firstCustomerName;
+    }
+
+    public String getSecondCustomerName() {
+        return secondCustomerName;
+    }
 }

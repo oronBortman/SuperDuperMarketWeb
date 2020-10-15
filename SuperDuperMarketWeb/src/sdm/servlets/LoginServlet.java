@@ -2,8 +2,6 @@ package sdm.servlets;
 
 import com.google.gson.Gson;
 import logic.users.User;
-import logic.zones.Zone;
-import logic.zones.ZoneManager;
 import sdm.constants.Constants;
 import sdm.utils.ServletUtils;
 import logic.users.UserManager;
@@ -13,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import java.io.IOException;
 
 import static sdm.constants.Constants.USERNAME;

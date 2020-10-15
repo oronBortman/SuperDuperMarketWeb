@@ -4,18 +4,24 @@ import logic.Store;
 
 public class DuplicateDiscountNameException extends Exception{
     String discountName=null;
-    Store store;
-    public DuplicateDiscountNameException(String discountName, Store store)
+    Integer storeID;
+    String storeName;
+    public DuplicateDiscountNameException(String discountName, Integer storeID, String storeName)
     {
         this.discountName = discountName;
-        this.store = store;
+        this.storeID = storeID;
+        this.storeName = storeName;
     }
 
     public String getDiscountName() {
         return discountName;
     }
 
-    public Store getStore() {
-        return store;
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public Integer getStoreID() {
+        return storeID;
     }
 }

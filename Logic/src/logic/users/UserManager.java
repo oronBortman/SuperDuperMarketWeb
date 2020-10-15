@@ -1,6 +1,6 @@
 package logic.users;
 
-import static logic.common.SuperDuperMarketConstants.SELLER1;
+import static logic.common.SuperDuperMarketConstants.SELLER;
 import static logic.common.SuperDuperMarketConstants.CUSTOMER;
 
 import logic.Customer;
@@ -21,7 +21,7 @@ public class UserManager {
     }
 
     public synchronized void addUser(String username, String userType) {
-        if(userType.equals(SELLER1))
+        if(userType.equals(SELLER))
         {
             usersMap.put(username, new Seller(username));
         }

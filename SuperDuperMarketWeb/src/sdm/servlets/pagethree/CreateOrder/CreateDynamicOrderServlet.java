@@ -1,15 +1,10 @@
 package sdm.servlets.pagethree.CreateOrder;
 
 import com.google.gson.Gson;
-import logic.Customer;
-import logic.Item;
 import logic.SDMLocation;
 import logic.order.CustomerOrder.OpenedCustomerOrder1;
 import logic.users.User;
 import logic.users.UserManager;
-import logic.zones.Zone;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import sdm.utils.ServletUtils;
 import sdm.utils.SessionUtils;
 
@@ -20,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 @WebServlet("/create-dynamic-order")
 public class CreateDynamicOrderServlet extends HttpServlet {

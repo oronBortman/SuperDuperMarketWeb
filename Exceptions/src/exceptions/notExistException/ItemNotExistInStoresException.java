@@ -3,13 +3,19 @@ package exceptions.notExistException;
 import logic.Item;
 
 public class ItemNotExistInStoresException extends Exception{
-    Item item;
-    public ItemNotExistInStoresException(Item item)
+    Integer serialID;
+    String itemName;
+    public ItemNotExistInStoresException(Integer serialID, String itemName)
     {
-        this.item = item;
+        this.serialID = serialID;
+        this.itemName = itemName;
     }
 
-    public Item getItem() {
-        return item;
+    public Integer getSerialID() {
+        return serialID;
+    }
+
+    public String getItemName() {
+        return itemName;
     }
 }

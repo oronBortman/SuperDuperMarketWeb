@@ -20,7 +20,6 @@ import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.order.StoreOrder.OpenedStoreOrder;
 import logic.order.itemInOrder.OrderedItemFromStoreByQuantity;
 import logic.order.itemInOrder.OrderedItemFromStoreByWeight;
-import logic.users.UserManager;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
@@ -43,7 +42,7 @@ public class Zone {
 
     public Zone(SuperDuperMarketDescriptor superDuperMarketDescriptor, Seller zoneOwner) throws FileNotFoundException, JAXBException, DuplicateItemSerialIDException, DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, StoreLocationIsIdenticalToStoreException, InvalidCoordinateXOfStoreException, ItemWithSerialIDNotExistInSDMException, StoreNotExistException, DuplicateItemSerialIDInStoreException, ItemIDInDiscountNotExistInAStoreException, ItemIDInDiscountNotExistInSDMException, DuplicateDiscountNameException, ItemIDNotExistInAStoreException {
         this.zoneOwner = zoneOwner;
-        this.zoneName = superDuperMarketDescriptor.getSDMZone().getName();
+        this.zoneName = superDuperMarketDescriptor.getSDMZone1().getName();
         storesLocationMap = new HashMap<>();
         storesSerialIDMap = new HashMap<>();
         itemsSerialIDMap = new HashMap<>();
@@ -544,9 +543,19 @@ public class Zone {
         return mapOfShopsWithCheapestItems;
     }
 
+    public ArrayList<Item> addItemsToItemListFromOrderedItemsMap(Map<Integer, Double> orderedItemsListByItemSerialID)
+    {
+        ArrayList<Item> itemsList = new ArrayList<>();
+        for (Map.Entry<Integer, Double> entry : orderedItemsListByItemSerialID.entrySet()) {
+            Integer itemSerialID = entry.getKey();
+            itemsList.add(getItemBySerialID(itemSerialID));
+        }
+        return itemsList;
+    }
+   /*
     public ArrayList<Item> addQuantityItemsToItemListFromOrderedItemsMap(Map<Integer, Integer> orderedItemsListByItemSerialID)
     {
-        ArrayList<Item> itemsList = new ArrayList<Item>();
+        ArrayList<Item> itemsList = new ArrayList<>();
         for (Map.Entry<Integer, Integer> entry : orderedItemsListByItemSerialID.entrySet()) {
             Integer itemSerialID = entry.getKey();
             itemsList.add(getItemBySerialID(itemSerialID));
@@ -562,10 +571,10 @@ public class Zone {
             itemsList.add(getItemBySerialID(itemSerialID));
         }
         return itemsList;
-    }
+    }*/
 
 
-    public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(Customer customer, String date, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer)
+   /* public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(Customer customer, String date, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer)
     {
         List<Item> itemsList = new ArrayList<>();
         OpenedCustomerOrder1 openedCustomerOrder = new OpenedCustomerOrder1(date, customer.getUserName(), false, locationOfCustomer);
@@ -588,23 +597,65 @@ public class Zone {
             openedCustomerOrder.addStoreOrder(openedStoreOrder);
         }
         return openedCustomerOrder;
-    }
+    }*/
 
-    public void addWeightItemToOpenedOrder(Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, AvailableItemInStore itemInStore, OpenedStoreOrder openedStoreOrder)
+    public void updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(OpenedCustomerOrder1 openedCustomerOrder1)
+    {
+        Map<Integer, Double> itemsChosenForDynamicOrder = openedCustomerOrder1.getItemsChosenForDynamicOrder();
+        List<Item> itemsList = addItemsToItemListFromOrderedItemsMap(itemsChosenForDynamicOrder);
+        Map<Store, List<AvailableItemInStore>> mapOfShopWithCheapestItems = getMapOfShopWithCheapestItemsFromListOfItems(itemsList);
+
+        for (Map.Entry<Store, List<AvailableItemInStore>> entry : mapOfShopWithCheapestItems.entrySet()) {
+            Store storeUsed = entry.getKey();
+            List<AvailableItemInStore> availableItemInStoreList = entry.getValue();
+            //OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, date, isOrderStatic, customer.getLocation());
+            OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, openedCustomerOrder1.getDateStr(), false, openedCustomerOrder1.getLocationOfCustomer());
+
+            for (AvailableItemInStore itemInStore : availableItemInStoreList) {
+                //   addItemToOpenedOrder(orderedItemsListByItemSerialIDAndAmount, itemInStore, openedStoreOrder);
+                if(itemInStore.getTypeOfMeasure() == Item.TypeOfMeasure.Weight) { addWeightItemToOpenedOrder(itemsChosenForDynamicOrder, itemInStore, openedStoreOrder);}
+                else if(itemInStore.getTypeOfMeasure() == Item.TypeOfMeasure.Quantity) { addQuantityItemToOpenedOrder(itemsChosenForDynamicOrder, itemInStore, openedStoreOrder);}
+            }
+            openedCustomerOrder1.addStoreOrder(openedStoreOrder);
+        }
+    }
+/*    public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(Customer customer, String date, Map<Integer, Double> orderedItemsListByItemSerialIDAndAmount, SDMLocation locationOfCustomer)
+    {
+        OpenedCustomerOrder1 openedCustomerOrder = new OpenedCustomerOrder1(date, customer.getUserName(), false, locationOfCustomer);
+        List<Item> itemsList = addItemsToItemListFromOrderedItemsMap(orderedItemsListByItemSerialIDAndAmount);
+        Map<Store, List<AvailableItemInStore>> mapOfShopWithCheapestItems = getMapOfShopWithCheapestItemsFromListOfItems(itemsList);
+
+        for (Map.Entry<Store, List<AvailableItemInStore>> entry : mapOfShopWithCheapestItems.entrySet()) {
+            Store storeUsed = entry.getKey();
+            List<AvailableItemInStore> availableItemInStoreList = entry.getValue();
+            //OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, date, isOrderStatic, customer.getLocation());
+            OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, date, false, locationOfCustomer);
+
+            for (AvailableItemInStore itemInStore : availableItemInStoreList) {
+             //   addItemToOpenedOrder(orderedItemsListByItemSerialIDAndAmount, itemInStore, openedStoreOrder);
+                if(itemInStore.getTypeOfMeasure() == Item.TypeOfMeasure.Weight) { addWeightItemToOpenedOrder(orderedItemsListByItemSerialIDAndAmount, itemInStore, openedStoreOrder);}
+                else if(itemInStore.getTypeOfMeasure() == Item.TypeOfMeasure.Quantity) { addQuantityItemToOpenedOrder(orderedItemsListByItemSerialIDAndAmount, itemInStore, openedStoreOrder);}
+            }
+            openedCustomerOrder.addStoreOrder(openedStoreOrder);
+        }
+        return openedCustomerOrder;
+    }*/
+
+    public void addWeightItemToOpenedOrder(Map<Integer, Double> orderedItemsListByItemSerialIDAndAmount, AvailableItemInStore itemInStore, OpenedStoreOrder openedStoreOrder)
     {
         int itemSerialID = itemInStore.getSerialNumber();
-        if (orderedItemsListByItemSerialIDAndWeight.containsKey(itemSerialID)) {
-            double amountOfItem = orderedItemsListByItemSerialIDAndWeight.get(itemSerialID);
+        if (orderedItemsListByItemSerialIDAndAmount.containsKey(itemSerialID)) {
+            double amountOfItem = orderedItemsListByItemSerialIDAndAmount.get(itemSerialID);
             OrderedItemFromStoreByWeight orderedItemFromStoreByWeight = new OrderedItemFromStoreByWeight(itemInStore, amountOfItem);
             openedStoreOrder.addItemToItemsMapOfOrder(orderedItemFromStoreByWeight);
         }
     }
 
-    public void addQuantityItemToOpenedOrder(Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, AvailableItemInStore itemInStore, OpenedStoreOrder openedStoreOrder)
+    public void addQuantityItemToOpenedOrder(Map<Integer, Double> orderedItemsListByItemSerialIDAndAmount, AvailableItemInStore itemInStore, OpenedStoreOrder openedStoreOrder)
     {
         int itemSerialID = itemInStore.getSerialNumber();
-        if (orderedItemsListByItemSerialIDAndQuantity.containsKey(itemSerialID)) {
-            double amountOfItem = orderedItemsListByItemSerialIDAndQuantity.get(itemSerialID);
+        if (orderedItemsListByItemSerialIDAndAmount.containsKey(itemSerialID)) {
+            double amountOfItem = orderedItemsListByItemSerialIDAndAmount.get(itemSerialID);
             OrderedItemFromStoreByWeight orderedItemFromStoreByWeight = new OrderedItemFromStoreByWeight(itemInStore, amountOfItem);
             openedStoreOrder.addItemToItemsMapOfOrder(orderedItemFromStoreByWeight);
         }

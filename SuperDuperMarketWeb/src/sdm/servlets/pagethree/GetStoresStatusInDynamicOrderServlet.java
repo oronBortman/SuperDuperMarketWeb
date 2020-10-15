@@ -2,7 +2,10 @@ package sdm.servlets.pagethree;
 
 import com.google.gson.Gson;
 import logic.AvailableItemInStore;
+import logic.SDMLocation;
 import logic.Store;
+import logic.order.CustomerOrder.OpenedCustomerOrder1;
+import logic.order.StoreOrder.OpenedStoreOrder;
 import logic.zones.Zone;
 import logic.zones.ZoneManager;
 import org.json.simple.JSONArray;
@@ -19,6 +22,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import static sdm.constants.Constants.ZONENAME;
+import static sdm.general.GeneralMethods.getCurrentOrderByRequest;
 
 @WebServlet("/get-stores-status-in-dynamic-order")
 public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
@@ -27,64 +31,54 @@ public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In showAllStoresInZoneServlet");
+        System.out.println("In GetStoresStatusInDynamicOrderServlet :)))))");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
-            ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
-            String zoneName = request.getParameter(ZONENAME);
-            Zone zone = zoneManager.getZoneByName(zoneName);
-            if(zoneName != null)
+            OpenedCustomerOrder1 openedCustomerOrder1 = getCurrentOrderByRequest(getServletContext(), request);
+            List<OpenedStoreOrder> listOfOpenedStoreOrder = openedCustomerOrder1.getListOfOpenedStoreOrder();
+            if(openedCustomerOrder1 != null)
             {
-                List<Store> storeList = zone.getStoresList();
-                JSONArray jsonArray = readingFromStoresListToJsonObject(storeList);
+                JSONArray jsonArray = readingFromStoresListToJsonObject(listOfOpenedStoreOrder, openedCustomerOrder1);
                 String json = gson.toJson(jsonArray);
                 out.println(json);
-                System.out.println("This is the list of stores!!");
+                System.out.println("This is the list of stores!!\n\n\n\n\n\n");
                 System.out.println(json);
                 out.flush();
+
             }
             else
             {
-                System.out.println("zoneName is null!!");
+                System.out.println("openedCustomerOrder is null!!");
             }
         }
     }
 
-    public JSONArray readingFromStoresListToJsonObject(List<Store> storeList)
+    public JSONArray readingFromStoresListToJsonObject(List<OpenedStoreOrder> openedStoreList, OpenedCustomerOrder1 openedCustomerOrder1)
     {
-        JSONArray jsonArray = new JSONArray();
-        int i=0;
-        for(Store store : storeList)
-        {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("serialNumber", store.getSerialNumber());
-            jsonObject.put("name", store.getName());
-            jsonObject.put("ownerName", store.getStoreOwner().getUserName());
-            jsonObject.put("totalOrdersFromStore", store.calcTotalOrdersFromStore());
-            jsonObject.put("totalProfitOfSoledItems", store.calcTotalProfitOfSoledItems());
-            jsonObject.put("PPK", store.getPPK());
-            jsonObject.put("totalProfitOfDeliveris",store.calcProfitOfDelivers());
-            JSONArray itemsInStore = readingItemsFromStoreToJsonObject(store.getAvailableItemsList(), store);
-            jsonObject.put("availableItemsList", itemsInStore);
-            jsonArray.add(i,jsonObject);
-            i++;
-        }
-        return jsonArray;
-    }
 
-    public JSONArray readingItemsFromStoreToJsonObject(List<AvailableItemInStore> availableItemInStoreList, Store store)
-    {
         JSONArray jsonArray = new JSONArray();
         int i=0;
-        for(AvailableItemInStore availableItemInStore : availableItemInStoreList)
+        for(OpenedStoreOrder openedStoreOrder : openedStoreList)
         {
-            int itemSerialId = availableItemInStore.getSerialNumber();
+            System.out.println(i +" !!!!!!");
+            Store store = openedStoreOrder.getStoreUsed();
+            SDMLocation locationOfStore = store.getLocation();
+            Integer coordinateX=locationOfStore.getX();
+            Integer coordinateY=locationOfStore.getY();
+
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("serialNumber", availableItemInStore.getSerialNumber());
-            jsonObject.put("name", availableItemInStore.getName());
-            jsonObject.put("typeToMeasureBy", availableItemInStore.getTypeOfMeasureStr());
-            jsonObject.put("pricePerUnit", availableItemInStore.getPricePerUnit());
-            jsonObject.put("totalSoledItemsFromStore", store.getAmountOfItemSoledByTypeOfMeasure(itemSerialId));
+
+            jsonObject.put("storeID", store.getSerialNumber());
+            jsonObject.put("storeName", store.getName());
+            jsonObject.put("storeOwner", store.getStoreOwner().getUserName());
+            jsonObject.put("location", "(" + coordinateX + "," + coordinateY + ")");
+            jsonObject.put("distanceFromCustomer", store.getLocation().getAirDistanceToOtherLocation(openedCustomerOrder1.getLocationOfCustomer()));
+            jsonObject.put("PPK", store.getPPK());
+            jsonObject.put("deliveryCost",openedStoreOrder.calcTotalDeliveryPrice());
+            jsonObject.put("amountOfItemsPurchased", openedStoreOrder.calcTotalAmountOfItemsByMeasureType());
+            jsonObject.put("totalPriceOfItems", openedStoreOrder.calcTotalPriceOfItemsNotFromSale());
+            System.out.println("!!!!!!!");
+            System.out.println(jsonObject);
             jsonArray.add(i,jsonObject);
             i++;
         }

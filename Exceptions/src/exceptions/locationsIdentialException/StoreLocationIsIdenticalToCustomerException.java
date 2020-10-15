@@ -6,15 +6,40 @@ import logic.Store;
 
 public class StoreLocationIsIdenticalToCustomerException extends Exception{
 
-    Store store;
-    Customer customer;
-    SDMLocation locationOfCustomer;
-    public StoreLocationIsIdenticalToCustomerException(Store store, Customer customer, SDMLocation locationOfCustomer)
+    Integer storeSerialID;
+    String storeName;
+    String customerName;
+    Integer coordinateXOfCustomer;
+    Integer coordinateYOfCustomer;
+    public StoreLocationIsIdenticalToCustomerException(Integer storeSerialID,  String storeName, String customerName, Integer coordinateXOfCustomer, Integer coordinateYOfCustomer)
     {
-        this.store = store;
-        this.customer = customer;
-        this.locationOfCustomer = locationOfCustomer;
-       // super(store, locationOfCustomer);
+        this.storeSerialID = storeSerialID;
+        this.storeName = storeName;
+        this.customerName = customerName;
+        this.coordinateXOfCustomer = coordinateXOfCustomer;
+        this.coordinateYOfCustomer = coordinateYOfCustomer;
     }
 
+    public Integer getCoordinateYOfCustomer() {
+        return coordinateYOfCustomer;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public Integer getCoordinateXOfCustomer() {
+        return coordinateXOfCustomer;
+    }
+
+    public Integer getStoreSerialID() {
+        return storeSerialID;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+
 }
+

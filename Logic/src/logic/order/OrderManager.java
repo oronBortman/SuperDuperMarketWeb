@@ -33,7 +33,7 @@ public class OrderManager {
         try {
             //InputStream inputStream = new FileInputStream(new File(xmlPath));
             SuperDuperMarketDescriptor superDuperMarketDescriptor = deserializeFrom(inputStream);
-            String zoneName = superDuperMarketDescriptor.getSDMZone().getName();
+            String zoneName = superDuperMarketDescriptor.getSDMZone1().getName();
             if(checkIfZoneExists(zoneName))
             {
                 throw new DuplicateZoneName(zoneName);

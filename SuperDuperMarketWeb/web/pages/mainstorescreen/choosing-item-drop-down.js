@@ -1,6 +1,17 @@
-import {emptyMakeOrderBody} from "./general-make-an-order-functions.js";
+import {emptyMakeOrderBody,
+    createHTMLElementAndAppendToMakeOrderBody,
+    createEmptyDropDownListHTML,
+    createButton,
+    disableElement,
+    enableElement,
+    createNextButtonHTMLAndAppendToMakeOrderBody} from "./general-make-an-order-functions.js";
+
+import {initiateShowStoresStatusTable} from "./show-store-status-in-dynamic-order.js"
 
 const ITEMS_NOT_CHOSEN_IN_ORDER_URL=buildUrlWithContextPath("get-items-that-are-available-in-order");
+const ACTIVATE_DYNAMIC_ALGORITHM_IN_DYNAMIC_ORDER = buildUrlWithContextPath("activate-dynamic-algorithm-in-dynamic-order");
+
+
 const ADD_ITEM_TO_ORDER = buildUrlWithContextPath("add-item-to-order");
 //ID's of HTML Elements
 const ID_OF_MINUS_BUTTON = "minusButton";
@@ -12,6 +23,8 @@ const NAME_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
 const ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
 const ID_OF_ADD_ITEM_TO_ORDER = 'addItemToOrder';
 const ID_OF_ITEM_ELEMENT = 'itemElement';
+const ID_OF_NEXT_BUTTON = "nextButton";
+
 
 const STATIC = 'static';
 const DYNAMIC = 'dynamic';
@@ -26,11 +39,11 @@ const WEIGHT = "Weight";
 export function initiateTheChoosingItemDropDownInOrder(orderType)
 {
     initiateChoosingItemDropDownHTMLInOrder();
-    $(getChooseItemsDropDownListHTML()).appendTo($("#" + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT));
-    $(getAddItemToOrderButtonHTML()).appendTo($("#" + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT));
-    getItemElementHTMLAndAppendToMakeOrderBody();
+    $(createChooseItemsDropDownListHTML()).appendTo($("#" + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT));
+    createItemElementHTMLAndAppendToMakeOrderBody();
+    createNextButtonHTMLAndAppendToMakeOrderBody();
+    setNextButtonEvent(orderType);
     setChoosingItemFromDropDownListEvent(orderType);
-   // setAddItemToOrderButtonClickedEvent(orderType);
     getItemsListFromServerAndSetTheItemsList(orderType);
 }
 
@@ -51,32 +64,70 @@ export function setChoosingItemFromDropDownListEvent(orderType)
     });
 }
 
+export function setNextButtonEvent(orderType)
+{
+    $('#' + ID_OF_NEXT_BUTTON).click(function () {
+        alert('Clicked On next button!');
+        if(orderType === STATIC)
+        {
+            alert('order is static!');
+        }
+        else if(orderType === DYNAMIC)
+        {
+            alert('order is dynamic!');
+            activateDynamicAlgorithm();
+            initiateShowStoresStatusTable();
+        }
+    });
+}
+
+export function appendElementToItemElement(elementToAppend)
+{
+    elementToAppend.appendTo($("#" + ID_OF_ITEM_ELEMENT));
+}
+
+export function setItemEvents(typeToMeasureBy, orderType, serialIDOfItem)
+{
+    setMinusButtonEvent(typeToMeasureBy);
+    setPlusButtonEvent(typeToMeasureBy);
+    setAddItemToOrderButtonClickedEvent(orderType,serialIDOfItem);//,typeToMeasureBy);
+}
+
+export function createHTMLElementsAndAppendThemToItemElement(itemStr, typeToMeasureBy, orderType)
+{
+    appendElementToItemElement($(getHTMLOfItemToChooseInOrder(itemStr, orderType)));
+    appendElementToItemElement($(getHTMLOfTableOfEnteringAmountOfItem(typeToMeasureBy, orderType)));
+    appendElementToItemElement($(getAddItemToOrderButtonHTML()));
+}
+
 export function createItemToChooseElement(itemStr, orderType)
 {
     var itemJSON = JSON.parse(itemStr);
     var typeToMeasureBy = itemJSON["typeToMeasureBy"];
     var serialIDOfItem = itemJSON["serialNumber"];
     emptyItemElement();
-    ($(getHTMLOfItemToChooseInOrder(itemStr, orderType))).appendTo($("#" + ID_OF_ITEM_ELEMENT));
-    ($(getHTMLOfTableOfEnteringAmountOfItem(typeToMeasureBy, orderType))).appendTo($("#" + ID_OF_ITEM_ELEMENT));
-    setMinusButtonEvent(typeToMeasureBy);
-    setPlusButtonEvent(typeToMeasureBy);
-    setAddItemToOrderButtonClickedEvent(orderType,serialIDOfItem);//,typeToMeasureBy);
+    createHTMLElementsAndAppendThemToItemElement(itemStr, typeToMeasureBy,orderType);
+    setItemEvents(typeToMeasureBy,orderType,serialIDOfItem);
+
 }
 
-export function getChooseItemsDropDownListHTML()
+
+export function createChooseItemsDropDownListHTML()
 {
-    return '<form>' +
-        '<label for="itemsInStore">Choose item:</label>'+
-        '<select name=' + NAME_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST + ' id=' + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST + '>' +
-        '</select>' +
-        '</form>';
+    var forName = "itemInStore";
+    var headline = "Choose item:";
+    return createEmptyDropDownListHTML(forName, headline, ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST)
 }
 
+export function emptyChooseItemsDropDownList()
+{
+    $( "#" + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST ).empty();
+}
+
+//The values in here are good
 export function setItemsListInItemDropDownInOrder(itemsList, orderType)
 {
     var chooseItemsDropDownList = $("#"+ ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST);
-
     $.each(itemsList || [], function(index, item) {
         var itemID = item["serialNumber"];
         var itemName = item["name"]["value"];
@@ -88,6 +139,8 @@ export function setItemsListInItemDropDownInOrder(itemsList, orderType)
             "pricePerUnit": itemPrice,
             "typeToMeasureBy": itemTypeOfMeasure
         };
+        //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
+
         var itemStr =JSON.stringify(itemJson);
         console.log("Adding item #" + itemID + ": " + itemName);
        // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
@@ -115,6 +168,7 @@ export function getHTMLOfItemToChooseInOrder(itemStr, orderType)
     if(orderType === STATIC)
     {
         var availableItemPrice = itemJSON["pricePerUnit"];
+    //    alert("in getHTMLOfItemToChooseInOrder and pricePerUnit is:" + availableItemPrice );
      //   alert('chose item with price ' + availableItemPrice);
         var priceRow='<tr><th>price:</th><th>' + availableItemPrice + '</th></tr>';
         res = table + '<tbody>' + serialIdRow + namRow + priceRow + '</tbody>' + '</table>';
@@ -128,22 +182,22 @@ export function getHTMLOfItemToChooseInOrder(itemStr, orderType)
 
 export function getAddItemToOrderButtonHTML()
 {
-    return '<button type="button" id=' + ID_OF_ADD_ITEM_TO_ORDER + '> Add item to order</button>';
+    return createButton(ID_OF_ADD_ITEM_TO_ORDER, "Add item to order");
 }
+
 
 export function emptyItemElement()
 {
-    document.getElementById(ID_OF_ITEM_ELEMENT).innerHTML = '';
+    $( "#" + ID_OF_ITEM_ELEMENT ).empty();
 }
 
-export function getItemElementHTMLAndAppendToMakeOrderBody()
+export function createItemElementHTMLAndAppendToMakeOrderBody()
 {
-    var makeOrderBody = $("#" + ID_OF_MAKE_ORDER_BODY);
-    console.log("In function getItemElementHTML\n")
-    var itemElement = '<div id=' + ID_OF_ITEM_ELEMENT + '></div>';
-    $(itemElement).appendTo(makeOrderBody);
+    createHTMLElementAndAppendToMakeOrderBody(ID_OF_ITEM_ELEMENT);
 }
 
+
+//Value in here are not good
 export function getHTMLOfTableOfEnteringAmountOfItem(typeToMeasureBy)
 {
 
@@ -156,6 +210,8 @@ export function getHTMLOfTableOfEnteringAmountOfItem(typeToMeasureBy)
     {
         amount=WEIGHT_DIFFERENCE;
     }
+   // alert("in getHTMLOfTableOfEnteringAmountOfItem and amount is:" + amount );
+
 
     return '<table class ="tableOfEnteringAmountOfItem">' +
         '<tr>' +
@@ -170,10 +226,10 @@ export function setAddItemToOrderButtonClickedEvent(orderType, serialIDOfItem)
 {
     //   alert("in getItemsListFromServerAndSetTheItemsList: " + orderType);
     $("#" + ID_OF_ADD_ITEM_TO_ORDER).click(function() {
-        var amountOfItem =  $('#' + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN).val();
-        alert("Inside setAddItemToOrderButtonClickedEvent and value are: orderType:"+ orderType + " serialIDOfITem:" + serialIDOfItem + " amountOfItem:" + amountOfItem)
+        var amountOfItem =  $('#' + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN).text();
+     //   alert("Inside setAddItemToOrderButtonClickedEvent and value are: orderType:"+ orderType + " serialIDOfITem:" + serialIDOfItem + " amountOfItem:" + amountOfItem)
         $.ajax({
-            method: 'GET',
+            method: 'POST',
             data: {"orderType":orderType, "serialIDOfItem":serialIDOfItem, "amountOfItem":amountOfItem},
             url: ADD_ITEM_TO_ORDER,
             dataType: "json",
@@ -185,8 +241,10 @@ export function setAddItemToOrderButtonClickedEvent(orderType, serialIDOfItem)
             success: function (r) {
                 if(r.length == 0)
                 {
-                    $('#' + ID_OF_ADD_ITEM_TO_ORDER).prop("disabled",true);
+                    disableElement(ID_OF_ADD_ITEM_TO_ORDER);
                 }
+                enableElement(ID_OF_NEXT_BUTTON); // need to execute just after adding the first item - to fix late
+                emptyChooseItemsDropDownList();
                 setItemsListInItemDropDownInOrder(r, orderType);
             }
         })
@@ -299,18 +357,20 @@ export function getItemsListFromServerAndSetTheItemsList(orderType)
     })
 }
 
-export function setNextButtonInChooseItemsElement() { // onload...do
-    $("#makeANewOrder").submit(function() {
-        var makeOrderBody = $("#makeOrderBody");
-        document.getElementById('makeOrderBody').innerHTML = '';
-        var selectOrderTypeHTML = '<p>Please select your type:</p>' +
-            '<input type="radio" id="static" name="ordertype" value="static">'+
-            '<label for="static">static</label><br>' +
-            '<input type="radio" id="dynamic" name="ordertype" value="dynamic">' +
-            '<label for="dynamic">dynamic</label><br>';
-        var selectDateHTML = '';
-        var nextButtonHTML = '';
-        $(selectOrderTypeHTML + selectDateHTML).appendTo(makeOrderBody);
-        return false;
+export function activateDynamicAlgorithm()
+{
+    $.ajax({
+        method: 'POST',
+        data: {},
+        url: ACTIVATE_DYNAMIC_ALGORITHM_IN_DYNAMIC_ORDER,
+        dataType: "json",
+        timeout: 4000,
+        error: function (e) {
+            console.error(e);
+            alert('error in  getItemsListFromServerAndSetTheItemsList\n' + e);
+        },
+        success: function (r) {
+            alert('succeed to activate dynamic algorithm.This is the json of the items added to order:\n' + r);
+        }
     })
 }
