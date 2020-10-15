@@ -2,6 +2,7 @@ package sdm.servlets.pagethree.ChoosingItemsForOrder;
 
 import com.google.gson.Gson;
 import logic.Item;
+import logic.order.CustomerOrder.OpenedCustomerOrder1;
 import logic.zones.Zone;
 import logic.zones.ZoneManager;
 import org.json.simple.JSONArray;
@@ -18,33 +19,49 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import static sdm.constants.Constants.ZONENAME;
+import static sdm.general.GeneralMethods.getCurrentOrderByRequest;
 
-@WebServlet("/add-item-to-order-servlet")
+@WebServlet("/add-item-to-order")
 public class AddItemToOrderServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In show all items in zone servlet");
+        System.out.println("In AddItemToOrderServlet");
+
         try (PrintWriter out = response.getWriter()) {
-            Gson gson = new Gson();
-            ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
-            String zoneName = request.getParameter(ZONENAME);
-            if(zoneName != null)
+           // Gson gson = new Gson();
+            String orderType = request.getParameter("orderType");
+            String serialIDOfItem = request.getParameter("serialIDOfItem");
+            String amountOfItem = request.getParameter("amountOfItem");
+           // String typeToMeasureBy = request.getParameter("typeToMeasureBy");
+
+           Integer serialIdOfItemInt = Integer.parseInt(serialIDOfItem);
+            Double amountOfItemDouble = Double.parseDouble(amountOfItem);
+
+            OpenedCustomerOrder1 openedCustomerOrder1 = getCurrentOrderByRequest(getServletContext(), request);
+            if(openedCustomerOrder1 != null)
             {
-                Zone zone = zoneManager.getZoneByName(zoneName);
-                List<Item> itemsList = zone.getItemsList();
-                JSONArray jsonArray = readingFromItemsListToJsonObject(itemsList, zone);
-                String json = gson.toJson(jsonArray);
-                out.println(json);
-                System.out.println(json);
-                out.flush();
+                if(orderType.equals("static"))
+                {
+                    openedCustomerOrder1.addItemForStoreOrderInStaticOrder(serialIdOfItemInt,amountOfItemDouble);
+
+                }
+                else if(orderType.equals("dynamic"))
+                {
+                    openedCustomerOrder1.addItemToItemsChosenForDynamicOrderMap(serialIdOfItemInt, amountOfItemDouble);
+                }
+
             }
             else
             {
                 System.out.println("Zone name is null!");
             }
+        }
+        catch (Exception error)
+        {
+            System.out.println("There is error in AddItemToOrderServler:\n" + error.getMessage());
         }
     }
 

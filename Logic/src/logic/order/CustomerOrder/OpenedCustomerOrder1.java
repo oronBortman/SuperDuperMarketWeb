@@ -13,6 +13,8 @@ import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.order.StoreOrder.OpenedStoreOrder;
 import logic.order.itemInOrder.OrderedItemFromSale;
 import logic.order.itemInOrder.OrderedItemFromStore;
+import logic.order.itemInOrder.OrderedItemFromStoreByQuantity;
+import logic.order.itemInOrder.OrderedItemFromStoreByWeight;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,7 +25,7 @@ public class OpenedCustomerOrder1 extends Order {
     Map<Store, OpenedStoreOrder> openedStoresOrderMap;
     SDMLocation locationOfCustomer;
     String customerName;
-    Map<Integer, Item> itemsChosenForDynamicOrder;
+    Map<Integer, Double> itemsChosenForDynamicOrder;
     //Map<Integer, Integer> itemsAmountLeftToUseInSalesMap;
     //Map<String, Discount> availableDiscountsMap;
 
@@ -42,11 +44,34 @@ public class OpenedCustomerOrder1 extends Order {
 
     }
 
-    @FXML
-    private Label LabelTotalItemsCost;
-    @FXML private Label LabelTotalDeliveryPrice;
-    @FXML private Label LabelTotalOrderPrice;
+    public void addItemForStoreOrderInStaticOrder(Integer serialIDOfItem, Double amountOfItem)
+    {
+        if(openedStoresOrderMap.size() == 1)
+        {
+            for(OpenedStoreOrder openedStoreOrder : openedStoresOrderMap.values())
+            {
+                Store store = openedStoreOrder.getStoreUsed();
+                AvailableItemInStore availableItemInStore = store.getItemBySerialID(serialIDOfItem);
+                Item.TypeOfMeasure typeOfMeasure = availableItemInStore.getTypeOfMeasure();
 
+                switch (typeOfMeasure) {
+                    case Quantity:
+                        openedStoreOrder.addItemToItemsMapOfOrder(new OrderedItemFromStoreByQuantity(availableItemInStore, amountOfItem));
+                        break;
+                    case Weight:
+                        openedStoreOrder.addItemToItemsMapOfOrder(new OrderedItemFromStoreByWeight(availableItemInStore, amountOfItem));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    public void addItemToItemsChosenForDynamicOrderMap(Integer serialIDOfItem, Double amountOfItem)
+    {
+        itemsChosenForDynamicOrder.put(serialIDOfItem,amountOfItem);
+    }
     public Double calcTotalItemsCost()
     {
         Double totalItemsCost=0.0;

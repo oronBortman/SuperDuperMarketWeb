@@ -1,7 +1,7 @@
 import {emptyMakeOrderBody} from "./general-make-an-order-functions.js";
 
 const ITEMS_NOT_CHOSEN_IN_ORDER_URL=buildUrlWithContextPath("get-items-that-are-available-in-order");
-
+const ADD_ITEM_TO_ORDER = buildUrlWithContextPath("add-item-to-order");
 //ID's of HTML Elements
 const ID_OF_MINUS_BUTTON = "minusButton";
 const ID_OF_PLUS_BUTTON = "plusButton";
@@ -30,7 +30,7 @@ export function initiateTheChoosingItemDropDownInOrder(orderType)
     $(getAddItemToOrderButtonHTML()).appendTo($("#" + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT));
     getItemElementHTMLAndAppendToMakeOrderBody();
     setChoosingItemFromDropDownListEvent(orderType);
-    setAddItemToOrderButtonClickedEvent();
+   // setAddItemToOrderButtonClickedEvent(orderType);
     getItemsListFromServerAndSetTheItemsList(orderType);
 }
 
@@ -55,11 +55,13 @@ export function createItemToChooseElement(itemStr, orderType)
 {
     var itemJSON = JSON.parse(itemStr);
     var typeToMeasureBy = itemJSON["typeToMeasureBy"];
+    var serialIDOfItem = itemJSON["serialNumber"];
     emptyItemElement();
     ($(getHTMLOfItemToChooseInOrder(itemStr, orderType))).appendTo($("#" + ID_OF_ITEM_ELEMENT));
     ($(getHTMLOfTableOfEnteringAmountOfItem(typeToMeasureBy, orderType))).appendTo($("#" + ID_OF_ITEM_ELEMENT));
     setMinusButtonEvent(typeToMeasureBy);
-    setPlusButtonEvent(typeToMeasureBy)
+    setPlusButtonEvent(typeToMeasureBy);
+    setAddItemToOrderButtonClickedEvent(orderType,serialIDOfItem);//,typeToMeasureBy);
 }
 
 export function getChooseItemsDropDownListHTML()
@@ -164,12 +166,36 @@ export function getHTMLOfTableOfEnteringAmountOfItem(typeToMeasureBy)
         '</table>';
 }
 
-export function setAddItemToOrderButtonClickedEvent()
+export function setAddItemToOrderButtonClickedEvent(orderType, serialIDOfItem)
 {
+    //   alert("in getItemsListFromServerAndSetTheItemsList: " + orderType);
     $("#" + ID_OF_ADD_ITEM_TO_ORDER).click(function() {
-        subbingAmount();
-        initiateTheChoosingItemDropDownInOrder(storeIDSelected);
-    });
+        var amountOfItem =  $('#' + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN).val();
+        alert("Inside setAddItemToOrderButtonClickedEvent and value are: orderType:"+ orderType + " serialIDOfITem:" + serialIDOfItem + " amountOfItem:" + amountOfItem)
+        $.ajax({
+            method: 'GET',
+            data: {"orderType":orderType, "serialIDOfItem":serialIDOfItem, "amountOfItem":amountOfItem},
+            url: ADD_ITEM_TO_ORDER,
+            dataType: "json",
+            timeout: 4000,
+            error: function (e) {
+                console.error(e);
+                alert('error in  setAddItemToOrderButtonClickedEvent\n' + e);
+            },
+            success: function (r) {
+                if(r.length == 0)
+                {
+                    $('#' + ID_OF_ADD_ITEM_TO_ORDER).prop("disabled",true);
+                }
+                setItemsListInItemDropDownInOrder(r, orderType);
+            }
+        })
+    })
+}
+
+export function addSelectedItemToOrder(orderType)
+{
+
 }
 
 export function subbingAmount(amount, minAmount, difference)
