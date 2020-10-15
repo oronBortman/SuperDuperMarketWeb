@@ -32,7 +32,6 @@ public class CreateDynamicOrderServlet extends HttpServlet {
         System.out.println("In create-dynamic-order servlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
-
             UserManager userManager = ServletUtils.getUserManager(getServletContext());
             User user = userManager.getUserByName(SessionUtils.getUsername(request));
             String date = request.getParameter("date");

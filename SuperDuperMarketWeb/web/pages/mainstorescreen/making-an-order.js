@@ -1,6 +1,5 @@
-import { initiateTheChoosingItemDropDownInStaticOrder } from './choosing-item-drop-down-in-staticOrder.js';
+import { initiateTheChoosingItemDropDownInOrder } from './choosing-item-drop-down.js';
 import {emptyMakeOrderBody} from "./general-make-an-order-functions.js";
-import {initiateTheChoosingItemDropDownInDynamicOrder} from "./choosing-item-drop-down-in-dynamicOrder.js";
 
 var CREATE_DYNAMIC_ORDER_URL = buildUrlWithContextPath("create-dynamic-order");
 var CREATE_STATIC_ORDER_URL = buildUrlWithContextPath("create-static-order");
@@ -27,6 +26,8 @@ var ID_OF_TABLE_OF_ENTERING_COORDINATE_Y = "tableOfEnteringCoordY";
 var COORDINATE_X = 'x';
 var COORDINATE_Y = 'y';
 var INITIAL_VALUE_OF_COORDINATE = '0';
+var STATIC="static";
+var DYNAMIC="dynamic";
 
 
 function emptyChooseStoresDropDownListElement()
@@ -245,35 +246,15 @@ function getChooseStoresDropDownListHTML()
 //TODO
 //Need to pass if static or dynamic
 function setNextButtonInMakeAnOrderElement() { // onload...do
-    var date;
-    var chooseStoresDropDownListElement;
-    var storeIDSelected=null;
-    var coordinateX;
-    var coordinateY;
 
     $("#nextButtonInMakeAnOrderFirstScreen").click(function() {
         //Getting selected ordertype,date and store if it's static
       //  alert("clicked on nextButtonInMakeAnOrderFirstScreen");
         if (document.getElementById(ID_OF_STATIC_RADIO_BUTTON).checked) {
-            date = document.getElementById(ID_OF_DATE_OF_ORDER).value;
-            coordinateX=$("#" + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
-            coordinateY=$("#" + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
-            chooseStoresDropDownListElement = document.getElementById(ID_OF_CHOOSE_STORES_DROP_DOWN_LIST);
-            storeIDSelected = chooseStoresDropDownListElement.options[chooseStoresDropDownListElement.selectedIndex].value;
-          //  alert('Inside clicked on next button static\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
-           // alert("Clicked on Next button and the order type is static");
-            OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coordinateY);
-            initiateTheChoosingItemDropDownInStaticOrder(storeIDSelected);
+            OpeningANewOrderFromHTMLElements(STATIC);
         }
         if (document.getElementById(ID_OF_DYNAMIC_RADIO_BUTTON).checked) {
-            // alert("Clicked on Next button and the order type is dynamic");
-            //storeIDSelected=
-            date = document.getElementById(ID_OF_DATE_OF_ORDER).value;
-            coordinateX=$("#" + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
-            coordinateY=$("#" + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
-         //   alert('Inside clicked on next button dynamic\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
-            OpeningANewDynamicOrderInServer(date, coordinateX, coordinateY);
-            initiateTheChoosingItemDropDownInDynamicOrder();
+            OpeningANewOrderFromHTMLElements(DYNAMIC);
         }
         // return value of the submit operation
         // by default - we'll always return false so it doesn't redirect the user.
@@ -281,64 +262,61 @@ function setNextButtonInMakeAnOrderElement() { // onload...do
     })
 }
 
+function OpeningANewOrderFromHTMLElements(orderType)
+{
+    var date = document.getElementById(ID_OF_DATE_OF_ORDER).value;
+    var coordinateX=$("#" + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
+    var coordinateY=$("#" + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
+    alert("date:" + date + " coordinateX: " + coordinateX + " coordinateY:" + coordinateY);
+    if(orderType===STATIC)
+    {
+        var chooseStoresDropDownListElement = document.getElementById(ID_OF_CHOOSE_STORES_DROP_DOWN_LIST);
+        var storeIDSelected = chooseStoresDropDownListElement.options[chooseStoresDropDownListElement.selectedIndex].value;
+        OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coordinateY);
+    }
+    else if(orderType===DYNAMIC)
+    {
+        OpeningANewDynamicOrderInServer(date, coordinateX, coordinateY);
+    }
+
+    initiateTheChoosingItemDropDownInOrder(orderType);
+}
+
 function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coordinateY)
 {
-   // var dataString = "date="+date + ",storeIDSelected="+storeIDSelected + ",coordinateX=" + coordinateX + ",coordinateY=" + coordinateY;
-  //  alert('Inside OpeningANewStaticOrderInServer\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ' + storeIDSelected);
     $.ajax({
         method:'GET',
-        //data: dataString,
         data:{"date":date,"storeIDSelected":storeIDSelected,"coordinateX":coordinateX,"coordinateY":coordinateY},
-       // data:{"date":date,"coordinateX":coordinateX,"coordinateY":coordinateY},
         url: CREATE_STATIC_ORDER_URL,
         dataType: "json",
-        //action: MOVE_TO_ZONE_URL,
-        //contentType: 'application/json; charset=utf-8',
-        // processData: false, // Don't process the files
-        //contentType: false, // Set content type to false as jQuery will tell the server its a query string request
         timeout: 4000,
         error: function(e) {
             console.error(e);
-         //   alert('error in OpeningANewDynamic\n' + e);
-            //$("#result").text("Failed to get result from server " + e);
+            alert('error in OpeningANewDynamic\n' + e);
         },
         success: function(r) {
             console.log("Succesfully!!!");
             console.log(r);
-         //   alert('added a static order succesfully');
-            // $("#result").text(r);
+
         }
     });
 }
 
 function OpeningANewDynamicOrderInServer(date,coordinateX, coordinateY)
 {
-   // alert(" in OpeningANewDynamicOrderInServer");
-    //
-    //alert('Inside OpeningANewDynamicOrderInServer\n' + date + ' ' + coordinateX + ' ' + coordinateY + ' ');
-
-   // var dataString = "date=" + date + ",coordinateX=" + coordinateX + ",coordinateY=" + coordinateY;
     $.ajax({
         method:'GET',
-        //data: dataString,
-        data:{},
+        data:{"date":date,"coordinateX":coordinateX,"coordinateY":coordinateY},
         url: CREATE_DYNAMIC_ORDER_URL,
         dataType: "json",
-        //action: MOVE_TO_ZONE_URL,
-        //contentType: 'application/json; charset=utf-8',
-        // processData: false, // Don't process the files
-        //contentType: false, // Set content type to false as jQuery will tell the server its a query string request
         timeout: 4000,
         error: function(e) {
             console.error(e);
             alert('error in OpeningANewDynamic\n' + e);
-            //$("#result").text("Failed to get result from server " + e);
         },
         success: function(r) {
             console.log("Succesfully!!!");
             console.log(r);
-           // alert('added a dynamic order succesfully');
-            // $("#result").text(r);
         }
     });
 }

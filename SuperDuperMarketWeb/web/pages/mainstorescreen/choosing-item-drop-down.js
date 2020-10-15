@@ -1,31 +1,38 @@
 import {emptyMakeOrderBody} from "./general-make-an-order-functions.js";
-import {initiateTheChoosingItemDropDownInStaticOrder} from "./choosing-item-drop-down-in-staticOrder.js";
 
-var ID_OF_MINUS_BUTTON = "minusButton";
-var ID_OF_PLUS_BUTTON = "plusButton";
-var ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN = 'valueOfAmountOfItemChosen';
-var ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
-var ID_OF_ITEM_ELEMENT = 'itemElement';
+const ITEMS_NOT_CHOSEN_IN_ORDER_URL=buildUrlWithContextPath("get-items-that-are-available-in-order");
 
-var ITEMS_NOT_CHOSEN_IN_STATIC_ORDER_URL = buildUrlWithContextPath("get-items-that-are-available-in-static-order");
-var GET_ITEM_FROM_STORE_URL = buildUrlWithContextPath("get-item-from-store");
-var detailsOnZoneJSONFormat = JSON.parse(localStorage.getItem('detailsOnZone'));
-var zoneName = detailsOnZoneJSONFormat.zoneName;
-var ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT = "chooseItemsInDropDownListElement";
-var ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
-var NAME_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
-var ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
-var ID_OF_ADD_ITEM_TO_ORDER = 'addItemToOrder';
-var ID_OF_ITEM_ELEMENT = 'itemElement';
-var STATIC = 'static';
-var DYNAMIC = 'dynamic';
-var QUANTITY_DIFFERENCE = 1;
-var WEIGHT_DIFFERENCE = 0.25;
-var MIN_QUANTITY_AMOUNT = 1;
-var MIN_WEIGHT_AMOUNT = 0.25;
-var QUANTITY = "Quantity";
-var WEIGHT = "Weight";
+//ID's of HTML Elements
+const ID_OF_MINUS_BUTTON = "minusButton";
+const ID_OF_PLUS_BUTTON = "plusButton";
+const ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN = 'valueOfAmountOfItemChosen';
+const ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT = "chooseItemsInDropDownListElement";
+const ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
+const NAME_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
+const ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
+const ID_OF_ADD_ITEM_TO_ORDER = 'addItemToOrder';
+const ID_OF_ITEM_ELEMENT = 'itemElement';
 
+const STATIC = 'static';
+const DYNAMIC = 'dynamic';
+
+const QUANTITY_DIFFERENCE = 1;
+const WEIGHT_DIFFERENCE = 0.25;
+const MIN_QUANTITY_AMOUNT = 1;
+const MIN_WEIGHT_AMOUNT = 0.25;
+const QUANTITY = "Quantity";
+const WEIGHT = "Weight";
+
+export function initiateTheChoosingItemDropDownInOrder(orderType)
+{
+    initiateChoosingItemDropDownHTMLInOrder();
+    $(getChooseItemsDropDownListHTML()).appendTo($("#" + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT));
+    $(getAddItemToOrderButtonHTML()).appendTo($("#" + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT));
+    getItemElementHTMLAndAppendToMakeOrderBody();
+    setChoosingItemFromDropDownListEvent(orderType);
+    setAddItemToOrderButtonClickedEvent();
+    getItemsListFromServerAndSetTheItemsList(orderType);
+}
 
 export function initiateChoosingItemDropDownHTMLInOrder()
 {
@@ -39,11 +46,7 @@ export function initiateChoosingItemDropDownHTMLInOrder()
 export function setChoosingItemFromDropDownListEvent(orderType)
 {
     $('#' + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST).change(function () {
-        //var dropDownListElement = document.getElementById(ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST);
-        // alert('chose item with value \n' + dropDownListElement);
-        // var availableItem = dropDownListElement.options[dropDownListElement.selectedIndex].value;
         var itemStr = $('#' + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST).val();
-      //  alert('in setChoosingItemFromDropDownListEvent\n ' + itemStr);
         createItemToChooseElement(itemStr, orderType);
     });
 }
@@ -76,11 +79,16 @@ export function setItemsListInItemDropDownInOrder(itemsList, orderType)
         var itemID = item["serialNumber"];
         var itemName = item["name"]["value"];
         var itemPrice = item["pricePerUnit"];
-        var itemTypeOfMeasre = item["typeToMeasureBy"];
-        var itemJson = {"serialNumber":itemID, "name":itemName,"pricePerUnit":itemPrice, "typeToMeasureBy":itemTypeOfMeasre}
+        var itemTypeOfMeasure = item["typeToMeasureBy"];
+        var itemJson = {
+            "serialNumber": itemID,
+            "name": itemName,
+            "pricePerUnit": itemPrice,
+            "typeToMeasureBy": itemTypeOfMeasure
+        };
         var itemStr =JSON.stringify(itemJson);
         console.log("Adding item #" + itemID + ": " + itemName);
-      //  alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
+       // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
         $('<option value=' + itemStr + '>' + 'availableItem serialID: ' + itemID + ', available Item Name: ' + itemName + '</option>').appendTo(chooseItemsDropDownList);
         if(index === 0)
         {
@@ -89,7 +97,7 @@ export function setItemsListInItemDropDownInOrder(itemsList, orderType)
     });
 }
 
-function getHTMLOfItemToChooseInOrder(itemStr, orderType)
+export function getHTMLOfItemToChooseInOrder(itemStr, orderType)
 {
     var itemJSON = JSON.parse(itemStr);
     var res;
@@ -121,7 +129,7 @@ export function getAddItemToOrderButtonHTML()
     return '<button type="button" id=' + ID_OF_ADD_ITEM_TO_ORDER + '> Add item to order</button>';
 }
 
-function emptyItemElement()
+export function emptyItemElement()
 {
     document.getElementById(ID_OF_ITEM_ELEMENT).innerHTML = '';
 }
@@ -160,11 +168,11 @@ export function setAddItemToOrderButtonClickedEvent()
 {
     $("#" + ID_OF_ADD_ITEM_TO_ORDER).click(function() {
         subbingAmount();
-        initiateTheChoosingItemDropDownInStaticOrder(storeIDSelected);
+        initiateTheChoosingItemDropDownInOrder(storeIDSelected);
     });
 }
 
-function subbingAmount(amount, minAmount, difference)
+export function subbingAmount(amount, minAmount, difference)
 {
     if(amount > minAmount)
     {
@@ -173,7 +181,7 @@ function subbingAmount(amount, minAmount, difference)
     }
 }
 
-function addingAmount(amount, minAmount, difference)
+export function addingAmount(amount, minAmount, difference)
 {
     amount=amount+difference;
     updateValueOfAmountOfItemChosen(amount);
@@ -190,37 +198,37 @@ export function setMinusButtonEvent(typeToMeasureBy)
         if(typeToMeasureBy === QUANTITY )
         {
             amount = getValueOfQuantityOfItemChosen();
-            alert("chose to add quantity " + amount + " " + QUANTITY_DIFFERENCE + " " + QUANTITY_DIFFERENCE);
+        //    alert("chose to add quantity " + amount + " " + QUANTITY_DIFFERENCE + " " + QUANTITY_DIFFERENCE);
             subbingAmount(amount, MIN_QUANTITY_AMOUNT, QUANTITY_DIFFERENCE);
         }
         else if(typeToMeasureBy === WEIGHT)
         {
             amount = getValueOfWeightOfItemChosen();
-            alert("chose to add weight " + amount + " " + MIN_WEIGHT_AMOUNT + " " + WEIGHT_DIFFERENCE);
+          //  alert("chose to add weight " + amount + " " + MIN_WEIGHT_AMOUNT + " " + WEIGHT_DIFFERENCE);
             subbingAmount(amount,MIN_WEIGHT_AMOUNT,WEIGHT_DIFFERENCE);
         }
     });
 }
 
-function getValueOfQuantityOfItemChosen()
+export function getValueOfQuantityOfItemChosen()
 {
     var valueStr = $("#" + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN).text();
     return parseInt(valueStr);
 }
 
-function getValueOfWeightOfItemChosen()
+export function getValueOfWeightOfItemChosen()
 {
     var valueStr = $("#" + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN).text();
     return parseFloat(valueStr);
 }
 
-function updateValueOfAmountOfItemChosen(value)
+export function updateValueOfAmountOfItemChosen(value)
 {
     $("#" + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN).text(value);
 
 }
 
-export function setPlusButtonEvent(typeToMeasureBy)
+function setPlusButtonEvent(typeToMeasureBy)
 {
     console.log("inside setPlusButtonOnCoordinate");
     $("#" + ID_OF_PLUS_BUTTON).click(function() {
@@ -230,16 +238,39 @@ export function setPlusButtonEvent(typeToMeasureBy)
         if(typeToMeasureBy === QUANTITY )
         {
             amount = getValueOfQuantityOfItemChosen();
-            alert("chose to add quantity " + amount + " " + QUANTITY_DIFFERENCE + " " + QUANTITY_DIFFERENCE);
+           // alert("chose to add quantity " + amount + " " + QUANTITY_DIFFERENCE + " " + QUANTITY_DIFFERENCE);
             addingAmount(amount, MIN_QUANTITY_AMOUNT, QUANTITY_DIFFERENCE);
         }
         else if(typeToMeasureBy === WEIGHT)
         {
             amount = getValueOfWeightOfItemChosen();
-            alert("chose to add weight " + amount + " " + MIN_WEIGHT_AMOUNT + " " + WEIGHT_DIFFERENCE);
+       //     alert("chose to add weight " + amount + " " + MIN_WEIGHT_AMOUNT + " " + WEIGHT_DIFFERENCE);
             addingAmount(amount,MIN_WEIGHT_AMOUNT,WEIGHT_DIFFERENCE);
         }
     });
+}
+
+export function getItemsListFromServerAndSetTheItemsList(orderType)
+{
+ //   alert("in getItemsListFromServerAndSetTheItemsList: " + orderType);
+    $.ajax({
+        method: 'GET',
+        data: {"orderType":orderType},
+        url: ITEMS_NOT_CHOSEN_IN_ORDER_URL,
+        dataType: "json",
+        timeout: 4000,
+        error: function (e) {
+            console.error(e);
+            alert('error in  getItemsListFromServerAndSetTheItemsList\n' + e);
+        },
+        success: function (r) {
+            if(r.length == 0)
+            {
+                $('#' + ID_OF_ADD_ITEM_TO_ORDER).prop("disabled",true);
+            }
+            setItemsListInItemDropDownInOrder(r, orderType);
+        }
+    })
 }
 
 export function setNextButtonInChooseItemsElement() { // onload...do

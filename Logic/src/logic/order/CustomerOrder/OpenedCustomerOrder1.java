@@ -3,6 +3,7 @@ package logic.order.CustomerOrder;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import logic.AvailableItemInStore;
+import logic.Item;
 import logic.SDMLocation;
 import logic.Store;
 import logic.discount.Discount;
@@ -22,6 +23,7 @@ public class OpenedCustomerOrder1 extends Order {
     Map<Store, OpenedStoreOrder> openedStoresOrderMap;
     SDMLocation locationOfCustomer;
     String customerName;
+    Map<Integer, Item> itemsChosenForDynamicOrder;
     //Map<Integer, Integer> itemsAmountLeftToUseInSalesMap;
     //Map<String, Discount> availableDiscountsMap;
 
@@ -30,6 +32,7 @@ public class OpenedCustomerOrder1 extends Order {
         this.customerName = customerName;
         this.locationOfCustomer = locationOfCustomer;
         openedStoresOrderMap = new HashMap<>();
+        itemsChosenForDynamicOrder = new HashMap<>();
         //itemsAmountLeftToUseInSalesMap = new HashMap<Integer, Integer>() ;
         //availableDiscountsMap = new HashMap<String, Discount>();
     }
@@ -90,14 +93,14 @@ public class OpenedCustomerOrder1 extends Order {
         return orderedItemNotFromSaleFromStoresList;
     }
 
-    public List<AvailableItemInStore> generateListsOfItemsInStoreThatAreNotInOrderAndNotFromSale(Integer serialIDOfStore)
+    public List<AvailableItemInStore> generateListsOfItemsInStoreThatAreNotInOrderAndNotFromSale()
     {
         List<AvailableItemInStore> availableItemInStoreList = null;
         for(OpenedStoreOrder openedStoreOrder : openedStoresOrderMap.values())
         {
             Store store = openedStoreOrder.getStoreUsed();
-            if(store.getSerialNumber() == serialIDOfStore)
-            {
+            //if(store.getSerialNumber() == serialIDOfStore)
+           // {
                 Map<Integer, AvailableItemInStore> availableItemInStoreMap = new HashMap<>(store.getItemsSerialIDMap());
                 List<OrderedItemFromStore> orderedItemFromStoreList = generateListsOfItemNotFromSale();
                 for(OrderedItemFromStore orderedItemFromStore : orderedItemFromStoreList)
@@ -109,9 +112,33 @@ public class OpenedCustomerOrder1 extends Order {
                     }
                 }
                 availableItemInStoreList = new ArrayList<>(availableItemInStoreMap.values());
-            }
+            //}
         }
         return availableItemInStoreList;
+    }
+
+    public List<Item> generateListsOfItemsThatAreNotInOrderAndNotFromSale(Map<Integer, Item> itemsInZone)
+    {
+                return itemsInZone.values().stream()
+                        .filter(e -> !itemsChosenForDynamicOrder.containsKey(e.getSerialNumber()))
+                        .collect(Collectors.toList());
+
+       /* for(Map.Entry<Integer, Item> itemInZone  : itemsInZone.entrySet())
+        {
+            Map<Integer, AvailableItemInStore> availableItemInStoreMap = new HashMap<>(store.getItemsSerialIDMap());
+            List<OrderedItemFromStore> orderedItemFromStoreList = generateListsOfItemNotFromSale();
+            for(Map.Entry<Integer, Item> itemInOrder : itemsChosenForDynamicOrder.entrySet())
+            {
+                Integer serialIDOfOrderedItem = itemInOrder.getKey();
+                if(availableItemInStoreMap.containsKey(serialIDOfOrderedItemFromStore))
+                {
+                    availableItemInStoreMap.remove(serialIDOfOrderedItemFromStore);
+                }
+            }
+            availableItemInStoreList = new ArrayList<>(availableItemInStoreMap.values());
+            //}
+        }*/
+        //return availableItemInStoreList;
     }
 
     public void initializeAvailableDiscountMapInOpenedStoreOrders()
@@ -216,7 +243,7 @@ public class OpenedCustomerOrder1 extends Order {
             closedStoresOrderMapByStoreSerialID.put(serialNumber, closedStoreOrder);
         }
 
-        ClosedCustomerOrder closedCustomerOrder = new ClosedCustomerOrder(getDateStr1(), closedStoresOrderMapByStoreSerialID, isOrderStatic(), customerName,locationOfCustomer);
+        ClosedCustomerOrder closedCustomerOrder = new ClosedCustomerOrder(getDateStr(), closedStoresOrderMapByStoreSerialID, isOrderStatic(), customerName,locationOfCustomer);
         return closedCustomerOrder;
     }
 
