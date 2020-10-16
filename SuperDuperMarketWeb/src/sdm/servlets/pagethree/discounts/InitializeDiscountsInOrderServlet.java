@@ -1,9 +1,7 @@
-package sdm.servlets.pagethree.CreateOrder;
+package sdm.servlets.pagethree.discounts;
 
 import com.google.gson.Gson;
-import logic.Item;
 import logic.order.CustomerOrder.OpenedCustomerOrder;
-import logic.zones.Zone;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -15,38 +13,32 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import static sdm.general.GeneralMethods.getCurrentOrderByRequest;
-import static sdm.general.GeneralMethods.getZoneByRequest;
 
-@WebServlet("/activate-dynamic-algorithm-in-dynamic-order")
-public class ActivateDynamicAlgroithminDynamicOrderServlet extends HttpServlet {
+@WebServlet("/initialize-discounts-in-order")
+public class InitializeDiscountsInOrderServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //returning JSON objects, not HTML
+        //{"discountName":discountName};
         response.setContentType("application/json");
-        System.out.println("In create-dynamic-order servlet");
+        System.out.println("In ApplyAllOrNothingDiscountServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
-            Zone zone = getZoneByRequest(servletContext,request);
             OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(servletContext, request);
-            zone.updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(openedCustomerOrder);
-            System.out.println("There are the parameters of the order in the dynamic algorithm!!:\n\n\n\n");
-            String json = gson.toJson(openedCustomerOrder.generateListsOfItemNotFromSale());
-            for(Item item : openedCustomerOrder.generateListsOfItemNotFromSale())
-            {
-                System.out.println("Item with serial id: " + item.getSerialNumber());
-            }
+            openedCustomerOrder.initializeAvailableDiscountMapInOpenedStoreOrders();
+            openedCustomerOrder.initializeItemsAmountLeftToUseInSalesMapInOpenedStoreOrders();
+            String json = gson.toJson(openedCustomerOrder);
             out.println(json);
             System.out.println(json);
             out.flush();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-            System.out.println("Error in creating opedCustomerOrder\n" + e.getMessage());
+            System.out.println("There was an error in InitializeDiscountsInOrderServlet:\n" + e.getMessage());
         }
     }
-
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request,response);

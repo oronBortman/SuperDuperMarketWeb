@@ -1,16 +1,12 @@
 package sdm.servlets.pagethree;
 
 import com.google.gson.Gson;
-import logic.AvailableItemInStore;
 import logic.SDMLocation;
 import logic.Store;
-import logic.order.CustomerOrder.OpenedCustomerOrder1;
+import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.order.StoreOrder.OpenedStoreOrder;
-import logic.zones.Zone;
-import logic.zones.ZoneManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import sdm.utils.ServletUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,7 +17,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import static sdm.constants.Constants.ZONENAME;
 import static sdm.general.GeneralMethods.getCurrentOrderByRequest;
 
 @WebServlet("/get-stores-status-in-dynamic-order")
@@ -34,11 +29,11 @@ public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
         System.out.println("In GetStoresStatusInDynamicOrderServlet :)))))");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
-            OpenedCustomerOrder1 openedCustomerOrder1 = getCurrentOrderByRequest(getServletContext(), request);
-            List<OpenedStoreOrder> listOfOpenedStoreOrder = openedCustomerOrder1.getListOfOpenedStoreOrder();
-            if(openedCustomerOrder1 != null)
+            OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(getServletContext(), request);
+            List<OpenedStoreOrder> listOfOpenedStoreOrder = openedCustomerOrder.getListOfOpenedStoreOrder();
+            if(openedCustomerOrder != null)
             {
-                JSONArray jsonArray = readingFromStoresListToJsonObject(listOfOpenedStoreOrder, openedCustomerOrder1);
+                JSONArray jsonArray = readingFromStoresListToJsonObject(listOfOpenedStoreOrder, openedCustomerOrder);
                 String json = gson.toJson(jsonArray);
                 out.println(json);
                 System.out.println("This is the list of stores!!\n\n\n\n\n\n");
@@ -53,7 +48,7 @@ public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
         }
     }
 
-    public JSONArray readingFromStoresListToJsonObject(List<OpenedStoreOrder> openedStoreList, OpenedCustomerOrder1 openedCustomerOrder1)
+    public JSONArray readingFromStoresListToJsonObject(List<OpenedStoreOrder> openedStoreList, OpenedCustomerOrder openedCustomerOrder)
     {
 
         JSONArray jsonArray = new JSONArray();
@@ -72,7 +67,7 @@ public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
             jsonObject.put("storeName", store.getName());
             jsonObject.put("storeOwner", store.getStoreOwner().getUserName());
             jsonObject.put("location", "(" + coordinateX + "," + coordinateY + ")");
-            jsonObject.put("distanceFromCustomer", store.getLocation().getAirDistanceToOtherLocation(openedCustomerOrder1.getLocationOfCustomer()));
+            jsonObject.put("distanceFromCustomer", store.getLocation().getAirDistanceToOtherLocation(openedCustomerOrder.getLocationOfCustomer()));
             jsonObject.put("PPK", store.getPPK());
             jsonObject.put("deliveryCost",openedStoreOrder.calcTotalDeliveryPrice());
             jsonObject.put("amountOfItemsPurchased", openedStoreOrder.calcTotalAmountOfItemsByMeasureType());

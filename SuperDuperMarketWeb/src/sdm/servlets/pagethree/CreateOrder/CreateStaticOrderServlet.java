@@ -3,7 +3,7 @@ package sdm.servlets.pagethree.CreateOrder;
 import com.google.gson.Gson;
 import logic.SDMLocation;
 import logic.Store;
-import logic.order.CustomerOrder.OpenedCustomerOrder1;
+import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.order.StoreOrder.OpenedStoreOrder;
 import logic.users.User;
 import logic.users.UserManager;
@@ -55,13 +55,13 @@ public class CreateStaticOrderServlet extends HttpServlet {
                 //TODO
                 //Need to check if there is no store in this coordinates
                 SDMLocation orderLocation = new SDMLocation(coordinateXInt, coordinateYInt);
-                OpenedCustomerOrder1 openedCustomerOrder1 = new OpenedCustomerOrder1(date, user.getUserName(), true, orderLocation);
+                OpenedCustomerOrder openedCustomerOrder = new OpenedCustomerOrder(date, user.getUserName(), true, orderLocation);
                 ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
                 Zone zone = zoneManager.getZoneByName(SessionUtils.getZoneName(request));
                 Store storeSelected = zone.getStoreBySerialID(storeIDSelectedInt);
-                openedCustomerOrder1.addStoreOrder(new OpenedStoreOrder(storeSelected,date,true,orderLocation));
-                user.setCurrentOpenedOrder(openedCustomerOrder1);
-                String json = gson.toJson(openedCustomerOrder1);
+                openedCustomerOrder.addStoreOrder(new OpenedStoreOrder(storeSelected,date,true,orderLocation));
+                user.setCurrentOpenedOrder(openedCustomerOrder);
+                String json = gson.toJson(openedCustomerOrder);
                 out.println(json);
                 System.out.println("About to print json of the stqtaic order");
                 System.out.println(json);

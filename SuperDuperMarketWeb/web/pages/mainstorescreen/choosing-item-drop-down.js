@@ -1,5 +1,5 @@
 import {emptyMakeOrderBody,
-    createHTMLElementAndAppendToMakeOrderBody,
+    createHTMLContainerAndAppendToMakeOrderBody,
     createEmptyDropDownListHTML,
     createButton,
     disableElement,
@@ -191,7 +191,7 @@ export function emptyItemElement()
 
 export function createItemElementHTMLAndAppendToMakeOrderBody()
 {
-    createHTMLElementAndAppendToMakeOrderBody(ID_OF_ITEM_ELEMENT);
+    createHTMLContainerAndAppendToMakeOrderBody(ID_OF_ITEM_ELEMENT);
 }
 
 

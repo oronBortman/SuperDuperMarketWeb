@@ -1,17 +1,8 @@
 package sdm.servlets.pagethree.ChoosingItemsForOrder;
 
 import com.google.gson.Gson;
-import javafx.scene.Parent;
-import logic.Item;
-import logic.order.CustomerOrder.OpenedCustomerOrder1;
+import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.order.StoreOrder.OpenedStoreOrder;
-import logic.order.itemInOrder.OrderedItem;
-import logic.order.itemInOrder.OrderedItemFromStore;
-import logic.zones.Zone;
-import logic.zones.ZoneManager;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import sdm.utils.ServletUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -22,9 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
-import static sdm.constants.Constants.ZONENAME;
 import static sdm.general.GeneralMethods.getCurrentOrderByRequest;
 
 @WebServlet("/add-item-to-order")
@@ -46,13 +35,13 @@ public class AddItemToOrderServlet extends HttpServlet {
            Integer serialIdOfItemInt = Integer.parseInt(serialIDOfItem);
             Double amountOfItemDouble = Double.parseDouble(amountOfItem);
 
-            OpenedCustomerOrder1 openedCustomerOrder1 = getCurrentOrderByRequest(servletContext, request);
-            if(openedCustomerOrder1 != null)
+            OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(servletContext, request);
+            if(openedCustomerOrder != null)
             {
                 if(orderType.equals("static"))
                 {
-                    openedCustomerOrder1.addItemForStoreOrderInStaticOrder(serialIdOfItemInt,amountOfItemDouble);
-                    for(OpenedStoreOrder openedStoreOrder : openedCustomerOrder1.getListOfOpenedStoreOrder())
+                    openedCustomerOrder.addItemForStoreOrderInStaticOrder(serialIdOfItemInt,amountOfItemDouble);
+                    for(OpenedStoreOrder openedStoreOrder : openedCustomerOrder.getListOfOpenedStoreOrder())
                     {
                         for(Integer key : openedStoreOrder.getOrderedItemsNotFromSale().keySet())
                         {
@@ -63,8 +52,8 @@ public class AddItemToOrderServlet extends HttpServlet {
                 }
                 else if(orderType.equals("dynamic"))
                 {
-                    openedCustomerOrder1.addItemToItemsChosenForDynamicOrderMap(serialIdOfItemInt, amountOfItemDouble);
-                    for(Integer key : openedCustomerOrder1.getItemsChosenForDynamicOrder().keySet())
+                    openedCustomerOrder.addItemToItemsChosenForDynamicOrderMap(serialIdOfItemInt, amountOfItemDouble);
+                    for(Integer key : openedCustomerOrder.getItemsChosenForDynamicOrder().keySet())
                     {
                         System.out.println("Added to the order dynamic item: " + key);
                     }
@@ -77,7 +66,7 @@ public class AddItemToOrderServlet extends HttpServlet {
             {
                 System.out.println("Zone name is null!");
             }
-            String json = gson.toJson(openedCustomerOrder1);
+            String json = gson.toJson(openedCustomerOrder);
             out.println(json);
             System.out.println(json);
             out.flush();

@@ -2,7 +2,7 @@ package sdm.servlets.pagethree.CreateOrder;
 
 import com.google.gson.Gson;
 import logic.SDMLocation;
-import logic.order.CustomerOrder.OpenedCustomerOrder1;
+import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.users.User;
 import logic.users.UserManager;
 import sdm.utils.ServletUtils;
@@ -46,10 +46,10 @@ public class CreateDynamicOrderServlet extends HttpServlet {
                 //LocalDate date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer
                 //TODO
                 //Need to check if there is no store in this coordinates
-                OpenedCustomerOrder1 openedCustomerOrder1 = new OpenedCustomerOrder1(date, user.getUserName(), false, new SDMLocation(coordinateXInt, coordinateYInt));
-                user.setCurrentOpenedOrder(openedCustomerOrder1);
+                OpenedCustomerOrder openedCustomerOrder = new OpenedCustomerOrder(date, user.getUserName(), false, new SDMLocation(coordinateXInt, coordinateYInt));
+                user.setCurrentOpenedOrder(openedCustomerOrder);
                 System.out.println("About to print json of the dynamic order!!!");
-                String json = gson.toJson(openedCustomerOrder1);
+                String json = gson.toJson(openedCustomerOrder);
                 System.out.println("About to print json of the dynamic order!!!");
                 System.out.println(json);
                 out.println(json);

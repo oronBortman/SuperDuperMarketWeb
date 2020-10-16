@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class OpenedCustomerOrder1 extends Order {
+public class OpenedCustomerOrder extends Order {
 
     Map<Store, OpenedStoreOrder> openedStoresOrderMap;
     SDMLocation locationOfCustomer;
@@ -27,7 +27,7 @@ public class OpenedCustomerOrder1 extends Order {
     //Map<Integer, Integer> itemsAmountLeftToUseInSalesMap;
     //Map<String, Discount> availableDiscountsMap;
 
-    public OpenedCustomerOrder1(String date, String customerName, boolean isOrderStatic, SDMLocation locationOfCustomer) {
+    public OpenedCustomerOrder(String date, String customerName, boolean isOrderStatic, SDMLocation locationOfCustomer) {
         super(date, isOrderStatic);
 
         this.customerName = customerName;
@@ -221,7 +221,7 @@ public class OpenedCustomerOrder1 extends Order {
 
     public List<Discount> generateListOfDiscounts()
     {
-        List<Discount> listOfDiscounts = new ArrayList<Discount>();
+        List<Discount> listOfDiscounts = new ArrayList<>();
         for(Map.Entry<Store, OpenedStoreOrder> openedStoreOrderEntry : openedStoresOrderMap.entrySet())
         {
             List<Discount> listOfDiscountsFromCertainStore = openedStoreOrderEntry.getValue().generateListOfDiscountsInStoresThatAreValidInOrder();

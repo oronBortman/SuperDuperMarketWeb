@@ -3,11 +3,8 @@ package sdm.servlets.pagethree.ChoosingItemsForOrder;
 import com.google.gson.Gson;
 import logic.AvailableItemInStore;
 import logic.Item;
-import logic.order.CustomerOrder.OpenedCustomerOrder1;
+import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.zones.Zone;
-import logic.zones.ZoneManager;
-import sdm.utils.ServletUtils;
-import sdm.utils.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,9 +31,9 @@ public class GetItemsThatAreAvailableInOrderServlet extends HttpServlet {
             Gson gson = new Gson();
             String json="";
             String orderType = request.getParameter("orderType");
-            OpenedCustomerOrder1 openedCustomerOrder1 = getCurrentOrderByRequest(getServletContext(), request);
+            OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(getServletContext(), request);
             System.out.println("A5");
-            if(openedCustomerOrder1 == null)
+            if(openedCustomerOrder == null)
             {
                 System.out.println("openedCustomerOrder1 NULL!!!");
             }
@@ -47,7 +44,7 @@ public class GetItemsThatAreAvailableInOrderServlet extends HttpServlet {
             }
             else if(orderType.equals("static"))
             {
-                List<AvailableItemInStore> availableItemInStoreList = openedCustomerOrder1.generateListsOfItemsInStoreThatAreNotInOrderAndNotFromSale();
+                List<AvailableItemInStore> availableItemInStoreList = openedCustomerOrder.generateListsOfItemsInStoreThatAreNotInOrderAndNotFromSale();
                 System.out.println("A6");
                 json = gson.toJson(availableItemInStoreList);
                 System.out.println("About to print Available item list");
@@ -63,7 +60,7 @@ public class GetItemsThatAreAvailableInOrderServlet extends HttpServlet {
                 System.out.println("A8");
                 Map<Integer, Item> itemsMap = zone.getItemsSerialIDMap();
                 System.out.println("A9");
-                List<Item> itemInZoneList = openedCustomerOrder1.generateListsOfItemsThatAreNotInOrderAndNotFromSale(itemsMap);
+                List<Item> itemInZoneList = openedCustomerOrder.generateListsOfItemsThatAreNotInOrderAndNotFromSale(itemsMap);
                 System.out.println("A10");
                 json = gson.toJson(itemInZoneList);
             }

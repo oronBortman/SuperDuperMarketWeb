@@ -14,7 +14,7 @@ import jaxb.schema.generated.*;
 import logic.*;
 import logic.discount.Discount;
 import logic.order.CustomerOrder.ClosedCustomerOrder;
-import logic.order.CustomerOrder.OpenedCustomerOrder1;
+import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.order.GeneralMethods;
 import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.order.StoreOrder.OpenedStoreOrder;
@@ -24,8 +24,6 @@ import logic.order.itemInOrder.OrderedItemFromStoreByWeight;
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toCollection;
 
@@ -599,9 +597,9 @@ public class Zone {
         return openedCustomerOrder;
     }*/
 
-    public void updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(OpenedCustomerOrder1 openedCustomerOrder1)
+    public void updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(OpenedCustomerOrder openedCustomerOrder)
     {
-        Map<Integer, Double> itemsChosenForDynamicOrder = openedCustomerOrder1.getItemsChosenForDynamicOrder();
+        Map<Integer, Double> itemsChosenForDynamicOrder = openedCustomerOrder.getItemsChosenForDynamicOrder();
         List<Item> itemsList = addItemsToItemListFromOrderedItemsMap(itemsChosenForDynamicOrder);
         Map<Store, List<AvailableItemInStore>> mapOfShopWithCheapestItems = getMapOfShopWithCheapestItemsFromListOfItems(itemsList);
 
@@ -609,14 +607,14 @@ public class Zone {
             Store storeUsed = entry.getKey();
             List<AvailableItemInStore> availableItemInStoreList = entry.getValue();
             //OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, date, isOrderStatic, customer.getLocation());
-            OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, openedCustomerOrder1.getDateStr(), false, openedCustomerOrder1.getLocationOfCustomer());
+            OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, openedCustomerOrder.getDateStr(), false, openedCustomerOrder.getLocationOfCustomer());
 
             for (AvailableItemInStore itemInStore : availableItemInStoreList) {
                 //   addItemToOpenedOrder(orderedItemsListByItemSerialIDAndAmount, itemInStore, openedStoreOrder);
                 if(itemInStore.getTypeOfMeasure() == Item.TypeOfMeasure.Weight) { addWeightItemToOpenedOrder(itemsChosenForDynamicOrder, itemInStore, openedStoreOrder);}
                 else if(itemInStore.getTypeOfMeasure() == Item.TypeOfMeasure.Quantity) { addQuantityItemToOpenedOrder(itemsChosenForDynamicOrder, itemInStore, openedStoreOrder);}
             }
-            openedCustomerOrder1.addStoreOrder(openedStoreOrder);
+            openedCustomerOrder.addStoreOrder(openedStoreOrder);
         }
     }
 /*    public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(Customer customer, String date, Map<Integer, Double> orderedItemsListByItemSerialIDAndAmount, SDMLocation locationOfCustomer)
@@ -661,9 +659,9 @@ public class Zone {
         }
     }
 
-    public OpenedCustomerOrder1 updateItemsWithAmountAndCreateOpenedStaticCustomerOrder(Customer customer, String date, Store store, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer) {
+    public OpenedCustomerOrder updateItemsWithAmountAndCreateOpenedStaticCustomerOrder(Customer customer, String date, Store store, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer) {
         boolean isOrderStatic = true;
-        OpenedCustomerOrder1 openedCustomerOrder = new OpenedCustomerOrder1(date, customer.getUserName(), isOrderStatic, locationOfCustomer);
+        OpenedCustomerOrder openedCustomerOrder = new OpenedCustomerOrder(date, customer.getUserName(), isOrderStatic, locationOfCustomer);
         OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(store, date, isOrderStatic, locationOfCustomer);
 
 
