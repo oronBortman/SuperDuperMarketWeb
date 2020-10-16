@@ -44,7 +44,7 @@ public class GetDiscountsFromServerServlet extends HttpServlet {
             JSONArray jsonArray = readingFromDiscountsListToJsonObject(discountList, zone);
             String json = gson.toJson(jsonArray);
             out.println(json);
-            System.out.println("This is the list of discounts!!");
+            System.out.println("This is the list of discounts!!\n\n\n\n\n");
             System.out.println(json);
             out.flush();
 
