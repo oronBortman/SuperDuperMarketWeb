@@ -24,6 +24,7 @@ import java.util.List;
 
 import static sdm.constants.Constants.ZONENAME;
 import static sdm.general.GeneralMethods.getCurrentOrderByRequest;
+import static sdm.general.GeneralMethods.getZoneByRequest;
 
 @WebServlet("/get-discounts-from-server")
 public class GetDiscountsFromServerServlet extends HttpServlet {
@@ -35,10 +36,8 @@ public class GetDiscountsFromServerServlet extends HttpServlet {
         System.out.println("In GetDiscountsFromServerServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
-            ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
-            String zoneName = request.getParameter(ZONENAME);
-            Zone zone = zoneManager.getZoneByName(zoneName);
             ServletContext servletContext = getServletContext();
+            Zone zone = getZoneByRequest(servletContext, request);
             OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(servletContext, request);
             List<Discount> discountList = openedCustomerOrder.generateListOfDiscounts();
 
