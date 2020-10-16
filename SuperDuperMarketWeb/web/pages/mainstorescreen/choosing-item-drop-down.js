@@ -5,12 +5,11 @@ import {emptyMakeOrderBody,
     disableElement,
     enableElement,
     createNextButtonHTMLAndAppendToMakeOrderBody} from "./general-make-an-order-functions.js";
-
+import {prepareAndInitiateChoosingDiscountsToApply} from "./choosing-discounts-to-apply.js"
 import {initiateShowStoresStatusTable} from "./show-store-status-in-dynamic-order.js"
 
 const ITEMS_NOT_CHOSEN_IN_ORDER_URL=buildUrlWithContextPath("get-items-that-are-available-in-order");
-const ACTIVATE_DYNAMIC_ALGORITHM_IN_DYNAMIC_ORDER = buildUrlWithContextPath("activate-dynamic-algorithm-in-dynamic-order");
-
+const ACTIVATE_DYNAMIC_ALGORITHM_IN_DYNAMIC_ORDER_URL = buildUrlWithContextPath("activate-dynamic-algorithm-in-dynamic-order");
 
 const ADD_ITEM_TO_ORDER = buildUrlWithContextPath("add-item-to-order");
 //ID's of HTML Elements
@@ -39,7 +38,8 @@ export function initiateTheChoosingItemDropDownInOrder(orderType)
     initiateChoosingItemDropDownHTMLInOrder();
     $(createChooseItemsDropDownListHTML()).appendTo($("#" + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT));
     createItemElementHTMLAndAppendToMakeOrderBody();
-    createNextButtonHTMLAndAppendToMakeOrderBody();
+    createNextButtonHTMLAndAppendToMakeOrderBody(ID_OF_NEXT_BUTTON);
+    disableElement(ID_OF_NEXT_BUTTON)
     setNextButtonEvent(orderType);
     setChoosingItemFromDropDownListEvent(orderType);
     getItemsListFromServerAndSetTheItemsList(orderType);
@@ -69,6 +69,7 @@ export function setNextButtonEvent(orderType)
         if(orderType === STATIC)
         {
             alert('order is static!');
+            prepareAndInitiateChoosingDiscountsToApply();
         }
         else if(orderType === DYNAMIC)
         {
@@ -360,7 +361,7 @@ export function activateDynamicAlgorithm()
     $.ajax({
         method: 'POST',
         data: {},
-        url: ACTIVATE_DYNAMIC_ALGORITHM_IN_DYNAMIC_ORDER,
+        url: ACTIVATE_DYNAMIC_ALGORITHM_IN_DYNAMIC_ORDER_URL,
         dataType: "json",
         timeout: 4000,
         error: function (e) {

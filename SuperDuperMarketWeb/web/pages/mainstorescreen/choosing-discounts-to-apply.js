@@ -11,20 +11,21 @@ import {emptyMakeOrderBody,
     createNextButtonHTMLAndAppendToMakeOrderBody,
     createEmptyTable,
     appendHTMLToElement} from "./general-make-an-order-functions.js";
-import {setNextButtonEvent} from "./choosing-item-drop-down.js";
+import {emptyChooseItemsDropDownList, setNextButtonEvent} from "./choosing-item-drop-down.js";
 
 const APPLY_ONE_OF_DISCOUNT_URL=buildUrlWithContextPath("apply-one-of-discount");
 const APPLY_ALL_OR_NOTHING_DISCOUNT_URL = buildUrlWithContextPath("apply-all-or-nothing-discount");
 const GET_DISCOUNTS_FROM_SERVER_URL = buildUrlWithContextPath("get-discounts-from-server");
 const INITIALIZE_DISCOUNTS_IN_ORDER = buildUrlWithContextPath("initialize-discounts-in-order");
-var ID_OF_DISCOUNTS_DROP_DOWN = 'discountsDropDown';
-var ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER = 'itemFromDiscountDropDownContainer';
-var ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN = 'itemFromDiscountDropDown';
-var ID_OF_ADD_AN_ITEM_FROM_DISCOUNT_BUTTON = 'addAnItemFromDiscountButton'
-var ID_OF_ADD_DISCOUNT_BUTTON = 'addDiscountButton';
-var ID_OF_ADD_ITEM_FROM_DISCOUNT_BUTTON = 'addItemFromDiscountButton';
-var ID_OF_TABLE =  'discountsTable';
-var ID_OF_TABLE_BODY = 'discountsTableBody';
+const ID_OF_DISCOUNTS_DROP_DOWN = 'discountsDropDown';
+const ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER = 'itemFromDiscountDropDownContainer';
+const ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN = 'itemFromDiscountDropDown';
+const ID_OF_ADD_AN_ITEM_FROM_DISCOUNT_BUTTON = 'addAnItemFromDiscountButton'
+const ID_OF_ADD_DISCOUNT_BUTTON = 'addDiscountButton';
+const ID_OF_ADD_ITEM_FROM_DISCOUNT_BUTTON = 'addItemFromDiscountButton';
+const ID_OF_TABLE =  'discountsTable';
+const ID_OF_TABLE_BODY = 'discountsTableBody';
+const ID_OF_NEXT_BUTTON = 'nextButton';
 const ONE_OF = "ONE-OF";
 const IRRELEVANT = "IRRELEVANT";
 const ALL_OR_NOTHING = "ALL-OR-NOTHING";
@@ -51,40 +52,80 @@ export function prepareAndInitiateChoosingDiscountsToApply()
 
 export function initiateChoosingDiscountsToApply()
 {
-    var discountStr = getDiscountJSONFromServer();
-    alert("The discountStr is: " + discountStr);
-    emptyMakeOrderBody();
-    createDiscountTableAndAppendToMakeAnOrderBody(discountStr);
-    createDiscountDropDownListAndAppendToMakeAnOrderBody(discountStr);
-    setChoosingDiscountFromDropDownListEvent();
-    createAddDiscountButtonAndAppendToMakeAnOrderBody();
-    setAddDiscountButtonEvent();
-    createHTMLContainerAndAppendToMakeOrderBody(ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER);
-    createNextButtonHTMLAndAppendToMakeOrderBody();
-    setNextButtonEvent();
+    $.ajax({
+        method: 'GET',
+        data: {},
+        url: GET_DISCOUNTS_FROM_SERVER_URL,
+        dataType: "json",
+        timeout: 4000,
+        error: function (e) {
+            console.error(e);
+            alert('error in  getDiscountJSONFromServer\n' + e);
+            return("error");
+        },
+        success: function (r) {
+            //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
+            emptyMakeOrderBody();
+            createDiscountTableAndAppendToMakeAnOrderBody(r);
+            createDiscountDropDownListAndAppendToMakeAnOrderBody(r);
+            setChoosingDiscountFromDropDownListEvent();
+            createAddDiscountButtonAndAppendToMakeAnOrderBody();
+            setAddDiscountButtonEvent();
+            createHTMLContainerAndAppendToMakeOrderBody(ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER);
+            createNextButtonHTMLAndAppendToMakeOrderBody(ID_OF_NEXT_BUTTON);
+            setNextButtonEvent();
+        }
+    })
+
 }
 
-export function createDiscountTableAndAppendToMakeAnOrderBody(discountStr)
+export function createDiscountTableAndAppendToMakeAnOrderBody(discountsJSON)
 {
-    var discountsTableHTML = createDiscountsTableHTML(discountStr);
-    appendHTMLToMakeAndOrderBody(discountsTableHTML);
+    alert("in createDiscountTableAndAppendToMakeAnOrderBody and discountsJSON is: \n "+JSON.stringify(discountsJSON));
+
+    var tableHTML = createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY);
+    appendHTMLToMakeAndOrderBody(tableHTML);
+    appendHTMLToElement(generateFirstRowInDiscountsHTMLTable(),ID_OF_TABLE_BODY);
+    //  var discountsStr = getDiscountJSONFromServer();
+    // var discountsJSON = JSON.parse(discountsStr);
+    alert("In createDiscountsTableHTML, and discounts are: " + JSON.stringify(discountsJSON));
+    $.each(discountsJSON || [], function(index, discountJSON) {
+        console.log("Adding discount #" + index + ": ");
+        alert("Adding discount #" + index + ": ");
+        // var discountStr = JSON.parse(discount);
+        appendHTMLToElement(generateRowInDiscountsHTMLTable(discountJSON),ID_OF_TABLE_BODY);
+    });
 }
 
-export function createDiscountDropDownListAndAppendToMakeAnOrderBody(discountStr)
+export function createDiscountDropDownListAndAppendToMakeAnOrderBody(discountsJSON)
 {
+    alert("in createDiscountDropDownListAndAppendToMakeAnOrderBody \n" + JSON.stringify(discountsJSON));
     var discountsDropDownListHTML = createEmptyDropDownListHTML(ID_OF_DISCOUNTS_DROP_DOWN, 'Choose a discount', ID_OF_DISCOUNTS_DROP_DOWN);
+    alert("The discountsDropDownListHTML is:"  + discountsDropDownListHTML);
     appendHTMLToMakeAndOrderBody(discountsDropDownListHTML);
-    setDiscountDropDownList(discountStr);
+    setDiscountDropDownList(discountsJSON);
 }
 
-export function setDiscountDropDownList(discountStr)
+export function setDiscountDropDownList(discountsJSON)
 {
-    var discountsJSON = JSON.parse(discountStr);
+    //  var discountsJSON = JSON.parse(discountStr);
+    alert("in setDiscountDropDownList" + JSON.stringify(discountsJSON))
     var discountDropDownList = $("#"+ ID_OF_DISCOUNTS_DROP_DOWN);
-    $.each(discountsJSON || [], function(index, discount) {
-        var discountName = discount["discountName"]
-        alert("Adding discount " + discountName);
-        $('<option value=' + discountStr + '>' + discountName + '</option>').appendTo(discountDropDownList);
+    var firstOperatorOneOF = true;
+    $.each(discountsJSON || [], function(index, discountJSON) {
+        var discountName = discountJSON["discountName"]
+        var operator = discountJSON["thenYouGet"]["operator"];
+        var discountStr = JSON.stringify(discountJSON);
+        alert("added discount to dropDownList and this is the json:\n" + discountStr);
+        alert("Adding discount " + discountName + " and the discountStr is: " + discountStr);
+        $("<option value='" + discountStr + "'>" + discountName + "</option>").appendTo(discountDropDownList);
+        if(operator === ONE_OF && firstOperatorOneOF === true)
+        {
+            alert("first discount with operator ONE_OF");
+            emptyAddItemContainer();
+            createItemsDropDownListAndAppendToAddItemContainer(discountsJSON);
+            firstOperatorOneOF=false;
+        }
     });
 }
 export function createAddDiscountButtonAndAppendToMakeAnOrderBody()
@@ -137,7 +178,6 @@ export function postToServerTheChosenOneOfDiscount(discountName, itemSerialIDFro
             initiateChoosingDiscountsToApply();
         }
     })
-    return discountsStr;
 }
 
 export function postToServerTheChosenAllOrNothingDiscount(discountName)
@@ -158,17 +198,18 @@ export function postToServerTheChosenAllOrNothingDiscount(discountName)
             initiateChoosingDiscountsToApply();
         }
     })
-    return discountsStr;
 }
 
 export function emptyAddItemContainer() {
     $( "#" + ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER).empty();
+    alert("in emptyAddItemContainer")
 
 }
-export function createItemsDropDownListAndAppendToAddItemContainer(discountStr) {
+export function createItemsDropDownListAndAppendToAddItemContainer(discountsJSON) {
     var itemsFromDiscountDropDownListHTML = createEmptyDropDownListHTML(ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN, 'Choose an item', ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN);
+    alert("The itemsFromDiscountDropDownListHTML is: \n" + itemsFromDiscountDropDownListHTML);
     appendHTMLElementToAddItemContainer(itemsFromDiscountDropDownListHTML);
-    setItemsFromDiscountsDropDownList(discountStr);
+    setItemsFromDiscountsDropDownList(discountsJSON);
 }
 
 export function appendHTMLElementToAddItemContainer(htmlElement) {
@@ -176,7 +217,7 @@ export function appendHTMLElementToAddItemContainer(htmlElement) {
     $(htmlElement).appendTo(itemFromDiscountDropDownListContainer);
 }
 
-export function setChoosingDiscountFromDropDownListEvent(orderType)
+export function setChoosingDiscountFromDropDownListEvent()
 {
     $('#' + ID_OF_DISCOUNTS_DROP_DOWN).change(function () {
         var discountStr = $('#' + ID_OF_DISCOUNTS_DROP_DOWN).val();
@@ -184,28 +225,31 @@ export function setChoosingDiscountFromDropDownListEvent(orderType)
         var operator = discountsJSON["thenYouGet"]["operator"];
         if(operator === ONE_OF)
         {
-            createItemsDropDownListAndAppendToAddItemContainer(discountStr);
+            alert("Discount has been chosen!");
+            emptyAddItemContainer();
+            createItemsDropDownListAndAppendToAddItemContainer(discountsJSON);
         }
     });
 }
 
-export function setItemsFromDiscountsDropDownList(discountStr)
+export function setItemsFromDiscountsDropDownList(discountJSON)
 {
-    var discountJSON = JSON.parse(discountStr);
+    //  var discountJSON = JSON.parse(discountStr);
     var offerListJSON = discountJSON["thenYouGet"]["offerList"];
-    var offerListStr = JSON.stringify(offerListJSON);
+    alert("in setItemsFromDiscountsDropDownList and offerListJSON:\n" + JSON.stringify(offerListJSON));
+    //var offerListStr = JSON.stringify(offerListJSON);
 
     $.each(offerListJSON || [], function(index, offerJSON) {
-        var offerStr = JSON.stringify(offerJSON);
+        //  var offerStr = JSON.stringify(offerJSON);
         alert("Adding offer to itemsFromDiscountDropDownList");
-        var optionHTML = getOfferMessage(offerStr);
+        var optionHTML = getOfferMessage(offerJSON);
         appendHTMLToElement(optionHTML, ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN);
     });
 }
 
-export function getOfferMessage(offerStr)
+export function getOfferMessage(offerJSON)
 {
-    var offerJSON = JSON.parse(offerStr);
+    var offerStr = JSON.stringify(offerJSON);
     var quantity = offerJSON["quantity"]
     var forAdditional = offerJSON["forAdditional"]
     var itemName = offerJSON["itemName"]
@@ -215,37 +259,14 @@ export function getOfferMessage(offerStr)
 
 export function getDiscountJSONFromServer()
 {
-    var discountsStr=null;
-    $.ajax({
-        method: 'GET',
-        data: {},
-        url: GET_DISCOUNTS_FROM_SERVER_URL,
-        dataType: "json",
-        timeout: 4000,
-        error: function (e) {
-            console.error(e);
-            alert('error in  getDiscountJSONFromServer\n' + e);
-        },
-        success: function (r) {
-            //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
-            discountsStr = JSON.stringify(r);
-        }
-    })
-    return discountsStr;
+    // var discountsStr=null;
+
+    //return discountsStr;
 }
 
-export function createDiscountsTableHTML(discountStr)
+export function createDiscountsTableHTML(discountsJSON)
 {
-    createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY);
-    var tableBodyElement = $('#' + ID_OF_TABLE_BODY);
-    appendHTMLToElement(generateFirstRowInDiscountsHTMLTable(),tableBodyElement);
-  //  var discountsStr = getDiscountJSONFromServer();
-    var discountsJSON = JSON.parse(discountsStr);
-    $.each(discountsJSON || [], function(index, discount) {
-        console.log("Adding discount #" + index + ": ");
-        var discountStr = JSON.parse(discount);
-        appendHTMLToElement(generateRowInDiscountsHTMLTable(discountStr),tableBodyElement);
-    });
+
 }
 
 export function generateFirstRowInDiscountsHTMLTable()
@@ -253,44 +274,52 @@ export function generateFirstRowInDiscountsHTMLTable()
     return "<tr><th>Details of discount</th>";
 }
 
-export function generateRowInDiscountsHTMLTable(discountStr)
+export function generateRowInDiscountsHTMLTable(discountJSON)
 {
-    return "<tr><th>" + getDiscountMessage(discountStr) + "</th>";
+    return "<tr><th>" + getDiscountMessage(discountJSON) + "</th>";
 }
 
-export function getDiscountMessage(discountStr)
+export function getDiscountMessage(discountsJSON)
 {
-    var discountsJSON = JSON.parse(discountStr);
+    // var discountsJSON = JSON.parse(discountStr);
     var discountName = discountsJSON["discountName"];
     //convert ifYouBuyStr to ifYouBuyJSON
-    var quantity = discountsJSON["ifYouBuy"]["quantity"]
-    var itemName = discountsJSON["ifYouBuy"]["itemName"]
-    var operator = discountsJSON["ifYouBuy"]["operator"]
+    var quantity = discountsJSON["ifYouBuy"]["quantity"];
+    var itemName = discountsJSON["ifYouBuy"]["itemName"];
+    var operator = discountsJSON["thenYouGet"]["operator"];
 
-    var message = "Name of sale: " + discountName + "\n" +
-    "Buy: " + quantity + " of " + itemName + "\n" +
-    "Get:\n";
-    var offerListStr = JSON.stringify(discountsJSON["offerList"]);
-    return message.concat(getStringByOperator(offerListStr, operator));
+    var message = "<table>" +
+        "<tr><th>Name of sale: " + discountName + "</th></tr>" +
+        "<tr><th>Buy: " + quantity + " of " + itemName + "</th></th>" +
+        "<tr><th> Get:"
+
+        "Get:\n";
+    var offerListJSON = discountsJSON["thenYouGet"]["offerList"];
+    //  var offerListStr = JSON.stringify(discountsJSON["offerList"]);
+    var newMessage =  message.concat(getStringByOperator(offerListJSON, operator));
+   // alert("newMessage: " + newMessage);
+    return newMessage + '</th></tr></table>';
 }
 
-export function getStringByOperator(offerListStr, operator)
+export function getStringByOperator(offerListJSON, operator)
 {
     var allOrNothingOffers = "";
-    var offerListJSON = JSON.parse(offerListStr);
+    //  var offerListJSON = JSON.parse(offerListStr);
     //convert offerListStr to json
+    alert("offerListJSON: " + offerListJSON);
     $.each(offerListJSON || [], function(index, offer) {
         if(index !== 0) // if this is not the first offer
         {
-            allOrNothingOffers = allOrNothingOffers.concat("         ");
-            if(operator === ALL_OR_NOTHING) {
-                allOrNothingOffers = allOrNothingOffers.concat("AND\n");
+          //  allOrNothingOffers = allOrNothingOffers.concat(" ");
+            if(operator === ALL_OR_NOTHING || operator === IRRELEVANT) {
+                allOrNothingOffers = allOrNothingOffers.concat(" AND" );
             }
             else if(operator === ONE_OF) {
-                allOrNothingOffers = allOrNothingOffers.concat("OR\n");
+                allOrNothingOffers = allOrNothingOffers.concat(" OR ");
             }
         }
-        allOrNothingOffers = allOrNothingOffers.concat(offer["quantity"]+ " amount of " + offer["itemName"] + " for " + offer["forAdditional"] + "\n");
+        allOrNothingOffers = allOrNothingOffers.concat(offer["quantity"]+ " amount of " + offer["itemName"] + " for additional " + offer["forAdditional"] + "$");
+        alert("allOrNothingOffer: " + allOrNothingOffers);
     });
     return  allOrNothingOffers;
 }

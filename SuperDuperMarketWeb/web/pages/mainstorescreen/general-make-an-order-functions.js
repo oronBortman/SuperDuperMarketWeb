@@ -1,6 +1,5 @@
 const ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
 const ID_OF_ADD_ITEM_TO_ORDER = 'addItemToOrder';
-const ID_OF_NEXT_BUTTON = "nextButton";
 
 export function emptyMakeOrderBody()
 {
@@ -59,10 +58,10 @@ export function appendHTMLToElement(htmlToAppend, IdOfElementToAppendTo)
 
 }
 
-export function createNextButtonHTMLAndAppendToMakeOrderBody()
+export function createNextButtonHTMLAndAppendToMakeOrderBody(idOfNextButton)
 {
-    var nextButtonHTML = createButton(ID_OF_NEXT_BUTTON,"Next");
+    var nextButtonHTML = createButton(idOfNextButton,"Next");
     appendHTMLToMakeAndOrderBody(nextButtonHTML);
-    disableElement(ID_OF_NEXT_BUTTON);
+   // disableElement(ID_OF_NEXT_BUTTON);
 }
 

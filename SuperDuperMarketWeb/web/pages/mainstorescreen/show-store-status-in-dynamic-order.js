@@ -24,7 +24,7 @@ export function initiateShowStoresStatusTable()
     //var storesStatusTableHTML = createStoresStatusTableHTML();
     createStoresTableAndAppendToMakeAndOrderElement();
     //appendHTMLToMakeAndOrderBody(storesStatusTableHTML);
-    createNextButtonHTMLAndAppendToMakeOrderBody();
+    createNextButtonHTMLAndAppendToMakeOrderBody(ID_OF_NEXT_BUTTON);
     setNextButtonEvent();
 }
 

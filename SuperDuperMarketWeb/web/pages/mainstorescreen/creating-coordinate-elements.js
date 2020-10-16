@@ -1,4 +1,4 @@
-import {appendHTMLToMakeAndOrderBody} from "./general-make-an-order-functions";
+import {appendHTMLToMakeAndOrderBody} from "./general-make-an-order-functions.js";
 
 var ID_OF_MINUS_BUTTON_IN_SELECT_COORIDNATE_X="minusButtonInSelectCoordX";
 var ID_OF_PLUS_BUTTON_IN_SELECT_COORIDNATE_X = "plusButtonInSelectCoordX";
@@ -17,8 +17,8 @@ export function creatingCoordinatesHTMLAndSetEvents(idOfValueOfCoordinateXChosen
     appendHTMLToMakeAndOrderBody(selectCoordinateXHTML,idOfValueOfCoordinateXChosen);
     appendHTMLToMakeAndOrderBody(selectCoordinateYHTML,idOfValueOfCoordinateYChosen);
     setMinusButtonOnCoordinate(COORDINATE_X,idOfValueOfCoordinateXChosen);
-    setPlusButtonOnCoordinate(COORDINATE_X,idOfValueOfCoordinateYChosen);
-    setMinusButtonOnCoordinate(COORDINATE_Y,idOfValueOfCoordinateXChosen);
+    setPlusButtonOnCoordinate(COORDINATE_X,idOfValueOfCoordinateXChosen);
+    setMinusButtonOnCoordinate(COORDINATE_Y,idOfValueOfCoordinateYChosen);
     setPlusButtonOnCoordinate(COORDINATE_Y,idOfValueOfCoordinateYChosen);
 }
 
@@ -58,7 +58,6 @@ export function setMinusButtonOnCoordinate(typeOfCoordinate, idOfValueOfCoordina
 {
     console.log("inside setMinusButtonOnCoordinate function")
     var idOfMinusButtonOfCoordinate;
-    var idOfValueCoordinateChosen = idOfValueOfCoordinateChosen;
 
     if(typeOfCoordinate === COORDINATE_X)
     {
@@ -69,16 +68,14 @@ export function setMinusButtonOnCoordinate(typeOfCoordinate, idOfValueOfCoordina
         idOfMinusButtonOfCoordinate = ID_OF_MINUS_BUTTON_IN_SELECT_COORIDNATE_Y;
     }
     $("#" + idOfMinusButtonOfCoordinate).click(function() {
-        var coordinateValueNum=getValueOfCoordinateChosen(idOfValueCoordinateChosen);
+        var coordinateValueNum=getValueOfCoordinateChosen(idOfValueOfCoordinateChosen);
         console.log("Coordinate value before checking the value: " + coordinateValueNum);
         if(coordinateValueNum > 0)
         {
             console.log("Coordinate value before changing the value: " + coordinateValueNum);
             coordinateValueNum=coordinateValueNum-1;
             console.log("Coordinate value after clicking on minus button: " + coordinateValueNum);
-            $("#" + idOfValueCoordinateChosen).text(coordinateValueNum);
-            // alert($("#" + idOfValueCoordinateChosen).text());
-
+            applyValueOnCoordinate(coordinateValueNum, idOfValueOfCoordinateChosen);
         }
     });
 }
@@ -88,11 +85,16 @@ export function getValueOfCoordinateChosen(idOfValueCoordinateChosen)
     var coordinateValueNumStr =  $("#" + idOfValueCoordinateChosen).text();
     return  parseInt(coordinateValueNumStr);
 }
+
+export function applyValueOnCoordinate(value, idOfValueCoordinateChosen)
+{
+    $("#" + idOfValueCoordinateChosen).text(value);
+
+}
 //TODO
 export function setPlusButtonOnCoordinate(typeOfCoordinate, idOfValueOfCoordinateChosen) {
     console.log("inside setPlusButtonOnCoordinate");
     var idOfPlusButtonOfCoordinate;
-    var idOfValueCoordinateChosen = idOfValueOfCoordinateChosen;
 
     if (typeOfCoordinate === COORDINATE_X) {
         idOfPlusButtonOfCoordinate = ID_OF_PLUS_BUTTON_IN_SELECT_COORIDNATE_X;
@@ -100,14 +102,14 @@ export function setPlusButtonOnCoordinate(typeOfCoordinate, idOfValueOfCoordinat
         idOfPlusButtonOfCoordinate = ID_OF_PLUS_BUTTON_IN_SELECT_COORIDNATE_Y;
     }
     $("#" + idOfPlusButtonOfCoordinate).click(function () {
-        var coordinateValueNum = getValueOfCoordinateChosen(idOfValueCoordinateChosen);
+        var coordinateValueNum = getValueOfCoordinateChosen(idOfValueOfCoordinateChosen);
         console.log("Coordinate value before checking the value: " + coordinateValueNum);
         if (coordinateValueNum < 50) {
             // alert($("#" + idOfValueCoordinateChosen).text());
             console.log("Coordinate value before changing the value: " + coordinateValueNum);
             coordinateValueNum = coordinateValueNum + 1;
-            console.log("Coordinate value after clicking on minus button: " + coordinateValueNum);
-            $("#" + idOfValueCoordinateChosen).text(coordinateValueNum);
+            console.log("Coordinate value after clicking on plus button: " + coordinateValueNum);
+            applyValueOnCoordinate(coordinateValueNum, idOfValueOfCoordinateChosen);
             // alert($("#" + idOfValueCoordinateChosen).text());
 
         }
