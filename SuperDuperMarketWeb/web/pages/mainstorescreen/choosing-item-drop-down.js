@@ -19,12 +19,10 @@ const ID_OF_PLUS_BUTTON = "plusButton";
 const ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN = 'valueOfAmountOfItemChosen';
 const ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT = "chooseItemsInDropDownListElement";
 const ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
-const NAME_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
 const ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
 const ID_OF_ADD_ITEM_TO_ORDER = 'addItemToOrder';
 const ID_OF_ITEM_ELEMENT = 'itemElement';
 const ID_OF_NEXT_BUTTON = "nextButton";
-
 
 const STATIC = 'static';
 const DYNAMIC = 'dynamic';

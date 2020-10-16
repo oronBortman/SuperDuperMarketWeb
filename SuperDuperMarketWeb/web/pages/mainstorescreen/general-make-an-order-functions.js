@@ -65,3 +65,4 @@ export function createNextButtonHTMLAndAppendToMakeOrderBody()
     appendHTMLToMakeAndOrderBody(nextButtonHTML);
     disableElement(ID_OF_NEXT_BUTTON);
 }
+
