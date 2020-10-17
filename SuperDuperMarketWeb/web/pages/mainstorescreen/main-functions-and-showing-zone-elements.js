@@ -21,6 +21,8 @@ const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER = "showOrdersInSellerStoresCo
 
 function emptyStoresInZoneTable() {
     document.getElementById(ID_OF_TBODY_OF_STORE_TABLE).innerHTML = '';
+}
+
 function refreshStoresInZoneList(detailsOnStoresInZone) {
     console.log("in refreshStoresInZoneList");
     emptyStoresInZoneTable();
