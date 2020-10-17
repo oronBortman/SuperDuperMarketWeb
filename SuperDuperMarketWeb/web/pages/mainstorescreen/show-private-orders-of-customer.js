@@ -9,7 +9,7 @@ import {
 import {initiateRateStore} from "./rate-seller.js";
 
 const GET_STORES_ORDERS_FOR_ORDER_SUMMERY_URL=buildUrlWithContextPath("get-store-orders-for-order-summery");
-
+const GET_SUMMERY_OF_ORDERS = buildUrlWithContextPath("get-summery-of-orders");
 //ID's of HTML Elements
 const ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
 const ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
@@ -18,12 +18,12 @@ const ID_OF_STORE_ORDERS_TABLE = "storeOrdersTable";
 const ID_OF_STORE_ORDERS_TABLE_BODY = "storeOrdersTableBody";
 const ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER = "storeOrderStatusContainer";
 
-export function initiateShowingSummeryOfOrder(orderType)
+export function initiateShowPrivateOrdersOfCustomer()
 {
     $.ajax({
         method: 'GET',
         data: {},
-        url: GET_STORES_ORDERS_FOR_ORDER_SUMMERY_URL,
+        url: GET_SUMMERY_OF_ORDERS,
         dataType: "json",
         timeout: 4000,
         error: function (e) {

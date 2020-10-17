@@ -63,6 +63,11 @@ export function appendHTMLToElement(htmlToAppend, IdOfElementToAppendTo)
 
 }
 
+export function createEmptyForm(idOfForm)
+{
+    return '<form id=' + idOfForm + '>' + '</form>';
+}
+
 export function createNextButtonHTMLAndAppendToMakeOrderBody(idOfNextButton)
 {
     var nextButtonHTML = createButton(idOfNextButton,"Next");

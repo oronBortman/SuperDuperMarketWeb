@@ -270,8 +270,10 @@ public class OpenedCustomerOrder extends Order {
 
         for(OpenedStoreOrder openedStoreOrder : openedStoresOrderMap.values())
         {
-            int serialNumber = openedStoreOrder.getStoreUsed().getSerialNumber();
+            Store store = openedStoreOrder.getStoreUsed();
+            int serialNumber = store.getSerialNumber();
             ClosedStoreOrder closedStoreOrder = openedStoreOrder.closeOrder();
+            store.addClosedOrderToHistory(closedStoreOrder);
             closedStoresOrderMapByStoreSerialID.put(serialNumber, closedStoreOrder);
         }
 

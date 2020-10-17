@@ -1,11 +1,9 @@
 package logic.order.CustomerOrder;
 
-import logic.Customer;
 import logic.SDMLocation;
 import logic.order.Order;
 import logic.order.StoreOrder.ClosedStoreOrder;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +14,14 @@ public class ClosedCustomerOrder extends Order {
 
     SDMLocation locationOfCustomer;
     String customerName;
-    Integer SerialNumber;
+    Integer serialNumber;
     Map<Integer, ClosedStoreOrder> closedStoresOrderMapByStoreSerialID;
+    static Integer generalSerialNumber;
+
+    static
+    {
+        generalSerialNumber=1;
+    }
 
     public ClosedCustomerOrder(String date, Map<Integer, ClosedStoreOrder> closedStoresOrderMapByStoreSerialID , boolean isOrderStatic, String customerName, SDMLocation locationOfCustomer)
     {
@@ -25,6 +29,9 @@ public class ClosedCustomerOrder extends Order {
         this.closedStoresOrderMapByStoreSerialID = closedStoresOrderMapByStoreSerialID;
         this.customerName = customerName;
         this.locationOfCustomer = locationOfCustomer;
+        this.serialNumber = generalSerialNumber;
+        closedStoresOrderMapByStoreSerialID.values().stream().forEach(x->x.setSerialNumber(serialNumber));
+        generalSerialNumber++;
     }
 
     public Map<Integer, ClosedStoreOrder> getClosedStoresOrderMapByStoreSerialID() {
@@ -63,7 +70,7 @@ public class ClosedCustomerOrder extends Order {
     }
 
     public void setSerialNumber(Integer serialNumber) {
-        this.SerialNumber = serialNumber;
+        this.serialNumber = serialNumber;
     }
 
     public Double getTotalItemCostInOrder()
@@ -98,7 +105,7 @@ public class ClosedCustomerOrder extends Order {
     
 
     public Integer getSerialNumber() {
-        return SerialNumber;
+        return serialNumber;
     }
 
     public boolean checkIfItemAlreadyExistsInOrder(int serialIDOfItem) {

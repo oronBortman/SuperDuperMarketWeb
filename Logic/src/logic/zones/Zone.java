@@ -167,16 +167,16 @@ public class Zone {
 
     public void addClosedOrderToHistory(ClosedCustomerOrder order)
     {
-        for(ClosedStoreOrder closedStoreOrder : order.getClosedStoresOrderMapByStoreSerialID().values())
+       /* for(ClosedStoreOrder closedStoreOrder : order.getClosedStoresOrderMapByStoreSerialID().values())
         {
             closedStoreOrder.setSerialNumber(currentOrderSerialIDInSDK);
         }
-        order.setSerialNumber(currentOrderSerialIDInSDK);
+        order.setSerialNumber(currentOrderSerialIDInSDK);*/
         //TODO
         //Need to add closed order to customer
         //order.getCustomerName().addClosedCustomerOrderToMap(order);
-        ordersSerialIDMap.put(currentOrderSerialIDInSDK, order);
-        currentOrderSerialIDInSDK++;
+        ordersSerialIDMap.put(order.getSerialNumber(), order);
+      //  currentOrderSerialIDInSDK++;
     }
 
     public Integer getHowManyShopsSellesAnItem(Integer itemID)
