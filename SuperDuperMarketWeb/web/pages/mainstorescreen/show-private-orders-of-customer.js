@@ -1,29 +1,47 @@
 import {
-    emptyMakeOrderBody,
-    createEmptyDropDownListHTML,
     createEmptyTable,
-    appendHTMLToMakeAndOrderBody,
-    createHTMLContainerAndAppendToMakeOrderBody,
-    createNextButtonHTMLAndAppendToMakeOrderBody, appendHTMLToElement, emptyElementByID
+    appendHTMLToElement,
+    emptyElementByID,
+    createButton
 } from "./general-make-an-order-functions.js";
-import {initiateRateStore} from "./rate-seller.js";
 
-const GET_STORES_ORDERS_FOR_ORDER_SUMMERY_URL=buildUrlWithContextPath("get-store-orders-for-order-summery");
-const GET_SUMMERY_OF_ORDERS = buildUrlWithContextPath("get-summery-of-orders");
+const GET_CUSTOMER_ORDERS_DETAILS_URL = buildUrlWithContextPath("get-customer-orders-details");
 //ID's of HTML Elements
-const ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
-const ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
-const ID_OF_NEXT_BUTTON = "nextButton";
-const ID_OF_STORE_ORDERS_TABLE = "storeOrdersTable";
-const ID_OF_STORE_ORDERS_TABLE_BODY = "storeOrdersTableBody";
-const ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER = "storeOrderStatusContainer";
+const ID_OF_CUSTOMER_ORDERS_TABLE = "customerOrdersTable";
+const ID_OF_CUSTOMER_ORDERS_TABLE_BODY = "customerOrdersTableBody";
+const ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE = "specificCustomerOrderTable";
+const ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE_BODY = "specificCustomerOrderTableBody";
+const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER = "showPrivateOrdersOfSellerContainer";
 
-export function initiateShowPrivateOrdersOfCustomer()
-{
+export function initiateShowPrivateOrdersOfCustomer() {
+
+    /*
+    customerOrder["serialID"]
+    customerOrder["date"];
+    customerOrder["location"]
+    customerOrder["totalStores"]
+    customerOrder["totalItemsInOrder"]
+    customerOrder["totalItemsPriceInOrder"]
+    customerOrder["totalDeliveryPrice"]
+    customerOrder["totalOrderPrice"]
+    customerOrder["itemsListInOrder"]
+    */
+    /*
+    itemInOrder["serialID"]
+    itemInOrder["nameOfItem"]
+    itemInOrder["storeSerialID"]
+    itemInOrder["storeName"]
+    itemInOrder["AmountOfItemPurchased"]
+    itemInOrder["totalPriceOfItem"]
+    itemInOrder["FromDiscount"]
+
+     */
+
+
     $.ajax({
         method: 'GET',
         data: {},
-        url: GET_SUMMERY_OF_ORDERS,
+        url: GET_CUSTOMER_ORDERS_DETAILS_URL,
         dataType: "json",
         timeout: 4000,
         error: function (e) {
@@ -31,148 +49,108 @@ export function initiateShowPrivateOrdersOfCustomer()
             alert('error in  initiateTheChoosingItemDropDownInOrder\n' + e);
         },
         success: function (r) {
-            initiateChoosingStoreOrderDropDownHTMLInOrder();
-            appendHTMLToMakeAndOrderBody(createEmptyDropDownListHTML("storeOrders", "Choose store order:", ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST));
-            appendHTMLToMakeAndOrderBody(createEmptyTable(ID_OF_STORE_ORDERS_TABLE, ID_OF_STORE_ORDERS_TABLE_BODY));
-            appendHTMLToMakeAndOrderBody(createHTMLContainerAndAppendToMakeOrderBody(ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER));
-            createNextButtonHTMLAndAppendToMakeOrderBody(ID_OF_NEXT_BUTTON);
-            setNextButtonEvent();
-            setChoosingStoreOrderDropDownListEvent();
-            setStoreOrdersListInDropDownInOrder(r);
+            emptyElementByID(ID_OF_CUSTOMER_ORDERS_TABLE);
+            appendHTMLToElement(createEmptyTable(ID_OF_CUSTOMER_ORDERS_TABLE, ID_OF_CUSTOMER_ORDERS_TABLE_BODY), ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER);
+            appendHTMLToElement(createEmptyTable(ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE, ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE_BODY), ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER);
+            setCustomerOrdersListInTable(r);
         }
     })
 }
 
-export function initiateChoosingStoreOrderDropDownHTMLInOrder()
-{
-    var makeOrderBody = $("#" + ID_OF_MAKE_ORDER_BODY);
-    emptyMakeOrderBody();
-    console.log("In function initiateChoosingItemDropDownHTMLInOrder()\n")
-    var chooseItemsDropDownList = '<div id="chooseItemsInDropDownListElement"></div>';
-    $(chooseItemsDropDownList).appendTo(makeOrderBody);
-}
-
-export function setChoosingStoreOrderDropDownListEvent()
-{
-    $('#' + ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST).change(function () {
-        var itemListStr = $('#' + ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST).val();
-        var itemListJSON = JSON.parse(itemListStr);
-        buildTableBodyHTMLAndUpdateStoresOrderTable(itemListJSON);
-    });
-}
-
-export function setNextButtonEvent()
-{
-    $('#' + ID_OF_NEXT_BUTTON).click(function () {
-        alert('Clicked On next button!');
-        initiateRateStore();
-    });
-}
 
 //The values in here are good
-export function setStoreOrdersListInDropDownInOrder(storeOrdersList)
+export function setCustomerOrdersListInTable(customerOrdersList)
 {
-    var chooseStoreOrdersDropDownListElement = $("#"+ ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST);
-    $.each(storeOrdersList || [], function(index, storeOrder) {
-        var storeID = storeOrder["serialNumber"];
-        var storeName = storeOrder["name"];
-        var itemsList = storeOrder["itemsList"];
-        //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
-        var itemsListStr =JSON.stringify(itemsList);
-        console.log("Adding storeOrder #" + storeID + ": " + storeName);
-       // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
-        $('<option value=' + itemsListStr + '>' + 'storeID: ' + storeID + ', Store Name: ' + storeName + '</option>').appendTo(chooseStoreOrdersDropDownListElement);
-        if(index === 0)
-        {
-            buildTableBodyHTMLAndUpdateStoresOrderTable(itemsList);
-            setStoreOrderStatusContainer(storeOrder);
-        }
+    appendHTMLToElement(generateFirstRowInCustomerOrdersHTMLTable(),ID_OF_CUSTOMER_ORDERS_TABLE_BODY);
+    $.each(customerOrdersList || [], function(index, customerOrder) {
+        console.log("Adding storeOrder #" + index);
+        var itemsListInOrder = customerOrder["itemsListInOrder"];
+        var idOfShowItemsDetailsInStoreOrderButton = "showItemsDetailsInStoreOrderButton" + index;
+        // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
+        appendHTMLToElement(generateRowInCustomerOrdersHTMLTable(customerOrder, index),ID_OF_CUSTOMER_ORDERS_TABLE_BODY);
+        setShowItemsInOrderTableButtonEvent(itemsListInOrder, idOfShowItemsDetailsInStoreOrderButton);
     });
 }
 
-export function setStoreOrderStatusContainer()
-{
-    emptyElementByID(ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER);
-    appendHTMLToElement(createStoreStatusHTML(),ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER);
-}
-
-export function createStoreStatusHTML(storeOrder)
-{
-    var storeID = storeOrder["serialNumber"];
-    var storeName = storeOrder["name"];
-    var PPK = storeOrder["PPK"];
-    var distanceToCustomer = storeOrder["distanceToCustomer"];
-    var deliveryCost = storeOrder["deliveryCost"];
-    var date = storeOrder["date"];
-
-    return '<p>Serial Number: ' + storeID +'</p>' +
-        '<p>Store Name: ' + storeName + '</p>' +
-        '<p>PPK: ' + PPK + '</p>' +
-        '<p>DistanceToCustomer: ' + distanceToCustomer + '</p>' +
-        '<p>DeliveryCost: ' + deliveryCost + '</p>' +
-        '<p>Date: ' + date + '</p>';
-}
-/*
-0:
-serialNumber:1
-name: baba store
-ownerName:
-PPK:
-distanceToCustomer:
-deliveryCost
-date:
-
-itemsList{
-    var serialID = itemInOrder["serialID"];
-     var itemName = itemInOrder["itemName"];
-    var measureType = itemInOrder["measureType"];
-    var amount = itemInOrder["amount"];
-    var pricePerUnit = itemInOrder["pricePerUnit"];
-    var totalPrice = itemInOrder["totalPrice"];
-    var boughtOnSale = itemInOrder["boughtOnSale"];
-}
-*/
-
-export function emptyTableBody()
-{
-    $( "#makeOrderBody" ).empty();
-}
-
-export function generateFirstRowInDiscountsHTMLTable()
+export function generateFirstRowInCustomerOrdersHTMLTable()
 {
     return "<tr><th>Serial ID</th>" +
+        "<th>date</th>" +
+        "<th>Location</th>" +
+        "<th>Total Stores</th>" +
+        "<th>Total Items In Order</th>" +
+        "<th>Total Items Price In Order</th>" +
+        "<th>Total Delivery Price</th>" +
+        "<th>Total Order Price</th>" +
+        "<th>Show details On Items In Order</th>";
+}
+
+export function generateFirstRowInItemsFromStoreOrderHTMLTable() {
+    return "<tr><th>Serial ID</th>" +
         "<th>Name</th>" +
-        "<th>MeasureType</th>" +
+        "<th>Measure Type</th>" +
+        "<th>Store serialID</th>" +
+        "<th>Store Name</th>" +
         "<th>Amount</th>" +
         "<th>Price per unit</th>" +
         "<th>Total Price</th>" +
         "<th>Bought on sale</th>";
 }
 
-export function generateRowInDiscountsHTMLTable(itemInOrder)
+export function setShowItemsInOrderTableButtonEvent(itemsList, idOfButton)
 {
-    var serialID = itemInOrder["serialID"];
-    var itemName = itemInOrder["itemName"];
-    var measureType = itemInOrder["measureType"];
-    var amount = itemInOrder["amount"];
-    var pricePerUnit = itemInOrder["pricePerUnit"];
-    var totalPrice = itemInOrder["totalPrice"];
-    var boughtOnSale = itemInOrder["boughtOnSale"];
-
-    return "<tr><th>" + serialID + "</th>" +
-        "<th>" + itemName + "</th>" +
-        "<th>" + measureType + "</th>" +
-        "<th>" + amount + "</th>" +
-        "<th>" + pricePerUnit + "</th>" +
-        "<th>" + totalPrice + "</th>" +
-        "<th>" + boughtOnSale + "</th>";
+    $("#" + idOfButton).click(function() {
+        emptyElementByID(ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE_BODY);
+        appendHTMLToElement(generateFirstRowInItemsFromStoreOrderHTMLTable(),ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE_BODY);
+        $.each(itemsList || [], function(index, itemInOrder) {
+            appendHTMLToElement(generateRowInItemsFromStoreOrderHTMLTable(itemInOrder),ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE_BODY);
+        });
+    });
 }
 
-export function buildTableBodyHTMLAndUpdateStoresOrderTable(itemsList)
+export function generateRowInCustomerOrdersHTMLTable(customerOrder, idOfButton)
 {
-    appendHTMLToElement(generateFirstRowInDiscountsHTMLTable(), ID_OF_STORE_ORDERS_TABLE_BODY);
-    $.each(itemsList || [], function(index, itemInOrder) {
-        emptyTableBody();
-        generateRowInDiscountsHTMLTable(itemInOrder);
-    });
+    var serialID = customerOrder["serialID"];
+    var date = customerOrder["date"];;
+    var location = customerOrder["location"];
+    var totalStores = customerOrder["totalStores"];
+    var totalItemsInOrder = customerOrder["totalItemsInOrder"];
+    var totalItemsPriceInOrder = customerOrder["totalItemsPriceInOrder"];
+    var totalDeliveryPrice = customerOrder["totalDeliveryPrice"];
+    var totalOrderPrice = customerOrder["totalOrderPrice"];
+
+    return "<tr><th>" + serialID + "</th>" +
+        "<th>" + date + "</th>" +
+        "<th>" + location + "</th>" +
+        "<th>" + totalStores + "</th>" +
+        "<th>" + totalItemsInOrder + "</th>" +
+        "<th>" + totalItemsPriceInOrder + "</th>" +
+        "<th>" + totalDeliveryPrice + "</th>" +
+        "<th>" + totalOrderPrice + "</th>" +
+        "<th>" + createButton(idOfButton, "Show") + "</th>";
+}
+
+
+
+export function generateRowInItemsFromStoreOrderHTMLTable(itemInOrder)
+{
+    var serialID = itemInOrder["serialID"];
+    var nameOfItem = itemInOrder["nameOfItem"];
+    var typeToMeasureBy = itemInOrder["typeToMeasureBy"];
+    var AmountOfItemPurchased = itemInOrder["AmountOfItemPurchased"];
+
+
+    var pricePerUnit = itemInOrder["pricePerUnit"];
+    var totalPriceOfItem = itemInOrder["totalPriceOfItem"];
+    var FromDiscount = itemInOrder["FromDiscount"];
+
+    return "<tr><th>" + serialID + "</th>" +
+        "<th>" + nameOfItem + "</th>" +
+        "<th>" + typeToMeasureBy + "</th>" +
+        "<th>" + storeSerialID + "</th>" +
+        "<th>" + storeName + "</th>" +
+        "<th>" + AmountOfItemPurchased + "</th>" +
+        "<th>" + pricePerUnit + "</th>" +
+        "<th>" + totalPriceOfItem + "</th>" +
+        "<th>" + FromDiscount + "</th>";
 }

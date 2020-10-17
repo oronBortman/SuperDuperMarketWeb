@@ -1,4 +1,7 @@
 import {setMakeANewOrderButton} from "./making-an-order.js";
+import {createButton, createHTMLContainerAndAppendToMakeOrderBody} from "./general-make-an-order-functions";
+import {initiateShowOrdersOfSellerStoresInCertainZone} from "./show-orders-of-seller.js";
+import {initiateShowPrivateOrdersOfCustomer} from "./show-private-orders-of-customer.js";
 
 var chatVersion = 0;
 var refreshRate = 5000; //milli seconds
@@ -11,9 +14,13 @@ var zoneName = detailsOnZoneJSONFormat.zoneName;
 var ID_OF_TBODY_OF_ZONE_ITEMS_TABLE = 'tbodyOfZoneItemsTable';
 var ID_OF_TBODY_OF_STORE_TABLE = 'tbodyOfDetailsOnStoresInZone';
 
+const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON = "showPrivateOrdersOfCustomerButton";
+const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER = "showPrivateOrdersOfSellerContainer";
+const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON = "showPrivateOrdersInSellerStoresButton";
+const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER = "showOrdersInSellerStoresContainer";
+
 function emptyStoresInZoneTable() {
     document.getElementById(ID_OF_TBODY_OF_STORE_TABLE).innerHTML = '';
-}
 function refreshStoresInZoneList(detailsOnStoresInZone) {
     console.log("in refreshStoresInZoneList");
     emptyStoresInZoneTable();
@@ -30,8 +37,8 @@ function generateRowInStoresInZoneHTMLTable(storeInZone)
     var storeID = storeInZone["serialNumber"];
     var storeName = storeInZone["name"];
     var storeOwner = storeInZone["ownerName"];
-    var listOfitemsInStore = storeInZone["availableItemsList"]
-    var detailsOnItemInStore = createItemsTableFromItemsListInStore(listOfitemsInStore);
+    var listOfItemsInStore = storeInZone["availableItemsList"]
+    var detailsOnItemInStore = createItemsTableFromItemsListInStore(listOfItemsInStore);
     var totalOrdersFromStore = storeInZone["totalOrdersFromStore"];
     var totalProfitOfSoledItems = storeInZone["totalProfitOfSoledItems"];
     var PPK = storeInZone["PPK"];
@@ -165,16 +172,36 @@ function setActionBasedOnRole(user)
     }
 }
 
+
+function setShowOrdersInSellerStoresButtonEvent()
+{
+    $("#" + ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON).click(function() {
+        initiateShowOrdersOfSellerStoresInCertainZone();
+    })
+}
+
+function setShowCustomerOrdersButtonEvent()
+{
+    $("#" + ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON).click(function() {
+        initiateShowPrivateOrdersOfCustomer();
+    })
+}
+
 function hideHTMLElementsByRole(user){
     var userType = user["userType"];
     if(userType === "seller")
     {
          $("#makeANewOrder").hide();
+        createButton(ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON, "show orders of seller" );
+        createHTMLContainerAndAppendToMakeOrderBody(ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER);
+        setShowOrdersInSellerStoresButtonEvent()
+
     }
     else if(userType === "customer")
     {
-
-        //  $("#loadFromXml").hide();
+        createButton(ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON, "Show private orders of customer");
+        createHTMLContainerAndAppendToMakeOrderBody(ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER);
+        setShowCustomerOrdersButtonEvent();
     }
 }
 

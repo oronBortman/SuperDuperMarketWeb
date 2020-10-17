@@ -119,6 +119,7 @@ export function setAddFeedbackButtonEvent()
         //Get infromation from feedback and send them to servlet
         var feedbackText = $("#" + ID_OF_FEEDBACK_TEXT_FIELD).val();
         var grade = $("#" +ID_OF_VALUE_OF_AMOUNT_OF_GRADE_CHOSEN).val();
+        alert("in setAddFeedbackButtonEvent and storeID: " + storeID + " feedbackText: " +feedbackText + " grade: " + grade);
 
         //Active servlet that add feedback to store
         $.ajax({
