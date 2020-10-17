@@ -2,6 +2,7 @@ package sdm.servlets.pagethree;
 
 import com.google.gson.Gson;
 import logic.Customer;
+import logic.Store;
 import logic.order.CustomerOrder.ClosedCustomerOrder;
 import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.users.User;
@@ -25,29 +26,30 @@ import static sdm.general.GeneralMethods.*;
 @WebServlet("/add-feedback")
 public class AddFeedbackServlet extends HttpServlet {
     DecimalFormat decimalFormat = new DecimalFormat("#.00");
-    //"storeID" : storeID
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //returning JSON objects, not HTML
-
+        // data:{"storeID" : storeID,"feedbackText":feedbackText,"grade":grade},
         response.setContentType("application/json");
         System.out.println("In AddFeedbackServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
+
             Zone zone = getZoneByRequest(servletContext,request);
             UserManager userManager = getUserManagerByServletContext(servletContext);
             User user = userManager.getUserByName(SessionUtils.getUsername(request));
-            String userType = SessionUtils.getUserType(request);
+            OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(servletContext,request);
 
-            if(userType.equals(CUSTOMER))
-            {
-                Customer customer = ((Customer)user);
-                OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(servletContext, request);
-                ClosedCustomerOrder closedCustomerOrder = openedCustomerOrder.closeCustomerOrder();
-                zone.addClosedOrderToHistory(closedCustomerOrder);
-                customer.addClosedCustomerOrderToMap(closedCustomerOrder);
-            }
+            String storeIDStr = request.getParameter("storeID");
+            String feedbackText = request.getParameter("feedbackText");
+            String gradeStr = request.getParameter("grade");
+
+            Integer gradeInt = Integer.parseInt(gradeStr);
+            Integer storeIDInt = Integer.parseInt(storeIDStr);
+
+            Store store = zone.getStoreBySerialID(storeIDInt);
+            store.addFeedback(user.getUserName(),openedCustomerOrder.getDateStr(), gradeInt, feedbackText);
 
             String json = gson.toJson(zone);
             out.println(json);

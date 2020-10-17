@@ -22,7 +22,7 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     private Map<String, Discount> discountNameDMap;
     private Seller storeOwner;
     private Integer PPK;
-    private Feedback feedback;
+    private List<Feedback> feedbackList;
 
     public Store(Integer serialNumber, String name, int PPK, SDMLocation SDMLocationOfShop, Seller storeOwner)
     {
@@ -31,6 +31,7 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         ItemsSerialIDMap = new HashMap<>();
         ordersSerialIDMap = new HashMap<>();
         discountNameDMap = new HashMap<>();
+        feedbackList = new ArrayList<>();
 
         this.PPK = PPK;
     }
@@ -55,6 +56,16 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         ordersSerialIDMap = new HashMap();
         discountNameDMap = new HashMap();
         this.PPK = shop.getDeliveryPpk();
+    }
+
+    public List<Feedback> getFeedbackList() {
+        return feedbackList;
+    }
+
+    public void addFeedback(String customerName, String orderDate, Integer grade, String feedbackText)
+    {
+        //String customerName, String orderDate, Integer rating, String feedbackText
+        feedbackList.add(new Feedback(customerName,orderDate,grade,feedbackText));
     }
 
     public Seller getStoreOwner() {

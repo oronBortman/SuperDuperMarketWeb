@@ -161,12 +161,16 @@ export function getFeedbackInstructionHTML()
 }
 export function setAddFeedbackButtonEvent()
 {
-    $('#' + ID_OF_ADD_FEEDBACK_BUTTON).click(function () {
+    $('#' + ID_OF_FEEDBACK_FORM).submit(function () {
         var storeID = $('#' + ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST).val();
+        //Get infromation from feedback and send them to servlet
+        var feedbackText = $("#" + ID_OF_FEEDBACK_TEXT_FIELD).val();
+        var grade = $("#" +ID_OF_VALUE_OF_AMOUNT_OF_GRADE_CHOSEN).val();
+
         //Active servlet that add feedback to store
         $.ajax({
             method:'POST',
-            data:{"storeID" : storeID},
+            data:{"storeID" : storeID,"feedbackText":feedbackText,"grade":grade},
             url: ADD_FEEDBACK_URL,
             dataType: "json",
             timeout: 4000,
@@ -179,6 +183,7 @@ export function setAddFeedbackButtonEvent()
                 console.log(r);
             }
         });
+        return false;
     });
 }
 
