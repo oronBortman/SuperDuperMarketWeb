@@ -6,6 +6,11 @@ export function emptyMakeOrderBody()
     $( "#makeOrderBody" ).empty();
 }
 
+export function emptyElementByID(idOfElement)
+{
+    $( "#" + idOfElement ).empty();
+
+}
 export function createHTMLContainerAndAppendToMakeOrderBody(idOfElementToCreate)
 {
     var itemElement = '<div id=' + idOfElementToCreate + '></div>';

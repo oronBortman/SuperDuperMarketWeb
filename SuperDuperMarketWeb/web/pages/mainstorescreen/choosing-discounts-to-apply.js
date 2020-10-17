@@ -11,7 +11,7 @@ import {emptyMakeOrderBody,
     createNextButtonHTMLAndAppendToMakeOrderBody,
     createEmptyTable,
     appendHTMLToElement} from "./general-make-an-order-functions.js";
-import {emptyChooseItemsDropDownList, setNextButtonEvent} from "./choosing-item-drop-down.js";
+import {initiateShowingSummeryOfOrder} from "./show-summery-of-order.js";
 
 const APPLY_ONE_OF_DISCOUNT_URL=buildUrlWithContextPath("apply-one-of-discount");
 const APPLY_ALL_OR_NOTHING_DISCOUNT_URL = buildUrlWithContextPath("apply-all-or-nothing-discount");
@@ -72,6 +72,7 @@ export function initiateChoosingDiscountsToApply()
             createAddDiscountButtonAndAppendToMakeAnOrderBody();
             setAddDiscountButtonEvent();
             createHTMLContainerAndAppendToMakeOrderBody(ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER);
+            appendHTMLElementToAddItemContainer('<p>hello</p>');
             createNextButtonHTMLAndAppendToMakeOrderBody(ID_OF_NEXT_BUTTON);
             setNextButtonEvent();
         }
@@ -79,19 +80,24 @@ export function initiateChoosingDiscountsToApply()
 
 }
 
+export function setNextButtonEvent()
+{
+    initiateShowingSummeryOfOrder();
+}
+
 export function createDiscountTableAndAppendToMakeAnOrderBody(discountsJSON)
 {
-    alert("in createDiscountTableAndAppendToMakeAnOrderBody and discountsJSON is: \n "+JSON.stringify(discountsJSON));
+    //alert("in createDiscountTableAndAppendToMakeAnOrderBody and discountsJSON is: \n "+JSON.stringify(discountsJSON));
 
     var tableHTML = createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY);
     appendHTMLToMakeAndOrderBody(tableHTML);
     appendHTMLToElement(generateFirstRowInDiscountsHTMLTable(),ID_OF_TABLE_BODY);
     //  var discountsStr = getDiscountJSONFromServer();
     // var discountsJSON = JSON.parse(discountsStr);
-    alert("In createDiscountsTableHTML, and discounts are: " + JSON.stringify(discountsJSON));
+   // alert("In createDiscountsTableHTML, and discounts are: " + JSON.stringify(discountsJSON));
     $.each(discountsJSON || [], function(index, discountJSON) {
         console.log("Adding discount #" + index + ": ");
-        alert("Adding discount #" + index + ": ");
+      //  alert("Adding discount #" + index + ": ");
         // var discountStr = JSON.parse(discount);
         appendHTMLToElement(generateRowInDiscountsHTMLTable(discountJSON),ID_OF_TABLE_BODY);
     });
@@ -99,9 +105,9 @@ export function createDiscountTableAndAppendToMakeAnOrderBody(discountsJSON)
 
 export function createDiscountDropDownListAndAppendToMakeAnOrderBody(discountsJSON)
 {
-    alert("in createDiscountDropDownListAndAppendToMakeAnOrderBody \n" + JSON.stringify(discountsJSON));
+  //  alert("in createDiscountDropDownListAndAppendToMakeAnOrderBody \n" + JSON.stringify(discountsJSON));
     var discountsDropDownListHTML = createEmptyDropDownListHTML(ID_OF_DISCOUNTS_DROP_DOWN, 'Choose a discount', ID_OF_DISCOUNTS_DROP_DOWN);
-    alert("The discountsDropDownListHTML is:"  + discountsDropDownListHTML);
+    //alert("The discountsDropDownListHTML is:"  + discountsDropDownListHTML);
     appendHTMLToMakeAndOrderBody(discountsDropDownListHTML);
     setDiscountDropDownList(discountsJSON);
 }
@@ -109,21 +115,22 @@ export function createDiscountDropDownListAndAppendToMakeAnOrderBody(discountsJS
 export function setDiscountDropDownList(discountsJSON)
 {
     //  var discountsJSON = JSON.parse(discountStr);
-    alert("in setDiscountDropDownList" + JSON.stringify(discountsJSON))
+   // alert("in setDiscountDropDownList" + JSON.stringify(discountsJSON))
     var discountDropDownList = $("#"+ ID_OF_DISCOUNTS_DROP_DOWN);
     var firstOperatorOneOF = true;
     $.each(discountsJSON || [], function(index, discountJSON) {
         var discountName = discountJSON["discountName"]
         var operator = discountJSON["thenYouGet"]["operator"];
         var discountStr = JSON.stringify(discountJSON);
-        alert("added discount to dropDownList and this is the json:\n" + discountStr);
-        alert("Adding discount " + discountName + " and the discountStr is: " + discountStr);
+      //  alert("added discount to dropDownList and this is the json:\n" + discountStr);
+      //  alert("Adding discount " + discountName + " and the discountStr is: " + discountStr);
         $("<option value='" + discountStr + "'>" + discountName + "</option>").appendTo(discountDropDownList);
         if(operator === ONE_OF && firstOperatorOneOF === true)
         {
-            alert("first discount with operator ONE_OF");
+        //    alert("first discount with operator ONE_OF");
             emptyAddItemContainer();
-            createItemsDropDownListAndAppendToAddItemContainer(discountsJSON);
+            alert("The first value of ONE_OF and and discountsJSON is: " + JSON.stringify(discountJSON));
+            createItemsDropDownListAndAppendToAddItemContainer(discountJSON);
             firstOperatorOneOF=false;
         }
     });
@@ -205,11 +212,16 @@ export function emptyAddItemContainer() {
     alert("in emptyAddItemContainer")
 
 }
-export function createItemsDropDownListAndAppendToAddItemContainer(discountsJSON) {
-    var itemsFromDiscountDropDownListHTML = createEmptyDropDownListHTML(ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN, 'Choose an item', ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN);
+//good
+export function createItemsDropDownListAndAppendToAddItemContainer(discountJSON) {
+    var itemsFromDiscountDropDownListHTML = createEmptyDropDownListHTML('itemFromDiscount', 'Choose an item', ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN);
     alert("The itemsFromDiscountDropDownListHTML is: \n" + itemsFromDiscountDropDownListHTML);
-    appendHTMLElementToAddItemContainer(itemsFromDiscountDropDownListHTML);
-    setItemsFromDiscountsDropDownList(discountsJSON);
+    alert("inside createItemsDropDownListAndAppendToAddItemContainer and discountsJSON is: \n" + JSON.stringify(discountJSON));
+
+    appendHTMLElementToAddItemContainer(itemsFromDiscountDropDownListHTML); //good
+    alert("1");
+    setItemsFromDiscountsDropDownList(discountJSON);
+    alert("2");
 }
 
 export function appendHTMLElementToAddItemContainer(htmlElement) {
@@ -221,28 +233,35 @@ export function setChoosingDiscountFromDropDownListEvent()
 {
     $('#' + ID_OF_DISCOUNTS_DROP_DOWN).change(function () {
         var discountStr = $('#' + ID_OF_DISCOUNTS_DROP_DOWN).val();
-        var discountsJSON = JSON.parse(discountStr);
-        var operator = discountsJSON["thenYouGet"]["operator"];
+        alert("discountStr is:" + discountStr);
+        var discountJSON = JSON.parse(discountStr);
+        var operator = discountJSON["thenYouGet"]["operator"];
         if(operator === ONE_OF)
         {
             alert("Discount has been chosen!");
             emptyAddItemContainer();
-            createItemsDropDownListAndAppendToAddItemContainer(discountsJSON);
+            createItemsDropDownListAndAppendToAddItemContainer(discountJSON);
         }
     });
 }
 
 export function setItemsFromDiscountsDropDownList(discountJSON)
 {
+
+    alert("in setItemsFromDiscountsDropDownList and discountJSON is: " + JSON.stringify(discountJSON));
     //  var discountJSON = JSON.parse(discountStr);
+    var name = discountJSON["discountName"];
+    var ifYouBuy = discountJSON["ifYouBuy"];
+    var ifYouBuy = discountJSON["thenYouGet"];
     var offerListJSON = discountJSON["thenYouGet"]["offerList"];
     alert("in setItemsFromDiscountsDropDownList and offerListJSON:\n" + JSON.stringify(offerListJSON));
     //var offerListStr = JSON.stringify(offerListJSON);
 
     $.each(offerListJSON || [], function(index, offerJSON) {
         //  var offerStr = JSON.stringify(offerJSON);
-        alert("Adding offer to itemsFromDiscountDropDownList");
+        alert("Adding offer to itemsFromDiscountDropDownList" + offerJSON);
         var optionHTML = getOfferMessage(offerJSON);
+        alert("optionHTML: " + optionHTML);
         appendHTMLToElement(optionHTML, ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN);
     });
 }
@@ -279,14 +298,14 @@ export function generateRowInDiscountsHTMLTable(discountJSON)
     return "<tr><th>" + getDiscountMessage(discountJSON) + "</th>";
 }
 
-export function getDiscountMessage(discountsJSON)
+export function getDiscountMessage(discountJSON)
 {
     // var discountsJSON = JSON.parse(discountStr);
-    var discountName = discountsJSON["discountName"];
+    var discountName = discountJSON["discountName"];
     //convert ifYouBuyStr to ifYouBuyJSON
-    var quantity = discountsJSON["ifYouBuy"]["quantity"];
-    var itemName = discountsJSON["ifYouBuy"]["itemName"];
-    var operator = discountsJSON["thenYouGet"]["operator"];
+    var quantity = discountJSON["ifYouBuy"]["quantity"];
+    var itemName = discountJSON["ifYouBuy"]["itemName"];
+    var operator = discountJSON["thenYouGet"]["operator"];
 
     var message = "<table>" +
         "<tr><th>Name of sale: " + discountName + "</th></tr>" +
@@ -294,7 +313,7 @@ export function getDiscountMessage(discountsJSON)
         "<tr><th> Get:"
 
         "Get:\n";
-    var offerListJSON = discountsJSON["thenYouGet"]["offerList"];
+    var offerListJSON = discountJSON["thenYouGet"]["offerList"];
     //  var offerListStr = JSON.stringify(discountsJSON["offerList"]);
     var newMessage =  message.concat(getStringByOperator(offerListJSON, operator));
    // alert("newMessage: " + newMessage);
@@ -306,7 +325,7 @@ export function getStringByOperator(offerListJSON, operator)
     var allOrNothingOffers = "";
     //  var offerListJSON = JSON.parse(offerListStr);
     //convert offerListStr to json
-    alert("offerListJSON: " + offerListJSON);
+   // alert("offerListJSON: " + offerListJSON);
     $.each(offerListJSON || [], function(index, offer) {
         if(index !== 0) // if this is not the first offer
         {
@@ -319,7 +338,7 @@ export function getStringByOperator(offerListJSON, operator)
             }
         }
         allOrNothingOffers = allOrNothingOffers.concat(offer["quantity"]+ " amount of " + offer["itemName"] + " for additional " + offer["forAdditional"] + "$");
-        alert("allOrNothingOffer: " + allOrNothingOffers);
+       // alert("allOrNothingOffer: " + allOrNothingOffers);
     });
     return  allOrNothingOffers;
 }
