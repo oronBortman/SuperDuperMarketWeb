@@ -1,11 +1,11 @@
 import {
     emptyMakeOrderBody,
     createEmptyDropDownListHTML,
-    createEmptyTable,
     appendHTMLToMakeAndOrderBody,
-    createHTMLContainerAndAppendToMakeOrderBody,
     createEmptyForm,
-    createNextButtonHTMLAndAppendToMakeOrderBody, appendHTMLToElement, emptyElementByID, createButton
+    appendHTMLToElement,
+    emptyElementByID,
+    createButton
 } from "./general-make-an-order-functions.js";
 
 const GET_STORES_ORDERS_FOR_ORDER_SUMMERY_URL=buildUrlWithContextPath("get-store-orders-for-order-summery");
@@ -14,11 +14,6 @@ const ADD_FEEDBACK_URL = buildUrlWithContextPath("add-feedback");
 
 //ID's of HTML Elements
 const ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
-const ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
-const ID_OF_NEXT_BUTTON = "nextButton";
-const ID_OF_STORE_ORDERS_TABLE = "storeOrdersTable";
-const ID_OF_STORE_ORDERS_TABLE_BODY = "storeOrdersTableBody";
-const ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER = "storeOrderStatusContainer";
 const ID_OF_FEEDBACK_FORM = "feedbackForm";
 const ID_OF_FINISH_ORDER_BUTTON = "finishOrderButton";
 const ID_OF_ADD_FEEDBACK_BUTTON = "addFeedbackButton";
@@ -29,48 +24,6 @@ const MIN_GRADE = 1;
 const MAX_GRADE = 5;
 const ID_OF_VALUE_OF_AMOUNT_OF_GRADE_CHOSEN = 1;
 const ID_OF_FEEDBACK_TEXT_FIELD = 'feedbackTextField';
-
-/*
-<!DOCTYPE html>
-<html>
-<head>
-<title>Page Title</title>
-</head>
-<body>
-
-<p>If you would like,<br>
-You can choose a store and give it a feedback.<br>
-<p>Choose a store for rating</p>
-
-<form>
-
-
-	<p>Choose your grade between 1 to 5:</p>
-	<table>
-		<tbody>
-			<tr>
-				<th><input type="button" value="-" id="minusButton"></input></th>
-				<th><p>1</p></th>
-				<th><input type="button" value="+" id="plusButton" ></input></th>
-			</tr>
-		</tbody>
-	</table>
-
-  	<label for="fname">Write a feedback:</label><br>
-  	<input type="text" id="feedback" name="feedback"><br><br>
-    <input type="submit" value="add feedback"></input>
-
-</form>
-
-<p>For finishing the order, just click the button 'Finish Order'</p>
-<button id="Finish Order">Finish Order</button>
-/*
-export createFromButton(idOfButton, valueOfButton)
-{
-	return '<input type="button" value=' + valueOfButton + ' id=' + idOfButton + '></input>'
-}
-
-*/
 
 export function initiateRateStore()
 {
@@ -285,82 +238,4 @@ export function setStoreOrdersListInDropDownInOrder(storeOrdersList)
         // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
         $('<option value=' + storeID + '>' + 'storeID: ' + storeID + ', Store Name: ' + storeName + '</option>').appendTo(chooseStoreOrdersDropDownListElement);
     });
-}
-
-export function setStoreOrderStatusContainer()
-{
-    emptyElementByID(ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER);
-    appendHTMLToElement(createStoreStatusHTML(),ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER);
-}
-
-export function createStoreStatusHTML(storeOrder)
-{
-    var storeID = storeOrder["serialNumber"];
-    var storeName = storeOrder["name"];
-    var PPK = storeOrder["PPK"];
-    var distanceToCustomer = storeOrder["distanceToCustomer"];
-    var deliveryCost = storeOrder["deliveryCost"];
-    var date = storeOrder["date"];
-
-    return '<p>Serial Number: ' + storeID +'</p>' +
-        '<p>Store Name: ' + storeName + '</p>' +
-        '<p>PPK: ' + PPK + '</p>' +
-        '<p>DistanceToCustomer: ' + distanceToCustomer + '</p>' +
-        '<p>DeliveryCost: ' + deliveryCost + '</p>' +
-        '<p>Date: ' + date + '</p>';
-}
-/*
-0:
-serialNumber:1
-name: baba store
-ownerName:
-PPK:
-distanceToCustomer:
-deliveryCost
-date:
-
-itemsList{
-    var serialID = itemInOrder["serialID"];
-     var itemName = itemInOrder["itemName"];
-    var measureType = itemInOrder["measureType"];
-    var amount = itemInOrder["amount"];
-    var pricePerUnit = itemInOrder["pricePerUnit"];
-    var totalPrice = itemInOrder["totalPrice"];
-    var boughtOnSale = itemInOrder["boughtOnSale"];
-}
-*/
-
-export function emptyTableBody()
-{
-    $( "#makeOrderBody" ).empty();
-}
-
-export function generateFirstRowInDiscountsHTMLTable()
-{
-    return "<tr><th>Serial ID</th>" +
-        "<th>Name</th>" +
-        "<th>MeasureType</th>" +
-        "<th>Amount</th>" +
-        "<th>Price per unit</th>" +
-        "<th>Total Price</th>" +
-        "<th>Bought on sale</th>";
-}
-
-export function generateRowInDiscountsHTMLTable(itemInOrder)
-{
-    var serialID = itemInOrder["serialID"];
-    var itemName = itemInOrder["itemName"];
-    var measureType = itemInOrder["measureType"];
-    var amount = itemInOrder["amount"];
-    var pricePerUnit = itemInOrder["pricePerUnit"];
-    var totalPrice = itemInOrder["totalPrice"];
-    var boughtOnSale = itemInOrder["boughtOnSale"];
-
-    return "<tr><th>" + serialID + "</th>" +
-        "<th>" + itemName + "</th>" +
-        "<th>" + measureType + "</th>" +
-        "<th>" + amount + "</th>" +
-        "<th>" + pricePerUnit + "</th>" +
-        "<th>" + totalPrice + "</th>" +
-        "<th>" + boughtOnSale + "</th>";
 }
