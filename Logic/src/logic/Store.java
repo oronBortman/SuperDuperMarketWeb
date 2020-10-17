@@ -7,6 +7,7 @@ import jaxb.schema.generated.*;
 import logic.discount.Discount;
 import logic.discount.IfYouBuySDM;
 import logic.discount.ThenYouGetSDM;
+import logic.order.CustomerOrder.Feedback;
 import logic.order.GeneralMethods;
 import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.order.StoreOrder.StoreOrder;
@@ -21,6 +22,7 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     private Map<String, Discount> discountNameDMap;
     private Seller storeOwner;
     private Integer PPK;
+    private Feedback feedback;
 
     public Store(Integer serialNumber, String name, int PPK, SDMLocation SDMLocationOfShop, Seller storeOwner)
     {

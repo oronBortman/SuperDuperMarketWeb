@@ -10,6 +10,8 @@ import {
 
 const GET_STORES_ORDERS_FOR_ORDER_SUMMERY_URL=buildUrlWithContextPath("get-store-orders-for-order-summery");
 const CLOSE_ORDER_AND_ADD_TO_HISTORY_URL = buildUrlWithContextPath("close-order-and-add-to-history");
+const ADD_FEEDBACK_URL = buildUrlWithContextPath("add-feedback");
+
 //ID's of HTML Elements
 const ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
 const ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
@@ -162,6 +164,21 @@ export function setAddFeedbackButtonEvent()
     $('#' + ID_OF_ADD_FEEDBACK_BUTTON).click(function () {
         var storeID = $('#' + ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST).val();
         //Active servlet that add feedback to store
+        $.ajax({
+            method:'POST',
+            data:{"storeID" : storeID},
+            url: ADD_FEEDBACK_URL,
+            dataType: "json",
+            timeout: 4000,
+            error: function(e) {
+                console.error(e);
+                alert('error in closeOrderAndAddToHistory\n' + e);
+            },
+            success: function(r) {
+                console.log("Succesfully!!!");
+                console.log(r);
+            }
+        });
     });
 }
 
@@ -341,13 +358,4 @@ export function generateRowInDiscountsHTMLTable(itemInOrder)
         "<th>" + pricePerUnit + "</th>" +
         "<th>" + totalPrice + "</th>" +
         "<th>" + boughtOnSale + "</th>";
-}
-
-export function buildTableBodyHTMLAndUpdateStoresOrderTable(itemsList)
-{
-    appendHTMLToElement(generateFirstRowInDiscountsHTMLTable(), ID_OF_STORE_ORDERS_TABLE_BODY);
-    $.each(itemsList || [], function(index, itemInOrder) {
-        emptyTableBody();
-        generateRowInDiscountsHTMLTable(itemInOrder);
-    });
 }

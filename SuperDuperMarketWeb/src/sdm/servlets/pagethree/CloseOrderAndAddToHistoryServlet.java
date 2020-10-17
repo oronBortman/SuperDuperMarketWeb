@@ -31,7 +31,7 @@ import static sdm.constants.Constants.SELLER;
 import static sdm.general.GeneralMethods.*;
 
 @WebServlet("/close-order-and-add-to-history")
-public class CloseOrderAndAddToHistory extends HttpServlet {
+public class CloseOrderAndAddToHistoryServlet extends HttpServlet {
     DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
