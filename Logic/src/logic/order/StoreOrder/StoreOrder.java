@@ -87,7 +87,6 @@ public class StoreOrder extends Order {
         return Stream.concat(generateListOfOrderedItemFromSaleWithDiscountName().stream(), generateListOfOrdereItemsNotFromSale().stream()).collect(Collectors.toList());
     }
 
-
     public List<OrderedItemFromStore> generateListOfOrdereItemsNotFromSale()
     {
         return getOrderedItemsNotFromSale().values().stream().collect(toCollection(ArrayList::new));

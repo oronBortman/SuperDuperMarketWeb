@@ -3,8 +3,11 @@ package logic;
 import logic.order.CustomerOrder.ClosedCustomerOrder;
 import logic.users.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Customer extends User {
 
@@ -24,6 +27,10 @@ public class Customer extends User {
         return mapOfClosedCustomerOrders;
     }
 
+    public List<ClosedCustomerOrder> getListOfClosedCustomerOrders()
+    {
+        return new ArrayList<>(mapOfClosedCustomerOrders.values());
+    }
     public Integer getAmountOfOrders()
     {
         return mapOfClosedCustomerOrders.size();

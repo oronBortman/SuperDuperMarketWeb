@@ -1,6 +1,9 @@
 package sdm.general;
 
+import logic.Customer;
+import logic.Seller;
 import logic.order.CustomerOrder.OpenedCustomerOrder;
+import logic.users.User;
 import logic.users.UserManager;
 import logic.zones.Zone;
 import logic.zones.ZoneManager;
@@ -28,5 +31,39 @@ public class GeneralMethods {
         String zoneName = SessionUtils.getZoneName(request);
         ZoneManager zoneManager = ServletUtils.getZoneManager(servletContext);
         return zoneManager.getZoneByName(zoneName);
+    }
+
+    public static Customer getCustomerByRequestAndServletContext(ServletContext servletContext, HttpServletRequest request)
+    {
+        User user = getUserByRequestAndServletContext(servletContext, request);
+
+        if(user instanceof Customer)
+        {
+            return (Customer)user;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public static Seller getSellerByRequestAndServletContext(ServletContext servletContext, HttpServletRequest request)
+    {
+        User user = getUserByRequestAndServletContext(servletContext, request);
+        if(user instanceof Seller)
+        {
+            return (Seller)user;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public static User getUserByRequestAndServletContext(ServletContext servletContext, HttpServletRequest request)
+    {
+        UserManager userManager = ServletUtils.getUserManager(servletContext);
+        String userName = SessionUtils.getUsername(request);
+        return userManager.getUserByName(userName);
     }
 }

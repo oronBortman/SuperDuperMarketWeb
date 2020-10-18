@@ -34,6 +34,15 @@ public class ClosedCustomerOrder extends Order {
         generalSerialNumber++;
     }
 
+    public Double getTotalItemsInOrder()
+    {
+        return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(x->x.calcTotalAmountOfItemsByMeasureType()).sum();
+    }
+
+    public Integer getTotalAmountOfStoresInOrder()
+    {
+        return closedStoresOrderMapByStoreSerialID.size();
+    }
     public Map<Integer, ClosedStoreOrder> getClosedStoresOrderMapByStoreSerialID() {
         return closedStoresOrderMapByStoreSerialID;
     }
@@ -64,7 +73,7 @@ public class ClosedCustomerOrder extends Order {
 
     }
 
-    public List<ClosedStoreOrder> generateListOfClosedStoreOrders()
+    public List<ClosedStoreOrder> getListOfClosedStoreOrders()
     {
         return closedStoresOrderMapByStoreSerialID.values().stream().collect(toCollection(ArrayList::new));
     }
