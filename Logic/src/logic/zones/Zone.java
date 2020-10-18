@@ -14,6 +14,7 @@ import jaxb.schema.generated.*;
 import logic.*;
 import logic.discount.Discount;
 import logic.order.CustomerOrder.ClosedCustomerOrder;
+import logic.order.CustomerOrder.Feedback;
 import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.order.GeneralMethods;
 import logic.order.StoreOrder.ClosedStoreOrder;
@@ -704,6 +705,17 @@ public class Zone {
             closedStoreOrderList = Stream.concat(closedStoreOrderList.stream(), closedStoreOrderListFilteredByOwnerName.stream()).collect(Collectors.toList());
         }
         return closedStoreOrderList;
+    }
+
+    public List<Feedback> getListOfFeedbacksByStoreOwnerName(String storeOwnerName)
+    {
+        List<Store> listOfStoresByStoreOwnerName = storesSerialIDMap.values().stream().filter(x->x.getStoreOwner().getUserName().equals(storeOwnerName)).collect(Collectors.toList());
+        List<Feedback> feedbackList = new ArrayList<>();
+        for(Store store : listOfStoresByStoreOwnerName)
+        {
+            feedbackList = Stream.concat(feedbackList.stream(), store.getFeedbackList().stream()).collect(Collectors.toList());
+        }
+        return feedbackList;
     }
 
     public void addStore(Store newStoreToAdd) {

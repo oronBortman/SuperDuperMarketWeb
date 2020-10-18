@@ -2,6 +2,7 @@ import {setMakeANewOrderButton} from "./making-an-order.js";
 import {createButton, createHTMLContainerAndAppendToMakeOrderBody} from "./general-make-an-order-functions";
 import {initiateShowOrdersOfSellerStoresInCertainZone} from "./show-orders-of-seller.js";
 import {initiateShowPrivateOrdersOfCustomer} from "./show-private-orders-of-customer.js";
+import {initiateShowFeedbacksInCertainZone} from "./show-feedbacks-of-seller.js";
 
 var chatVersion = 0;
 var refreshRate = 5000; //milli seconds
@@ -18,6 +19,8 @@ const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON = "showPrivateOrdersOfCustome
 const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER = "showPrivateOrdersOfSellerContainer";
 const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON = "showPrivateOrdersInSellerStoresButton";
 const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER = "showOrdersInSellerStoresContainer";
+const ID_OF_SHOW_FEEDBACKS_BUTTON = 'showFeedbacksButton';
+const ID_OF_SHOW_FEEDBACKS_CONTAINER = 'showFeedbacksContainer';
 
 function emptyStoresInZoneTable() {
     document.getElementById(ID_OF_TBODY_OF_STORE_TABLE).innerHTML = '';
@@ -175,6 +178,13 @@ function setActionBasedOnRole(user)
 }
 
 
+function setShowFeedbacksButtonEvent()
+{
+    $("#" + ID_OF_SHOW_FEEDBACKS_BUTTON).click(function() {
+        initiateShowFeedbacksInCertainZone();
+    })
+}
+
 function setShowOrdersInSellerStoresButtonEvent()
 {
     $("#" + ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON).click(function() {
@@ -197,7 +207,8 @@ function hideHTMLElementsByRole(user){
         createButton(ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON, "show orders of seller" );
         createHTMLContainerAndAppendToMakeOrderBody(ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER);
         setShowOrdersInSellerStoresButtonEvent()
-
+        createHTMLContainerAndAppendToMakeOrderBody(ID_OF_SHOW_FEEDBACKS_CONTAINER);
+        setShowFeedbacksButtonEvent();
     }
     else if(userType === "customer")
     {

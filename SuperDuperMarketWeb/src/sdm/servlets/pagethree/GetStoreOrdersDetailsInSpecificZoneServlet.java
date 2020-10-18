@@ -29,10 +29,25 @@ import static sdm.general.GeneralMethods.*;
 
 @WebServlet("/get-store-orders-details")
 public class GetStoreOrdersDetailsInSpecificZoneServlet extends HttpServlet {
-/*
+    /*
+        storeOrder["serialID"]
+        storeOrder["date"];
+        storeOrder["customerName"];
+        storeOrder["locationOfCustomer"]
+        storeOrder["totalItemsInOrder"]
+        storeOrder["totalItemsPriceInOrder"]
+        storeOrder["totalDeliveryPrice"]
+        storeOrder["itemListInOrder"]
 
 
- */
+        itemInOrder["serialID"]
+        itemInOrder["nameOfItem"]
+        itemInOrder["typeToMeasureBy"]
+        itemInOrder["AmountOfItemPurchased"]
+        itemInOrder["pricePerUnit"]
+        itemInOrder["totalPriceOfItem"]
+        itemInOrder["FromDiscount"]
+     */
     DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -65,25 +80,7 @@ public class GetStoreOrdersDetailsInSpecificZoneServlet extends HttpServlet {
             }
         }
     }
-/*
-    storeOrder["serialID"]
-    storeOrder["date"];
-    storeOrder["customerName"];
-    storeOrder["locationOfCustomer"]
-    storeOrder["totalItemsInOrder"]
-    storeOrder["totalItemsPriceInOrder"]
-    storeOrder["totalDeliveryPrice"]
-    storeOrder["itemListInOrder"]
 
-
-    itemInOrder["serialID"]
-    itemInOrder["nameOfItem"]
-    itemInOrder["typeToMeasureBy"]
-    itemInOrder["AmountOfItemPurchased"]
-    itemInOrder["pricePerUnit"]
-    itemInOrder["totalPriceOfItem"]
-    itemInOrder["FromDiscount"]
- */
     public JSONArray readingFromStoreOrderListToJsonObject(List<ClosedStoreOrder> closedStoreOrderList)
     {
 
