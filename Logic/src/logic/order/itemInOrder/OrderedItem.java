@@ -14,4 +14,6 @@ public interface OrderedItem {
     public Integer getSerialNumber();
     public String getTypeOfMeasureStr();
 
+    public Integer getPricePerUnit();
+
 }

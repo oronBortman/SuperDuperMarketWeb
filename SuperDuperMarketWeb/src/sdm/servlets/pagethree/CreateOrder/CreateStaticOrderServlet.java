@@ -59,7 +59,7 @@ public class CreateStaticOrderServlet extends HttpServlet {
                 ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
                 Zone zone = zoneManager.getZoneByName(SessionUtils.getZoneName(request));
                 Store storeSelected = zone.getStoreBySerialID(storeIDSelectedInt);
-                openedCustomerOrder.addStoreOrder(new OpenedStoreOrder(storeSelected,date,true,orderLocation));
+                openedCustomerOrder.addStoreOrder(new OpenedStoreOrder(storeSelected,date,true,orderLocation, openedCustomerOrder.getCustomerName()));
                 user.setCurrentOpenedOrder(openedCustomerOrder);
                 String json = gson.toJson(openedCustomerOrder);
                 out.println(json);

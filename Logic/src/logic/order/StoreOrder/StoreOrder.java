@@ -16,16 +16,26 @@ import static java.util.stream.Collectors.toCollection;
 public class StoreOrder extends Order {
 
     SDMLocation customerLocation;
+    String customerName;
     Store storeUsed;
     private Map<Integer, OrderedItemFromStore> orderedItemsNotFromSale;
     private Map<String, Map<Integer, OrderedItemFromStore>> orderedItemsFromSale;
 
-    public StoreOrder(Store store, String date, boolean isOrderStatic, SDMLocation customerLocation){
+    public StoreOrder(Store store, String date, boolean isOrderStatic, SDMLocation customerLocation, String customerName){
         super(date, isOrderStatic);
         this.customerLocation = customerLocation;
+        this.customerName = customerName;
         this.storeUsed = store;
         orderedItemsNotFromSale = new HashMap<Integer, OrderedItemFromStore>();
         orderedItemsFromSale = new HashMap<String,Map<Integer, OrderedItemFromStore>>();
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public SDMLocation getCustomerLocation() {
+        return customerLocation;
     }
 
     /*public StoreOrder(String date, boolean isOrderStatic, SDMLocation customerLocation)

@@ -5,7 +5,7 @@ import {
     createButton
 } from "./general-make-an-order-functions.js";
 
-const GET_STORE_ORDERS_DETAILS_URL = buildUrlWithContextPath("get-customer-orders-details");
+const GET_STORE_ORDERS_DETAILS_URL = buildUrlWithContextPath("get-store-orders-details");
 //ID's of HTML Elements
 const ID_OF_STORE_ORDERS_TABLE = "storeOrdersTable";
 const ID_OF_STORE_ORDERS_TABLE_BODY = "storeOrdersTableBody";

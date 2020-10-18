@@ -52,4 +52,9 @@ public class OrderedItemFromSale implements  OrderedItem{
     public String getTypeOfMeasureStr() {
         return orderedItemFromStore.getTypeOfMeasureStr();
     }
+
+    @Override
+    public Integer getPricePerUnit() {
+        return orderedItemFromStore.getPricePerUnit();
+    }
 }

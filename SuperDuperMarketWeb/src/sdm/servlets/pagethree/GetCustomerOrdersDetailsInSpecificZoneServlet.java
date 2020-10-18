@@ -9,6 +9,7 @@ import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.order.itemInOrder.OrderedItem;
 import logic.order.itemInOrder.OrderedItemFromSale;
 import logic.users.User;
+import logic.zones.Zone;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -24,6 +25,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import static sdm.general.GeneralMethods.getUserByRequestAndServletContext;
+import static sdm.general.GeneralMethods.getZoneByRequest;
 
     /*
     customerOrder["serialID"]
@@ -60,25 +62,20 @@ public class GetCustomerOrdersDetailsInSpecificZoneServlet extends HttpServlet {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
             User user = getUserByRequestAndServletContext(servletContext, request);
-            String json;
-
-            if(user instanceof Customer)
+            Zone zone = getZoneByRequest(servletContext, request);
+            List<ClosedCustomerOrder> closedCustomerOrdersList = zone.getListOfClosedCustomerOrderByCustomerName(user.getUserName());
+            if(closedCustomerOrdersList != null)
             {
-                Customer customer = (Customer)user;
-                List<ClosedCustomerOrder> closedCustomerOrdersList = customer.getListOfClosedCustomerOrders();
-                if(closedCustomerOrdersList != null)
-                {
-                    JSONArray jsonArray = readListOfClosedCustomersOrderToJSONObject(closedCustomerOrdersList);
-                    json = gson.toJson(jsonArray);
-                    out.println(json);
-                    System.out.println("This is the details on the openedCustomerOrder!!\n\n\n\n\n\n");
-                    System.out.println(json);
-                    out.flush();
-                }
-                else
-                {
-                    System.out.println("openedCustomerOrder is null!!");
-                }
+                JSONArray jsonArray = readListOfClosedCustomersOrderToJSONObject(closedCustomerOrdersList);
+                String json = gson.toJson(jsonArray);
+                out.println(json);
+                System.out.println("This is the details on the openedCustomerOrder!!\n\n\n\n\n\n");
+                System.out.println(json);
+                out.flush();
+            }
+            else
+            {
+                System.out.println("openedCustomerOrder is null!!");
             }
         }
         catch(Exception e)

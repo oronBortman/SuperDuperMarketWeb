@@ -24,6 +24,8 @@ import logic.order.itemInOrder.OrderedItemFromStoreByWeight;
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toCollection;
 
@@ -607,7 +609,7 @@ public class Zone {
             Store storeUsed = entry.getKey();
             List<AvailableItemInStore> availableItemInStoreList = entry.getValue();
             //OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, date, isOrderStatic, customer.getLocation());
-            OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, openedCustomerOrder.getDateStr(), false, openedCustomerOrder.getLocationOfCustomer());
+            OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(storeUsed, openedCustomerOrder.getDateStr(), false, openedCustomerOrder.getLocationOfCustomer(), openedCustomerOrder.getCustomerName());
 
             for (AvailableItemInStore itemInStore : availableItemInStoreList) {
                 //   addItemToOpenedOrder(orderedItemsListByItemSerialIDAndAmount, itemInStore, openedStoreOrder);
@@ -659,10 +661,10 @@ public class Zone {
         }
     }
 
-    public OpenedCustomerOrder updateItemsWithAmountAndCreateOpenedStaticCustomerOrder(Customer customer, String date, Store store, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer) {
+    public OpenedCustomerOrder updateItemsWithAmountAndCreateOpenedStaticCustomerOrder(Customer customer, String date, Store store, Map<Integer, Double> orderedItemsListByItemSerialIDAndWeight, Map<Integer, Integer> orderedItemsListByItemSerialIDAndQuantity, SDMLocation locationOfCustomer, String customerName) {
         boolean isOrderStatic = true;
         OpenedCustomerOrder openedCustomerOrder = new OpenedCustomerOrder(date, customer.getUserName(), isOrderStatic, locationOfCustomer);
-        OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(store, date, isOrderStatic, locationOfCustomer);
+        OpenedStoreOrder openedStoreOrder = new OpenedStoreOrder(store, date, isOrderStatic, locationOfCustomer, customerName);
 
 
         for (Map.Entry<Integer, Double> entry : orderedItemsListByItemSerialIDAndWeight.entrySet()) {
@@ -687,6 +689,21 @@ public class Zone {
         }
         openedCustomerOrder.addStoreOrder(openedStoreOrder);
         return openedCustomerOrder;
+    }
+
+    public List<ClosedCustomerOrder> getListOfClosedCustomerOrderByCustomerName(String customerName)
+    {
+        return ordersSerialIDMap.values().stream().filter(x->x.getCustomerName().equals(customerName)).collect(Collectors.toList());
+    }
+
+    public List<ClosedStoreOrder> getListOfClosedStoreOrderByStoreOwnerName(String storeOwnerName)
+    {
+        List<ClosedStoreOrder> closedStoreOrderList = new ArrayList<>();
+        for(ClosedCustomerOrder closedCustomerOrder : ordersSerialIDMap.values()) {
+            List<ClosedStoreOrder> closedStoreOrderListFilteredByOwnerName = closedCustomerOrder.getListOfClosedStoreOrders().stream().filter(x -> x.getStoreUsed().getStoreOwner().getUserName().equals(storeOwnerName)).collect(Collectors.toList());
+            closedStoreOrderList = Stream.concat(closedStoreOrderList.stream(), closedStoreOrderListFilteredByOwnerName.stream()).collect(Collectors.toList());
+        }
+        return closedStoreOrderList;
     }
 
     public void addStore(Store newStoreToAdd) {
