@@ -45,7 +45,7 @@ export function initiateTheChoosingItemDropDownInOrder(orderType, idOfMakeAnOrde
     appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
 
     disableElement(ID_OF_NEXT_BUTTON)
-    setNextButtonEvent(orderType);
+    setNextButtonEvent(orderType, idOfMakeAnOrderContainer);
     setChoosingItemFromDropDownListEvent(orderType);
     getItemsListFromServerAndSetTheItemsList(orderType);
 }
@@ -58,7 +58,7 @@ export function setChoosingItemFromDropDownListEvent(orderType)
     });
 }
 
-export function setNextButtonEvent(orderType)
+export function setNextButtonEvent(orderType, idOfMakeAnOrderContainer)
 {
     $('#' + ID_OF_NEXT_BUTTON).click(function () {
         alert('Clicked On next button!');
@@ -71,7 +71,7 @@ export function setNextButtonEvent(orderType)
         {
             alert('order is dynamic!');
             activateDynamicAlgorithm();
-            initiateShowStoresStatusTable();
+            initiateShowStoresStatusTable(idOfMakeAnOrderContainer);
         }
     });
 }

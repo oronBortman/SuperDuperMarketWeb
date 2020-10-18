@@ -78,15 +78,15 @@ export function initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer)
             appendHTMLToElement(createEmptyHTMLContainer(ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER), idOfMakeAnOrderContainer);
 
             appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
-            setNextButtonEvent();
+            setNextButtonEvent(idOfMakeAnOrderContainer);
         }
     })
 
 }
 
-export function setNextButtonEvent()
+export function setNextButtonEvent(idOfMakeAnOrderContainer)
 {
-    initiateShowingSummeryOfOrder();
+    initiateShowingSummeryOfOrder(idOfMakeAnOrderContainer);
 }
 
 export function setDiscountTable(discountsJSON)

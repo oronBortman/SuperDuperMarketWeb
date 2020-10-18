@@ -4,7 +4,7 @@ import {
     createEmptyTable,
     appendHTMLToMakeAndOrderBody,
     createEmptyHTMLContainer,
-    createNextButtonHTMLAndAppendToMakeOrderBody, appendHTMLToElement, emptyElementByID
+    createNextButtonHTMLAndAppendToMakeOrderBody, appendHTMLToElement, emptyElementByID, createButton
 } from "./general-functions.js";
 import {initiateRateStore} from "./rate-seller.js";
 
@@ -12,13 +12,13 @@ const GET_STORES_ORDERS_FOR_ORDER_SUMMERY_URL=buildUrlWithContextPath("get-store
 
 //ID's of HTML Elements
 const ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
-const ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
 const ID_OF_NEXT_BUTTON = "nextButton";
 const ID_OF_STORE_ORDERS_TABLE = "storeOrdersTable";
 const ID_OF_STORE_ORDERS_TABLE_BODY = "storeOrdersTableBody";
 const ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER = "storeOrderStatusContainer";
+const ID_OF_CHOOSE_ITEMS_DROP_DOWN_LIST_CONTAINER = chooseItemsInDropDownListElement;
 
-export function initiateShowingSummeryOfOrder(orderType)
+export function initiateShowingSummeryOfOrder(orderType, idOfMakeAnOrderContainer)
 {
     $.ajax({
         method: 'GET',
@@ -32,24 +32,18 @@ export function initiateShowingSummeryOfOrder(orderType)
         },
         success: function (r) {
             initiateChoosingStoreOrderDropDownHTMLInOrder();
-            appendHTMLToMakeAndOrderBody(createEmptyDropDownListHTML("storeOrders", "Choose store order:", ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST));
-            appendHTMLToMakeAndOrderBody(createEmptyTable(ID_OF_STORE_ORDERS_TABLE, ID_OF_STORE_ORDERS_TABLE_BODY));
-            appendHTMLToMakeAndOrderBody(createEmptyHTMLContainer(ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER));
-            createNextButtonHTMLAndAppendToMakeOrderBody(ID_OF_NEXT_BUTTON);
-            setNextButtonEvent();
-            setChoosingStoreOrderDropDownListEvent();
+            emptyElementByID(idOfMakeAnOrderContainer);
+            appendHTMLToElement(createEmptyHTMLContainer(ID_OF_CHOOSE_ITEMS_DROP_DOWN_LIST_CONTAINER), idOfMakeAnOrderContainer)
+            appendHTMLToElement(createEmptyDropDownListHTML("storeOrders", "Choose store order:", ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST), idOfMakeAnOrderContainer)
+            appendHTMLToElement(createEmptyTable(ID_OF_STORE_ORDERS_TABLE, ID_OF_STORE_ORDERS_TABLE_BODY), idOfMakeAnOrderContainer);
+            appendHTMLToElement(createEmptyHTMLContainer(ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER), idOfMakeAnOrderContainer);
+            appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
+
             setStoreOrdersListInDropDownInOrder(r);
+            setNextButtonEvent(idOfMakeAnOrderContainer);
+            setChoosingStoreOrderDropDownListEvent();
         }
     })
-}
-
-export function initiateChoosingStoreOrderDropDownHTMLInOrder()
-{
-    var makeOrderBody = $("#" + ID_OF_MAKE_ORDER_BODY);
-    emptyMakeOrderBody();
-    console.log("In function initiateChoosingItemDropDownHTMLInOrder()\n")
-    var chooseItemsDropDownList = '<div id="chooseItemsInDropDownListElement"></div>';
-    $(chooseItemsDropDownList).appendTo(makeOrderBody);
 }
 
 export function setChoosingStoreOrderDropDownListEvent()
@@ -61,11 +55,11 @@ export function setChoosingStoreOrderDropDownListEvent()
     });
 }
 
-export function setNextButtonEvent()
+export function setNextButtonEvent(idOfMakeAnOrderContainer)
 {
     $('#' + ID_OF_NEXT_BUTTON).click(function () {
         alert('Clicked On next button!');
-        initiateRateStore();
+        initiateRateStore(idOfMakeAnOrderContainer);
     });
 }
 

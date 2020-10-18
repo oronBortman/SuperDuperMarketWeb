@@ -2,11 +2,13 @@
  * Created by oronbortman on 15/10/2020.
  */
 
-import {emptyMakeOrderBody,
+import {
+    emptyMakeOrderBody,
     createNextButtonHTMLAndAppendToMakeOrderBody,
     createEmptyTable,
     appendHTMLToElement,
-    appendHTMLToMakeAndOrderBody} from "./general-functions.js";
+    appendHTMLToMakeAndOrderBody, emptyElementByID, createButton
+} from "./general-functions.js";
 
 import {prepareAndInitiateChoosingDiscountsToApply} from "./choosing-discounts-to-apply.js";
 
@@ -17,14 +19,13 @@ const ID_OF_TABLE = "storesStatusTable";
 const ID_OF_TABLE_BODY = "storesStatusTableBody";
 
 
-export function initiateShowStoresStatusTable()
+export function initiateShowStoresStatusTable(idOfMakeAnOrderContainer)
 {
     alert('inside initiateShowStoresStatusTable')
-    emptyMakeOrderBody();
-    //var storesStatusTableHTML = createStoresStatusTableHTML();
-    createStoresTableAndAppendToMakeAndOrderElement();
-    //appendHTMLToMakeAndOrderBody(storesStatusTableHTML);
-    createNextButtonHTMLAndAppendToMakeOrderBody(ID_OF_NEXT_BUTTON);
+    emptyElementByID(idOfMakeAnOrderContainer);
+    appendHTMLToElement(createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY), idOfMakeAnOrderContainer);
+    setStoresTable();
+    appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
     setNextButtonEvent();
 }
 
@@ -35,9 +36,10 @@ export function setNextButtonEvent()
         prepareAndInitiateChoosingDiscountsToApply('dynamic');
     });
 }
-export function createStoresTableAndAppendToMakeAndOrderElement()
+
+export function setStoresTable()
 {
-    alert('In getStoresStatusListFromServer');
+    alert('In setStoresTable');
     $.ajax({
         method: 'GET',
         data: {},
@@ -46,12 +48,10 @@ export function createStoresTableAndAppendToMakeAndOrderElement()
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  getStoresStatusInDynamicOrder\n' + e);
+            alert('error in  setStoresTable\n' + e);
         },
         success: function (r) {
             alert("Succeed\n" + r);
-            var storesStatusTableHTML = createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY);
-            appendHTMLToMakeAndOrderBody(storesStatusTableHTML);
             appendHTMLToElement(generateFirstRowInStoresHTMLTable(),ID_OF_TABLE_BODY);
             // rebuild the list of users: scan all users and add them to the list of users
             $.each(r || [], function(index, store) {

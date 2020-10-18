@@ -47,7 +47,7 @@ export function setMakeANewOrderButton() { // onload...do
         creatingCoordinatesHTMLAndSetEvents(ID_OF_VALUE_OF_COORDINATE_X_CHOSEN, ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN, ID_OF_MAKE_AN_ORDER_CONTAINER);
         appendHTMLToElement(chooseStoresDropDownList, ID_OF_MAKE_AN_ORDER_CONTAINER);
         appendHTMLToElement(nextButtonHTML, ID_OF_MAKE_AN_ORDER_CONTAINER);
-        setNextButtonInMakeAnOrderElement();
+        setNextButtonInMakeAnOrderElement(ID_OF_MAKE_AN_ORDER_CONTAINER);
         return false;
     })
 }
@@ -131,16 +131,16 @@ function getChooseStoresDropDownListHTML()
 
 //TODO
 //Need to pass if static or dynamic
-function setNextButtonInMakeAnOrderElement() { // onload...do
+function setNextButtonInMakeAnOrderElement(idOfMakeAnOrderContainer) { // onload...do
 
     $("#nextButtonInMakeAnOrderFirstScreen").click(function() {
         //Getting selected ordertype,date and store if it's static
       //  alert("clicked on nextButtonInMakeAnOrderFirstScreen");
         if (document.getElementById(ID_OF_STATIC_RADIO_BUTTON).checked) {
-            OpeningANewOrderFromHTMLElements(STATIC);
+            OpeningANewOrderFromHTMLElements(STATIC), idOfMakeAnOrderContainer;
         }
         if (document.getElementById(ID_OF_DYNAMIC_RADIO_BUTTON).checked) {
-            OpeningANewOrderFromHTMLElements(DYNAMIC);
+            OpeningANewOrderFromHTMLElements(DYNAMIC, idOfMakeAnOrderContainer);
         }
         // return value of the submit operation
         // by default - we'll always return false so it doesn't redirect the user.
@@ -148,7 +148,7 @@ function setNextButtonInMakeAnOrderElement() { // onload...do
     })
 }
 
-function OpeningANewOrderFromHTMLElements(orderType)
+function OpeningANewOrderFromHTMLElements(orderType, idOfMakeAnOrderContainer)
 {
     var date = document.getElementById(ID_OF_DATE_OF_ORDER).value;
     var coordinateX=$("#" + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
@@ -165,7 +165,7 @@ function OpeningANewOrderFromHTMLElements(orderType)
         OpeningANewDynamicOrderInServer(date, coordinateX, coordinateY);
     }
 
-    initiateTheChoosingItemDropDownInOrder(orderType);
+    initiateTheChoosingItemDropDownInOrder(orderType, idOfMakeAnOrderContainer);
 }
 
 function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coordinateY)

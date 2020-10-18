@@ -46,7 +46,7 @@ export function initiateRateStore(idOfMakeAnOrderContainer)
             buildFormElementsByStoreChoice();
             appendHTMLToElement(generateFinishOrderMessageHTML(), idOfMakeAnOrderContainer);
             appendHTMLToElement(createButton(ID_OF_FINISH_ORDER_BUTTON, 'Finish Order'), idOfMakeAnOrderContainer);
-            setFinishButtonEvent();
+            setFinishButtonEvent(idOfMakeAnOrderContainer);
         }
     })
 }
@@ -55,13 +55,13 @@ export function generateFinishOrderMessageHTML()
 {
     return '<p>For finishing the order, just click the button "Finish Order"</p>';
 }
-export function setFinishButtonEvent()
+export function setFinishButtonEvent(idOfMakeAnOrderContainer)
 {
     $("#" + ID_OF_FINISH_ORDER_BUTTON).click(function() {
         alert('clicked on FinishButton');
         // console.log("Coordinate value before checking the value: " + coordinateValueNum);
         closeOrderAndAddToHistory();
-        emptyMakeOrderBody();
+        emptyElementByID(idOfMakeAnOrderContainer);
     });
 }
 
