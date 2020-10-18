@@ -3,14 +3,13 @@
  * Created by oronbortman on 15/10/2020.
  */
 
-import {emptyMakeOrderBody,
-    createHTMLContainerAndAppendToMakeOrderBody,
+import {
+    createEmptyHTMLContainer,
     createEmptyDropDownListHTML,
-    appendHTMLToMakeAndOrderBody,
     createButton,
-    createNextButtonHTMLAndAppendToMakeOrderBody,
+    emptyElementByID,
     createEmptyTable,
-    appendHTMLToElement} from "./general-make-an-order-functions.js";
+    appendHTMLToElement} from "./general-functions.js";
 import {initiateShowingSummeryOfOrder} from "./show-summery-of-order.js";
 
 const APPLY_ONE_OF_DISCOUNT_URL=buildUrlWithContextPath("apply-one-of-discount");
@@ -50,7 +49,7 @@ export function prepareAndInitiateChoosingDiscountsToApply()
 
 }
 
-export function initiateChoosingDiscountsToApply()
+export function initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer)
 {
     $.ajax({
         method: 'GET',
@@ -65,15 +64,20 @@ export function initiateChoosingDiscountsToApply()
         },
         success: function (r) {
             //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
-            emptyMakeOrderBody();
-            createDiscountTableAndAppendToMakeAnOrderBody(r);
-            createDiscountDropDownListAndAppendToMakeAnOrderBody(r);
+            emptyElementByID(idOfMakeAnOrderContainer);
+            appendHTMLToElement(createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY), idOfMakeAnOrderContainer);
+            setDiscountTable(r);
+
+            appendHTMLToElement(createEmptyDropDownListHTML(ID_OF_DISCOUNTS_DROP_DOWN, 'Choose a discount', ID_OF_DISCOUNTS_DROP_DOWN), idOfMakeAnOrderContainer);
+            setDiscountDropDownList(r);
             setChoosingDiscountFromDropDownListEvent();
-            createAddDiscountButtonAndAppendToMakeAnOrderBody();
+
+            appendHTMLToElement(createButton(ID_OF_ADD_DISCOUNT_BUTTON, "Apply discount"), idOfMakeAnOrderContainer);
             setAddDiscountButtonEvent();
-            createHTMLContainerAndAppendToMakeOrderBody(ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER);
-            appendHTMLElementToAddItemContainer('<p>hello</p>');
-            createNextButtonHTMLAndAppendToMakeOrderBody(ID_OF_NEXT_BUTTON);
+
+            appendHTMLToElement(createEmptyHTMLContainer(ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER), idOfMakeAnOrderContainer);
+
+            appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
             setNextButtonEvent();
         }
     })
@@ -85,12 +89,9 @@ export function setNextButtonEvent()
     initiateShowingSummeryOfOrder();
 }
 
-export function createDiscountTableAndAppendToMakeAnOrderBody(discountsJSON)
+export function setDiscountTable(discountsJSON)
 {
     //alert("in createDiscountTableAndAppendToMakeAnOrderBody and discountsJSON is: \n "+JSON.stringify(discountsJSON));
-
-    var tableHTML = createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY);
-    appendHTMLToMakeAndOrderBody(tableHTML);
     appendHTMLToElement(generateFirstRowInDiscountsHTMLTable(),ID_OF_TABLE_BODY);
     //  var discountsStr = getDiscountJSONFromServer();
     // var discountsJSON = JSON.parse(discountsStr);
@@ -101,15 +102,6 @@ export function createDiscountTableAndAppendToMakeAnOrderBody(discountsJSON)
         // var discountStr = JSON.parse(discount);
         appendHTMLToElement(generateRowInDiscountsHTMLTable(discountJSON),ID_OF_TABLE_BODY);
     });
-}
-
-export function createDiscountDropDownListAndAppendToMakeAnOrderBody(discountsJSON)
-{
-  //  alert("in createDiscountDropDownListAndAppendToMakeAnOrderBody \n" + JSON.stringify(discountsJSON));
-    var discountsDropDownListHTML = createEmptyDropDownListHTML(ID_OF_DISCOUNTS_DROP_DOWN, 'Choose a discount', ID_OF_DISCOUNTS_DROP_DOWN);
-    //alert("The discountsDropDownListHTML is:"  + discountsDropDownListHTML);
-    appendHTMLToMakeAndOrderBody(discountsDropDownListHTML);
-    setDiscountDropDownList(discountsJSON);
 }
 
 export function setDiscountDropDownList(discountsJSON)
@@ -137,8 +129,7 @@ export function setDiscountDropDownList(discountsJSON)
 }
 export function createAddDiscountButtonAndAppendToMakeAnOrderBody()
 {
-    var addDiscountsButton = createButton(ID_OF_ADD_DISCOUNT_BUTTON, "Apply discount");
-    appendHTMLToMakeAndOrderBody(addDiscountsButton);
+
 }
 
 export function setAddDiscountButtonEvent()

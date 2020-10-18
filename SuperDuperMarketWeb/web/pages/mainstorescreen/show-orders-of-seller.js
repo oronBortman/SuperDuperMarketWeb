@@ -3,7 +3,7 @@ import {
     appendHTMLToElement,
     emptyElementByID,
     createButton
-} from "./general-make-an-order-functions.js";
+} from "./general-functions.js";
 
 const GET_STORE_ORDERS_DETAILS_URL = buildUrlWithContextPath("get-store-orders-details");
 //ID's of HTML Elements

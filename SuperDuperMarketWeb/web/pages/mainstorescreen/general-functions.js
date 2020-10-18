@@ -1,20 +1,11 @@
-const ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
-const ID_OF_ADD_ITEM_TO_ORDER = 'addItemToOrder';
-
-export function emptyMakeOrderBody()
-{
-    $( "#makeOrderBody" ).empty();
-}
-
 export function emptyElementByID(idOfElement)
 {
     $( "#" + idOfElement ).empty();
 
 }
-export function createHTMLContainerAndAppendToMakeOrderBody(idOfElementToCreate)
+export function createEmptyHTMLContainer(idOfElementToCreate)
 {
-    var itemElement = '<div id=' + idOfElementToCreate + '></div>';
-    appendHTMLToMakeAndOrderBody(itemElement);
+    return'<div id=' + idOfElementToCreate + '></div>';
 }
 
 export function createButton(idOfButton, valueOfButton)
@@ -66,12 +57,5 @@ export function appendHTMLToElement(htmlToAppend, IdOfElementToAppendTo)
 export function createEmptyForm(idOfForm)
 {
     return '<form id=' + idOfForm + '>' + '</form>';
-}
-
-export function createNextButtonHTMLAndAppendToMakeOrderBody(idOfNextButton)
-{
-    var nextButtonHTML = createButton(idOfNextButton,"Next");
-    appendHTMLToMakeAndOrderBody(nextButtonHTML);
-   // disableElement(ID_OF_NEXT_BUTTON);
 }
 

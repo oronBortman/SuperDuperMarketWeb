@@ -1,13 +1,10 @@
-import {
-    emptyMakeOrderBody,
+import {emptyMakeOrderBody,
     createEmptyHTMLContainer,
     createEmptyDropDownListHTML,
     createButton,
     disableElement,
     enableElement,
-    emptyElementByID,
-    appendHTMLToElement
-} from "./general-functions.js";
+    createNextButtonHTMLAndAppendToMakeOrderBody} from "./general-functions.js";
 import {prepareAndInitiateChoosingDiscountsToApply} from "./choosing-discounts-to-apply.js"
 import {initiateShowStoresStatusTable} from "./show-store-status-in-dynamic-order.js"
 
@@ -36,18 +33,25 @@ const MIN_WEIGHT_AMOUNT = 0.25;
 const QUANTITY = "Quantity";
 const WEIGHT = "Weight";
 
-export function initiateTheChoosingItemDropDownInOrder(orderType, idOfMakeAnOrderContainer)
+export function initiateTheChoosingItemDropDownInOrder(orderType)
 {
-    emptyElementByID(idOfMakeAnOrderContainer);
-    appendHTMLToElement(createEmptyHTMLContainer(ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT),idOfMakeAnOrderContainer);
-    appendHTMLToElement(createChooseItemsDropDownListHTML(),ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT);
-    appendHTMLToElement(createEmptyHTMLContainer(ID_OF_ITEM_ELEMENT), ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT);
-    appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
-
+    initiateChoosingItemDropDownHTMLInOrder();
+    $(createChooseItemsDropDownListHTML()).appendTo($("#" + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT));
+    createItemElementHTMLAndAppendToMakeOrderBody();
+    createNextButtonHTMLAndAppendToMakeOrderBody(ID_OF_NEXT_BUTTON);
     disableElement(ID_OF_NEXT_BUTTON)
     setNextButtonEvent(orderType);
     setChoosingItemFromDropDownListEvent(orderType);
     getItemsListFromServerAndSetTheItemsList(orderType);
+}
+
+export function initiateChoosingItemDropDownHTMLInOrder()
+{
+    var makeOrderBody = $("#" + ID_OF_MAKE_ORDER_BODY);
+    emptyMakeOrderBody();
+    console.log("In function initiateChoosingItemDropDownHTMLInOrder()\n")
+    var chooseItemsDropDownList = '<div id="chooseItemsInDropDownListElement"></div>';
+    $(chooseItemsDropDownList).appendTo(makeOrderBody);
 }
 
 export function setChoosingItemFromDropDownListEvent(orderType)

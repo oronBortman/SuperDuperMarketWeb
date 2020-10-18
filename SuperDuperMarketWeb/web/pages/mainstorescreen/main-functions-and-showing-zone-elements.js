@@ -1,5 +1,5 @@
 import {setMakeANewOrderButton} from "./making-an-order.js";
-import {createButton, createHTMLContainerAndAppendToMakeOrderBody} from "./general-make-an-order-functions";
+import {createButton, createEmptyHTMLContainer} from "./general-functions";
 import {initiateShowOrdersOfSellerStoresInCertainZone} from "./show-orders-of-seller.js";
 import {initiateShowPrivateOrdersOfCustomer} from "./show-private-orders-of-customer.js";
 import {initiateShowFeedbacksInCertainZone} from "./show-feedbacks-of-seller.js";
@@ -165,15 +165,14 @@ function setActionBasedOnRole(user)
     if(userType === "seller")
     {
         //TODO
-        //Need to remove after fixing problem of connecting multiple users to website
-        setMakeANewOrderButton();
-        //  setUploadFileElement();
+        setShowOrdersInSellerStoresButtonEvent()
+        setShowFeedbacksButtonEvent();
 
     }
     else if(userType === "customer")
     {
         setMakeANewOrderButton();
-        //setChargingMoneyElement();
+        setShowCustomerOrdersButtonEvent();
     }
 }
 
@@ -199,22 +198,26 @@ function setShowCustomerOrdersButtonEvent()
     })
 }
 
+/*
+const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON = "showPrivateOrdersOfCustomerButton";
+const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER = "showPrivateOrdersOfSellerContainer";
+const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON = "showPrivateOrdersInSellerStoresButton";
+const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER = "showOrdersInSellerStoresContainer";
+const ID_OF_SHOW_FEEDBACKS_BUTTON = 'showFeedbacksButton';
+const ID_OF_SHOW_FEEDBACKS_CONTAINER = 'showFeedbacksContainer';
+ */
 function hideHTMLElementsByRole(user){
     var userType = user["userType"];
     if(userType === "seller")
     {
          $("#makeANewOrder").hide();
-        createButton(ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON, "show orders of seller" );
-        createHTMLContainerAndAppendToMakeOrderBody(ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER);
-        setShowOrdersInSellerStoresButtonEvent()
-        createHTMLContainerAndAppendToMakeOrderBody(ID_OF_SHOW_FEEDBACKS_CONTAINER);
-        setShowFeedbacksButtonEvent();
+         $("#" + ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON).hide();
+
     }
     else if(userType === "customer")
     {
-        createButton(ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON, "Show private orders of customer");
-        createHTMLContainerAndAppendToMakeOrderBody(ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER);
-        setShowCustomerOrdersButtonEvent();
+        $("#" + ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON).hide();
+        $("#" + ID_OF_SHOW_FEEDBACKS_BUTTON).hide();
     }
 }
 

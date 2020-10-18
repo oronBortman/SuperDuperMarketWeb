@@ -1,6 +1,11 @@
 import { initiateTheChoosingItemDropDownInOrder } from './choosing-item-drop-down.js';
 import {creatingCoordinatesHTMLAndSetEvents} from './creating-coordinate-elements.js';
-import {emptyMakeOrderBody, appendHTMLToMakeAndOrderBody, createButton} from "./general-make-an-order-functions.js";
+import {
+    emptyMakeOrderBody,
+    appendHTMLToMakeAndOrderBody,
+    createButton,
+    appendHTMLToElement
+} from "./general-functions.js";
 
 var CREATE_DYNAMIC_ORDER_URL = buildUrlWithContextPath("create-dynamic-order");
 var CREATE_STATIC_ORDER_URL = buildUrlWithContextPath("create-static-order");
@@ -15,8 +20,9 @@ var ID_OF_DATE_OF_ORDER = 'dateOfOrder';
 var ID_OF_CHOOSE_STORES_DROP_DOWN_LIST_ELEMENT = 'chooseStoresDropDownListElement';
 var ID_OF_CHOOSE_STORES_DROP_DOWN_LIST = 'chooseStoresDropDownList'
 var ID_OF_NEXT_BUTTON = 'nextButtonInMakeAnOrderFirstScreen';
-var ID_OF_VALUE_OF_COORDINATE_X_CHOSEN = "valueOfSelectedCoordX";
-var ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN = "valueOfSelectedCoordY"
+var ID_OF_VALUE_OF_COORDINATE_X_CHOSEN = "valueOfSelectedCoordinateX";
+var ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN = "valueOfSelectedCoordinateY"
+var ID_OF_MAKE_AN_ORDER_CONTAINER = 'makeAnOrderContainer';
 
 var STATIC="static";
 var DYNAMIC="dynamic";
@@ -35,12 +41,12 @@ export function setMakeANewOrderButton() { // onload...do
         var selectDateHTML = getSelectDateHTML();
         var nextButtonHTML = createButton(ID_OF_NEXT_BUTTON, 'Next')// getNextButtonHTML();
         var chooseStoresDropDownList = '<div id=' + ID_OF_CHOOSE_STORES_DROP_DOWN_LIST_ELEMENT + '></div>';
-        appendHTMLToMakeAndOrderBody(selectOrderTypeHTML);
+        appendHTMLToElement(selectOrderTypeHTML, ID_OF_MAKE_AN_ORDER_CONTAINER);
         setTypeOfOrderRadioButtonEvent();
-        appendHTMLToMakeAndOrderBody(selectDateHTML);
-        creatingCoordinatesHTMLAndSetEvents(ID_OF_VALUE_OF_COORDINATE_X_CHOSEN, ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN);
-        appendHTMLToMakeAndOrderBody(chooseStoresDropDownList);
-        appendHTMLToMakeAndOrderBody(nextButtonHTML);
+        appendHTMLToElement(selectDateHTML, ID_OF_MAKE_AN_ORDER_CONTAINER);
+        creatingCoordinatesHTMLAndSetEvents(ID_OF_VALUE_OF_COORDINATE_X_CHOSEN, ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN, ID_OF_MAKE_AN_ORDER_CONTAINER);
+        appendHTMLToElement(chooseStoresDropDownList, ID_OF_MAKE_AN_ORDER_CONTAINER);
+        appendHTMLToElement(nextButtonHTML, ID_OF_MAKE_AN_ORDER_CONTAINER);
         setNextButtonInMakeAnOrderElement();
         return false;
     })

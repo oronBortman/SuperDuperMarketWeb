@@ -6,7 +6,7 @@
     <script src="../../common/jquery-2.0.3.min.js"></script>
     <script src="../../common/context-path-helper.js"></script>
     <script type="module"  src="choosing-item-drop-down.js"></script>
-    <script type="module"  src="general-make-an-order-functions.js"></script>
+    <script type="module"  src="general-functions.js"></script>
     <script type="module"  src="making-an-order.js"></script>
     <script type="module"  src="main-functions-and-showing-zone-elements.js"></script>
     <script type="module"  src="show-store-status-in-dynamic-order.js"></script>
@@ -79,6 +79,18 @@
             <button name="Submit" type="submit" id="makeANewOrderButton">Make a new order</button>
             <div id="makeOrderBody"></div>
         </form>
+        <div id="makeAnOrderContainer">
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <button id="showPrivateOrdersInSellerStoresButton">Show orders in seller's stores</button>
+        <div id = "showPrivateOrdersOfSellerContainer"></div>
+    </div>
+    <hr>
+    <div class="row">
+        <button id="showFeedbacksButton">Show seller's feedbacks</button>
+        <div id = "showFeedbacksContainer"></div>
     </div>
     <hr>
     <form id = "moveToSDMMainPage" name = "moveToSDMMainPage">

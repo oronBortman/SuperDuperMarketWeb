@@ -6,7 +6,7 @@ import {
     appendHTMLToElement,
     emptyElementByID,
     createButton
-} from "./general-make-an-order-functions.js";
+} from "./general-functions.js";
 
 const GET_STORES_ORDERS_FOR_ORDER_SUMMERY_URL=buildUrlWithContextPath("get-store-orders-for-order-summery");
 const CLOSE_ORDER_AND_ADD_TO_HISTORY_URL = buildUrlWithContextPath("close-order-and-add-to-history");
@@ -25,7 +25,7 @@ const MAX_GRADE = 5;
 const ID_OF_VALUE_OF_AMOUNT_OF_GRADE_CHOSEN = 1;
 const ID_OF_FEEDBACK_TEXT_FIELD = 'feedbackTextField';
 
-export function initiateRateStore()
+export function initiateRateStore(idOfMakeAnOrderContainer)
 {
     $.ajax({
         method: 'GET',
@@ -38,14 +38,14 @@ export function initiateRateStore()
             alert('error in  initiateTheChoosingItemDropDownInOrder\n' + e);
         },
         success: function (r) {
-            appendHTMLToMakeAndOrderBody(generateInformingUserAboutFeedbackOptionHTML());
-            appendHTMLToMakeAndOrderBody(createEmptyDropDownListHTML("storeOrders", "Choose a store for rating:", ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST));
+            appendHTMLToElement(generateInformingUserAboutFeedbackOptionHTML(), idOfMakeAnOrderContainer);
+            appendHTMLToElement(createEmptyDropDownListHTML("storeOrders", "Choose a store for rating:", ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST), idOfMakeAnOrderContainer);
             setStoreOrdersListInDropDownInOrder(r);
 
-            appendHTMLToMakeAndOrderBody(createEmptyForm(ID_OF_FEEDBACK_FORM));//creating form
+            appendHTMLToElement(createEmptyForm(ID_OF_FEEDBACK_FORM), idOfMakeAnOrderContainer);//creating form
             buildFormElementsByStoreChoice();
-            appendHTMLToMakeAndOrderBody(generateFinishOrderMessageHTML);
-            appendHTMLToMakeAndOrderBody(createButton(ID_OF_FINISH_ORDER_BUTTON, 'Finish Order'));
+            appendHTMLToElement(generateFinishOrderMessageHTML(), idOfMakeAnOrderContainer);
+            appendHTMLToElement(createButton(ID_OF_FINISH_ORDER_BUTTON, 'Finish Order'), idOfMakeAnOrderContainer);
             setFinishButtonEvent();
         }
     })

@@ -3,7 +3,7 @@ import {
     appendHTMLToElement,
     emptyElementByID,
     createButton
-} from "./general-make-an-order-functions.js";
+} from "./general-functions.js";
 
 const GET_FEEDBACKS_DETAILS_URL = buildUrlWithContextPath("get-feedbacks-in-zone-by-seller-name");
 //ID's of HTML Elements

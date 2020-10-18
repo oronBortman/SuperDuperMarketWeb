@@ -3,9 +3,9 @@ import {
     createEmptyDropDownListHTML,
     createEmptyTable,
     appendHTMLToMakeAndOrderBody,
-    createHTMLContainerAndAppendToMakeOrderBody,
+    createEmptyHTMLContainer,
     createNextButtonHTMLAndAppendToMakeOrderBody, appendHTMLToElement, emptyElementByID
-} from "./general-make-an-order-functions.js";
+} from "./general-functions.js";
 import {initiateRateStore} from "./rate-seller.js";
 
 const GET_STORES_ORDERS_FOR_ORDER_SUMMERY_URL=buildUrlWithContextPath("get-store-orders-for-order-summery");
@@ -34,7 +34,7 @@ export function initiateShowingSummeryOfOrder(orderType)
             initiateChoosingStoreOrderDropDownHTMLInOrder();
             appendHTMLToMakeAndOrderBody(createEmptyDropDownListHTML("storeOrders", "Choose store order:", ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST));
             appendHTMLToMakeAndOrderBody(createEmptyTable(ID_OF_STORE_ORDERS_TABLE, ID_OF_STORE_ORDERS_TABLE_BODY));
-            appendHTMLToMakeAndOrderBody(createHTMLContainerAndAppendToMakeOrderBody(ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER));
+            appendHTMLToMakeAndOrderBody(createEmptyHTMLContainer(ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER));
             createNextButtonHTMLAndAppendToMakeOrderBody(ID_OF_NEXT_BUTTON);
             setNextButtonEvent();
             setChoosingStoreOrderDropDownListEvent();

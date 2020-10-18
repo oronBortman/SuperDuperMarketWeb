@@ -1,4 +1,4 @@
-import {appendHTMLToMakeAndOrderBody} from "./general-make-an-order-functions.js";
+import {appendHTMLToElement, appendHTMLToMakeAndOrderBody} from "./general-functions.js";
 
 var ID_OF_MINUS_BUTTON_IN_SELECT_COORIDNATE_X="minusButtonInSelectCoordX";
 var ID_OF_PLUS_BUTTON_IN_SELECT_COORIDNATE_X = "plusButtonInSelectCoordX";
@@ -10,12 +10,15 @@ var COORDINATE_X = 'x';
 var COORDINATE_Y = 'y';
 var INITIAL_VALUE_OF_COORDINATE = '0';
 
-export function creatingCoordinatesHTMLAndSetEvents(idOfValueOfCoordinateXChosen, idOfValueOfCoordinateYChosen)
+export function creatingCoordinatesHTMLAndSetEvents(idOfValueOfCoordinateXChosen, idOfValueOfCoordinateYChosen, idOfContainerToPutCoordinatesHTMLInIt)
 {
-    var selectCoordinateXHTML = getSelectedCoordinateHTML(COORDINATE_X,idOfValueOfCoordinateXChosen);
-    var selectCoordinateYHTML = getSelectedCoordinateHTML(COORDINATE_Y,idOfValueOfCoordinateYChosen);
-    appendHTMLToMakeAndOrderBody(selectCoordinateXHTML,idOfValueOfCoordinateXChosen);
-    appendHTMLToMakeAndOrderBody(selectCoordinateYHTML,idOfValueOfCoordinateYChosen);
+    //var selectCoordinateXHTML =
+    //var selectCoordinateYHTML = getSelectedCoordinateHTML(COORDINATE_Y,idOfValueOfCoordinateYChosen);
+   // appendHTMLToMakeAndOrderBody(selectCoordinateXHTML,idOfValueOfCoordinateXChosen);
+    //appendHTMLToMakeAndOrderBody(selectCoordinateYHTML,idOfValueOfCoordinateYChosen);
+    appendHTMLToElement(getSelectedCoordinateHTML(COORDINATE_X,idOfValueOfCoordinateXChosen),idOfContainerToPutCoordinatesHTMLInIt);
+    appendHTMLToElement(getSelectedCoordinateHTML(COORDINATE_Y,idOfValueOfCoordinateXChosen),idOfContainerToPutCoordinatesHTMLInIt)
+
     setMinusButtonOnCoordinate(COORDINATE_X,idOfValueOfCoordinateXChosen);
     setPlusButtonOnCoordinate(COORDINATE_X,idOfValueOfCoordinateXChosen);
     setMinusButtonOnCoordinate(COORDINATE_Y,idOfValueOfCoordinateYChosen);

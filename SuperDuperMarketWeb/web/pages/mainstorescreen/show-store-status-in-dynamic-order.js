@@ -6,7 +6,7 @@ import {emptyMakeOrderBody,
     createNextButtonHTMLAndAppendToMakeOrderBody,
     createEmptyTable,
     appendHTMLToElement,
-    appendHTMLToMakeAndOrderBody} from "./general-make-an-order-functions.js";
+    appendHTMLToMakeAndOrderBody} from "./general-functions.js";
 
 import {prepareAndInitiateChoosingDiscountsToApply} from "./choosing-discounts-to-apply.js";
 
