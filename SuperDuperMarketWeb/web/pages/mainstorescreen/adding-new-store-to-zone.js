@@ -1,10 +1,9 @@
-import {emptyMakeOrderBody,
-    createEmptyHTMLContainer,
+import {createEmptyHTMLContainer,
     createEmptyDropDownListHTML,
     createButton,
     disableElement,
-    enableElement,
-    createNextButtonHTMLAndAppendToMakeOrderBody} from "./general-functions.js";
+    enableElement,} from "./general-functions.js";
+
 import {prepareAndInitiateChoosingDiscountsToApply} from "./choosing-discounts-to-apply.js"
 import {initiateShowStoresStatusTable} from "./show-store-status-in-dynamic-order.js"
 

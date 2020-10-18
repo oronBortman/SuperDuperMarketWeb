@@ -1,7 +1,4 @@
-import {
-    emptyMakeOrderBody,
-    createEmptyDropDownListHTML,
-    appendHTMLToMakeAndOrderBody,
+import {createEmptyDropDownListHTML,
     createEmptyForm,
     appendHTMLToElement,
     emptyElementByID,

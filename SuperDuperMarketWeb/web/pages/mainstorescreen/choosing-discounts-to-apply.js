@@ -10,6 +10,7 @@ import {
     emptyElementByID,
     createEmptyTable,
     appendHTMLToElement} from "./general-functions.js";
+
 import {initiateShowingSummeryOfOrder} from "./show-summery-of-order.js";
 
 const APPLY_ONE_OF_DISCOUNT_URL=buildUrlWithContextPath("apply-one-of-discount");

@@ -3,11 +3,10 @@
  */
 
 import {
-    emptyMakeOrderBody,
-    createNextButtonHTMLAndAppendToMakeOrderBody,
     createEmptyTable,
     appendHTMLToElement,
-    appendHTMLToMakeAndOrderBody, emptyElementByID, createButton
+    emptyElementByID,
+    createButton
 } from "./general-functions.js";
 
 import {prepareAndInitiateChoosingDiscountsToApply} from "./choosing-discounts-to-apply.js";

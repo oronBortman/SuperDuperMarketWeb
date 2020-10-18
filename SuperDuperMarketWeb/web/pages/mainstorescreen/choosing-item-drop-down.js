@@ -1,6 +1,4 @@
-import {
-    emptyMakeOrderBody,
-    createEmptyHTMLContainer,
+import {createEmptyHTMLContainer,
     createEmptyDropDownListHTML,
     createButton,
     disableElement,

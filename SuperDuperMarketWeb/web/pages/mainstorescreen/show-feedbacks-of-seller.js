@@ -2,7 +2,6 @@ import {
     createEmptyTable,
     appendHTMLToElement,
     emptyElementByID,
-    createButton
 } from "./general-functions.js";
 
 const GET_FEEDBACKS_DETAILS_URL = buildUrlWithContextPath("get-feedbacks-in-zone-by-seller-name");

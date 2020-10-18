@@ -1,8 +1,6 @@
 import { initiateTheChoosingItemDropDownInOrder } from './choosing-item-drop-down.js';
 import {creatingCoordinatesHTMLAndSetEvents} from './creating-coordinate-elements.js';
 import {
-    emptyMakeOrderBody,
-    appendHTMLToMakeAndOrderBody,
     createButton,
     appendHTMLToElement
 } from "./general-functions.js";

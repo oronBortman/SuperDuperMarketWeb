@@ -1,10 +1,9 @@
-import {
-    emptyMakeOrderBody,
-    createEmptyDropDownListHTML,
+import {createEmptyDropDownListHTML,
     createEmptyTable,
-    appendHTMLToMakeAndOrderBody,
     createEmptyHTMLContainer,
-    createNextButtonHTMLAndAppendToMakeOrderBody, appendHTMLToElement, emptyElementByID, createButton
+    appendHTMLToElement,
+    emptyElementByID,
+    createButton
 } from "./general-functions.js";
 import {initiateRateStore} from "./rate-seller.js";
 
