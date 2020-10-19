@@ -16,12 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import static sdm.constants.Constants.ZONENAME;
 
 @WebServlet("/stores-in-zone-list")
 public class GetAllStoresInZoneServlet extends HttpServlet {
+    DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -61,9 +63,9 @@ public class GetAllStoresInZoneServlet extends HttpServlet {
             jsonObject.put("name", store.getName());
             jsonObject.put("ownerName", store.getStoreOwner().getUserName());
             jsonObject.put("totalOrdersFromStore", store.calcTotalOrdersFromStore());
-            jsonObject.put("totalProfitOfSoledItems", store.calcTotalProfitOfSoledItems());
+            jsonObject.put("totalProfitOfSoledItems", decimalFormat.format(store.calcTotalProfitOfSoledItems()));
             jsonObject.put("PPK", store.getPPK());
-            jsonObject.put("totalProfitOfDeliveris",store.calcProfitOfDelivers());
+            jsonObject.put("totalProfitOfDeliveris",decimalFormat.format(store.calcProfitOfDelivers()));
             JSONArray itemsInStore = readingItemsFromStoreToJsonObject(store.getAvailableItemsList(), store);
             jsonObject.put("availableItemsList", itemsInStore);
             jsonArray.add(i,jsonObject);
@@ -84,7 +86,7 @@ public class GetAllStoresInZoneServlet extends HttpServlet {
             jsonObject.put("name", availableItemInStore.getName());
             jsonObject.put("typeToMeasureBy", availableItemInStore.getTypeOfMeasureStr());
             jsonObject.put("pricePerUnit", availableItemInStore.getPricePerUnit());
-            jsonObject.put("totalSoledItemsFromStore", store.getAmountOfItemSoledByTypeOfMeasure(itemSerialId));
+            jsonObject.put("totalSoledItemsFromStore", decimalFormat.format(store.getAmountOfItemSoledByTypeOfMeasure(itemSerialId)));
             jsonArray.add(i,jsonObject);
             i++;
         }

@@ -1,4 +1,4 @@
-import {appendHTMLToElement, appendHTMLToMakeAndOrderBody} from "./general-functions.js";
+import {appendHTMLToElement} from "./general-functions.js";
 
 var ID_OF_MINUS_BUTTON_IN_SELECT_COORIDNATE_X="minusButtonInSelectCoordX";
 var ID_OF_PLUS_BUTTON_IN_SELECT_COORIDNATE_X = "plusButtonInSelectCoordX";
@@ -8,7 +8,7 @@ var ID_OF_TABLE_OF_ENTERING_COORDINATE_X = "tableOfEnteringCoordX";
 var ID_OF_TABLE_OF_ENTERING_COORDINATE_Y = "tableOfEnteringCoordY";
 var COORDINATE_X = 'x';
 var COORDINATE_Y = 'y';
-var INITIAL_VALUE_OF_COORDINATE = '0';
+var INITIAL_VALUE_OF_COORDINATE = 1;
 
 export function creatingCoordinatesHTMLAndSetEvents(idOfValueOfCoordinateXChosen, idOfValueOfCoordinateYChosen, idOfContainerToPutCoordinatesHTMLInIt)
 {
@@ -17,7 +17,7 @@ export function creatingCoordinatesHTMLAndSetEvents(idOfValueOfCoordinateXChosen
    // appendHTMLToMakeAndOrderBody(selectCoordinateXHTML,idOfValueOfCoordinateXChosen);
     //appendHTMLToMakeAndOrderBody(selectCoordinateYHTML,idOfValueOfCoordinateYChosen);
     appendHTMLToElement(getSelectedCoordinateHTML(COORDINATE_X,idOfValueOfCoordinateXChosen),idOfContainerToPutCoordinatesHTMLInIt);
-    appendHTMLToElement(getSelectedCoordinateHTML(COORDINATE_Y,idOfValueOfCoordinateXChosen),idOfContainerToPutCoordinatesHTMLInIt)
+    appendHTMLToElement(getSelectedCoordinateHTML(COORDINATE_Y,idOfValueOfCoordinateYChosen),idOfContainerToPutCoordinatesHTMLInIt)
 
     setMinusButtonOnCoordinate(COORDINATE_X,idOfValueOfCoordinateXChosen);
     setPlusButtonOnCoordinate(COORDINATE_X,idOfValueOfCoordinateXChosen);
@@ -73,7 +73,7 @@ export function setMinusButtonOnCoordinate(typeOfCoordinate, idOfValueOfCoordina
     $("#" + idOfMinusButtonOfCoordinate).click(function() {
         var coordinateValueNum=getValueOfCoordinateChosen(idOfValueOfCoordinateChosen);
         console.log("Coordinate value before checking the value: " + coordinateValueNum);
-        if(coordinateValueNum > 0)
+        if(coordinateValueNum > INITIAL_VALUE_OF_COORDINATE)
         {
             console.log("Coordinate value before changing the value: " + coordinateValueNum);
             coordinateValueNum=coordinateValueNum-1;

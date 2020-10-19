@@ -5,25 +5,15 @@ import {
     disableElement,
     enableElement, appendHTMLToElement, createEmptyForm, emptyElementByID,
 } from "./general-functions.js";
-import {
-    buildingChoosingGradeElementAndAppendToForm,
-    buildingFeedbackElementAndAppendToForm,
-    generateSubmitFunctionInFormHTML, setAddFeedbackButtonEvent
-} from "./rate-seller";
 import {creatingCoordinatesHTMLAndSetEvents} from "./creating-coordinate-elements.js";
 
 const GET_ITEMS_IN_ZONE_URL = buildUrlWithContextPath("items-in-zone-list");
 const ADD_A_NEW_STORE_TO_ZONE_URL=buildUrlWithContextPath("add-a-new-store-to-zone");
-const ITEMS_NOT_CHOSEN_IN_ORDER_URL=buildUrlWithContextPath("get-items-that-are-available-in-order");
-const ACTIVATE_DYNAMIC_ALGORITHM_IN_DYNAMIC_ORDER_URL = buildUrlWithContextPath("activate-dynamic-algorithm-in-dynamic-order");
-
-const ADD_ITEM_TO_ORDER = buildUrlWithContextPath("add-item-to-order");
+;
 //ID's of HTML Elements
-const ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN = 'valueOfAmountOfItemChosen';
 const ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
 const ID_OF_ADD_ITEM_TO_ORDER = 'addItemToOrder';
 const ID_OF_ITEM_ELEMENT = 'itemElement';
-const ID_OF_NEXT_BUTTON = "nextButton";
 const ID_OF_PRICE_TEXT_FIELD = 'priceTextField';
 const ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER = 'addANewStoreToZoneContainer';
 const ID_OF_ADD_A_NEW_STORE_FORM = 'addANewStoreForm';
@@ -38,7 +28,7 @@ const ID_OF_ADD_STORE_ERROR = "addStoreError";
 
 var itemsChosenForStoreArray = [];
 
-export function initiateTheChoosingItemDropDownInOrder()
+export function initiateAddANewStoreToZone()
 {
     emptyElementByID(ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER);
     appendHTMLToElement(generateInformingUserAboutAddingANewStoreToZoneHTML(), ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER);

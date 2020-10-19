@@ -1,10 +1,9 @@
 import {setMakeANewOrderButton} from "./making-an-order.js";
-import {createButton, createEmptyHTMLContainer} from "./general-functions";
 import {initiateShowOrdersOfSellerStoresInCertainZone} from "./show-orders-of-seller.js";
 import {initiateShowPrivateOrdersOfCustomer} from "./show-private-orders-of-customer.js";
 import {initiateShowFeedbacksInCertainZone} from "./show-feedbacks-of-seller.js";
+import {initiateAddANewStoreToZone} from "./adding-new-store-to-zone.js";
 
-var chatVersion = 0;
 var refreshRate = 5000; //milli seconds
 var STORES_LIST_URL = buildUrlWithContextPath("stores-in-zone-list");
 var ITEMS_LIST_URL = buildUrlWithContextPath("items-in-zone-list");
@@ -16,11 +15,12 @@ var ID_OF_TBODY_OF_ZONE_ITEMS_TABLE = 'tbodyOfZoneItemsTable';
 var ID_OF_TBODY_OF_STORE_TABLE = 'tbodyOfDetailsOnStoresInZone';
 
 const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON = "showPrivateOrdersOfCustomerButton";
-const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER = "showPrivateOrdersOfSellerContainer";
+const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER = "showPrivateOrdersOfCustomerContainer";
 const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON = "showPrivateOrdersInSellerStoresButton";
 const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER = "showOrdersInSellerStoresContainer";
 const ID_OF_SHOW_FEEDBACKS_BUTTON = 'showFeedbacksButton';
 const ID_OF_SHOW_FEEDBACKS_CONTAINER = 'showFeedbacksContainer';
+const ID_OF_ADD_NEW_STORE_TO_ZONE_BUTTON = 'addANewStoreToZoneButton';
 
 function emptyStoresInZoneTable() {
     document.getElementById(ID_OF_TBODY_OF_STORE_TABLE).innerHTML = '';
@@ -167,6 +167,7 @@ function setActionBasedOnRole(user)
         //TODO
         setShowOrdersInSellerStoresButtonEvent()
         setShowFeedbacksButtonEvent();
+        setAddANewStoreButtonEvent();
 
     }
     else if(userType === "customer")
@@ -176,6 +177,12 @@ function setActionBasedOnRole(user)
     }
 }
 
+function setAddANewStoreButtonEvent()
+{
+    $("#" + ID_OF_SHOW_FEEDBACKS_BUTTON).click(function() {
+        initiateAddANewStoreToZone();
+    })
+}
 
 function setShowFeedbacksButtonEvent()
 {
@@ -218,6 +225,7 @@ function hideHTMLElementsByRole(user){
     {
         $("#" + ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON).hide();
         $("#" + ID_OF_SHOW_FEEDBACKS_BUTTON).hide();
+        $("#" + ID_OF_ADD_NEW_STORE_TO_ZONE_BUTTON).hide();
     }
 }
 

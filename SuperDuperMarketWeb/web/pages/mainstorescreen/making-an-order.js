@@ -2,7 +2,7 @@ import { initiateTheChoosingItemDropDownInOrder } from './choosing-item-drop-dow
 import {creatingCoordinatesHTMLAndSetEvents} from './creating-coordinate-elements.js';
 import {
     createButton,
-    appendHTMLToElement
+    appendHTMLToElement, emptyElementByID
 } from "./general-functions.js";
 
 var CREATE_DYNAMIC_ORDER_URL = buildUrlWithContextPath("create-dynamic-order");
@@ -34,7 +34,7 @@ function emptyChooseStoresDropDownListElement()
 export function setMakeANewOrderButton() { // onload...do
     console.log("In setMakeANewOrderButtonInJS");
     $("#makeANewOrder").submit(function() {
-        emptyMakeOrderBody();
+        emptyElementByID(ID_OF_MAKE_AN_ORDER_CONTAINER);
         var selectOrderTypeHTML = getSelectOrderTypeHTML();
         var selectDateHTML = getSelectDateHTML();
         var nextButtonHTML = createButton(ID_OF_NEXT_BUTTON, 'Next')// getNextButtonHTML();
@@ -105,9 +105,9 @@ function setStoresListInStoreDropDownInOrder(detailsOnStoresInZone)
 function getSelectOrderTypeHTML()
 {
     return '<p>Please select your type:</p>' +
-        '<input type="radio" id=' + ID_OF_STATIC_RADIO_BUTTON + ' name="ordertype" value="static">'+
+        '<input type="radio" id=' + ID_OF_STATIC_RADIO_BUTTON + ' name="orderType" value="static">'+
         '<label for="static">static</label><br>' +
-        '<input type="radio" id=' + ID_OF_DYNAMIC_RADIO_BUTTON + ' name="ordertype" value="dynamic">' +
+        '<input type="radio" id=' + ID_OF_DYNAMIC_RADIO_BUTTON + ' name="orderType" value="dynamic">' +
         '<label for="dynamic">dynamic</label><br>';
 }
 
@@ -135,12 +135,12 @@ function setNextButtonInMakeAnOrderElement(idOfMakeAnOrderContainer) { // onload
         //Getting selected ordertype,date and store if it's static
       //  alert("clicked on nextButtonInMakeAnOrderFirstScreen");
         if (document.getElementById(ID_OF_STATIC_RADIO_BUTTON).checked) {
-            OpeningANewOrderFromHTMLElements(STATIC), idOfMakeAnOrderContainer;
+            OpeningANewOrderFromHTMLElements(STATIC, idOfMakeAnOrderContainer);
         }
-        if (document.getElementById(ID_OF_DYNAMIC_RADIO_BUTTON).checked) {
+        else if (document.getElementById(ID_OF_DYNAMIC_RADIO_BUTTON).checked) {
             OpeningANewOrderFromHTMLElements(DYNAMIC, idOfMakeAnOrderContainer);
         }
-        // return value of the submit operation
+        // !!!!return value of the submit operation
         // by default - we'll always return false so it doesn't redirect the user.
         return false;
     })

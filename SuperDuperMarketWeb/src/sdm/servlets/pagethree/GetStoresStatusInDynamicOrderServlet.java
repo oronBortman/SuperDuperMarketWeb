@@ -15,12 +15,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import static sdm.general.GeneralMethods.getCurrentOrderByRequest;
 
 @WebServlet("/get-stores-status-in-dynamic-order")
 public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
+    DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -67,11 +69,11 @@ public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
             jsonObject.put("storeName", store.getName());
             jsonObject.put("storeOwner", store.getStoreOwner().getUserName());
             jsonObject.put("location", "(" + coordinateX + "," + coordinateY + ")");
-            jsonObject.put("distanceFromCustomer", store.getLocation().getAirDistanceToOtherLocation(openedCustomerOrder.getLocationOfCustomer()));
+            jsonObject.put("distanceFromCustomer",decimalFormat.format(store.getLocation().getAirDistanceToOtherLocation(openedCustomerOrder.getLocationOfCustomer())));
             jsonObject.put("PPK", store.getPPK());
-            jsonObject.put("deliveryCost",openedStoreOrder.calcTotalDeliveryPrice());
-            jsonObject.put("amountOfItemsPurchased", openedStoreOrder.calcTotalAmountOfItemsByMeasureType());
-            jsonObject.put("totalPriceOfItems", openedStoreOrder.calcTotalPriceOfItemsNotFromSale());
+            jsonObject.put("deliveryCost",decimalFormat.format(openedStoreOrder.calcTotalDeliveryPrice()));
+            jsonObject.put("amountOfItemsPurchased",decimalFormat.format(openedStoreOrder.calcTotalAmountOfItemsByMeasureType()));
+            jsonObject.put("totalPriceOfItems" ,decimalFormat.format(openedStoreOrder.calcTotalPriceOfItemsNotFromSale()));
             System.out.println("!!!!!!!");
             System.out.println(jsonObject);
             jsonArray.add(i,jsonObject);

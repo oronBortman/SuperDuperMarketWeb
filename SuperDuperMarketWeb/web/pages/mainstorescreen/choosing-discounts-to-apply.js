@@ -20,9 +20,7 @@ const INITIALIZE_DISCOUNTS_IN_ORDER = buildUrlWithContextPath("initialize-discou
 const ID_OF_DISCOUNTS_DROP_DOWN = 'discountsDropDown';
 const ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER = 'itemFromDiscountDropDownContainer';
 const ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN = 'itemFromDiscountDropDown';
-const ID_OF_ADD_AN_ITEM_FROM_DISCOUNT_BUTTON = 'addAnItemFromDiscountButton'
 const ID_OF_ADD_DISCOUNT_BUTTON = 'addDiscountButton';
-const ID_OF_ADD_ITEM_FROM_DISCOUNT_BUTTON = 'addItemFromDiscountButton';
 const ID_OF_TABLE =  'discountsTable';
 const ID_OF_TABLE_BODY = 'discountsTableBody';
 const ID_OF_NEXT_BUTTON = 'nextButton';
@@ -30,7 +28,7 @@ const ONE_OF = "ONE-OF";
 const IRRELEVANT = "IRRELEVANT";
 const ALL_OR_NOTHING = "ALL-OR-NOTHING";
 
-export function prepareAndInitiateChoosingDiscountsToApply()
+export function prepareAndInitiateChoosingDiscountsToApply(idOfMakeAnOrderContainer)
 {
     $.ajax({
         method: 'POST',
@@ -46,7 +44,7 @@ export function prepareAndInitiateChoosingDiscountsToApply()
             alert('initial successfully');
         }
     })
-    initiateChoosingDiscountsToApply();
+    initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
 
 }
 
@@ -67,18 +65,15 @@ export function initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer)
             //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
             emptyElementByID(idOfMakeAnOrderContainer);
             appendHTMLToElement(createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY), idOfMakeAnOrderContainer);
-            setDiscountTable(r);
-
             appendHTMLToElement(createEmptyDropDownListHTML(ID_OF_DISCOUNTS_DROP_DOWN, 'Choose a discount', ID_OF_DISCOUNTS_DROP_DOWN), idOfMakeAnOrderContainer);
+            appendHTMLToElement(createEmptyHTMLContainer(ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER), idOfMakeAnOrderContainer);
+            appendHTMLToElement(createButton(ID_OF_ADD_DISCOUNT_BUTTON, "Apply discount"), idOfMakeAnOrderContainer);
+            appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
+
+            setDiscountTable(r);
             setDiscountDropDownList(r);
             setChoosingDiscountFromDropDownListEvent();
-
-            appendHTMLToElement(createButton(ID_OF_ADD_DISCOUNT_BUTTON, "Apply discount"), idOfMakeAnOrderContainer);
             setAddDiscountButtonEvent();
-
-            appendHTMLToElement(createEmptyHTMLContainer(ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER), idOfMakeAnOrderContainer);
-
-            appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
             setNextButtonEvent(idOfMakeAnOrderContainer);
         }
     })
@@ -87,7 +82,9 @@ export function initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer)
 
 export function setNextButtonEvent(idOfMakeAnOrderContainer)
 {
-    initiateShowingSummeryOfOrder(idOfMakeAnOrderContainer);
+    $("#" + ID_OF_NEXT_BUTTON).click(function() {
+        initiateShowingSummeryOfOrder(idOfMakeAnOrderContainer);
+    });
 }
 
 export function setDiscountTable(discountsJSON)
@@ -120,11 +117,13 @@ export function setDiscountDropDownList(discountsJSON)
         $("<option value='" + discountStr + "'>" + discountName + "</option>").appendTo(discountDropDownList);
         if(operator === ONE_OF && firstOperatorOneOF === true)
         {
-        //    alert("first discount with operator ONE_OF");
+            alert("first discount with operator ONE_OF");
             emptyAddItemContainer();
-            alert("The first value of ONE_OF and and discountsJSON is: " + JSON.stringify(discountJSON));
+           // alert("The first value of ONE_OF and and discountsJSON is: " + JSON.stringify(discountJSON));
             createItemsDropDownListAndAppendToAddItemContainer(discountJSON);
             firstOperatorOneOF=false;
+
+
         }
     });
 }
@@ -133,18 +132,18 @@ export function createAddDiscountButtonAndAppendToMakeAnOrderBody()
 
 }
 
-export function setAddDiscountButtonEvent()
+export function setAddDiscountButtonEvent(idOfMakeAnOrderContainer)
 {
     $("#" + ID_OF_ADD_DISCOUNT_BUTTON).click(function() {
-        alert("clicked on add discount button");
+     //   alert("clicked on add discount button");
         var discountStr = $('#' + ID_OF_DISCOUNTS_DROP_DOWN).val();
         var discountJSON = JSON.parse(discountStr);
         var discountName = discountJSON["discountName"];
         var operator = discountJSON["ifYouBuy"]["operator"];
-
+        alert('clicked on setAddDiscountButtonEvent');
         if(operator === ONE_OF)
         {
-            postToServerTheChosenAllOrNothingDiscount(discountName);
+            postToServerTheChosenAllOrNothingDiscount(discountName, idOfMakeAnOrderContainer);
         }
         else if(operator === ALL_OR_NOTHING || operator === IRRELEVANT)
         {
@@ -153,15 +152,15 @@ export function setAddDiscountButtonEvent()
             var quantity = offerJSON["quantity"];
             var forAdditional = offerJSON["forAdditional"];
             var itemId = offerJSON["itemId"];
-            postToServerTheChosenOneOfDiscount(discountName, itemId, quantity,forAdditional);
+            postToServerTheChosenOneOfDiscount(discountName, itemId, quantity,forAdditional, idOfMakeAnOrderContainer);
         }
-
-        initiateChoosingDiscountsToApply();
+        alert("non of the operator! + discountName + ' ' + operator");
     });
 }
 
-export function postToServerTheChosenOneOfDiscount(discountName, itemSerialIDFromChosenOffer, quantityFromChosenOffer,forAdditionalFromChosenOffer)
+export function postToServerTheChosenOneOfDiscount(discountName, itemSerialIDFromChosenOffer, quantityFromChosenOffer,forAdditionalFromChosenOffer, idOfMakeAnOrderContainer)
 {
+    alert('in postToServerTheChosenOneOfDiscount');
     var discountsStr= {"discountName":discountName, "itemSerialIDFromChosenOffer":itemSerialIDFromChosenOffer, "quantityFromChosenOffer":quantityFromChosenOffer, "forAdditional": forAdditionalFromChosenOffer};
     $.ajax({
         method: 'POST',
@@ -174,13 +173,14 @@ export function postToServerTheChosenOneOfDiscount(discountName, itemSerialIDFro
             alert('error in  postToServerTheChosenOneOfDiscount\n' + e);
         },
         success: function (r) {
-            initiateChoosingDiscountsToApply();
+            initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
         }
     })
 }
 
-export function postToServerTheChosenAllOrNothingDiscount(discountName)
+export function postToServerTheChosenAllOrNothingDiscount(discountName, idOfMakeAnOrderContainer)
 {
+    alert('in postToServerTheChosenAllOrNothingDiscount');
     var discountsStr= {"discountName":discountName};
 
     $.ajax({
@@ -194,26 +194,26 @@ export function postToServerTheChosenAllOrNothingDiscount(discountName)
             alert('error in  postToServerTheChosenAllOrNothingDiscount\n' + e);
         },
         success: function (r) {
-            initiateChoosingDiscountsToApply();
+            initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
         }
     })
 }
 
 export function emptyAddItemContainer() {
     $( "#" + ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER).empty();
-    alert("in emptyAddItemContainer")
+   // alert("in emptyAddItemContainer")
 
 }
 //good
 export function createItemsDropDownListAndAppendToAddItemContainer(discountJSON) {
     var itemsFromDiscountDropDownListHTML = createEmptyDropDownListHTML('itemFromDiscount', 'Choose an item', ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN);
-    alert("The itemsFromDiscountDropDownListHTML is: \n" + itemsFromDiscountDropDownListHTML);
+    //alert("The itemsFromDiscountDropDownListHTML is: \n" + itemsFromDiscountDropDownListHTML);
     alert("inside createItemsDropDownListAndAppendToAddItemContainer and discountsJSON is: \n" + JSON.stringify(discountJSON));
 
     appendHTMLElementToAddItemContainer(itemsFromDiscountDropDownListHTML); //good
-    alert("1");
+   // alert("1");
     setItemsFromDiscountsDropDownList(discountJSON);
-    alert("2");
+  //  alert("2");
 }
 
 export function appendHTMLElementToAddItemContainer(htmlElement) {
@@ -225,14 +225,18 @@ export function setChoosingDiscountFromDropDownListEvent()
 {
     $('#' + ID_OF_DISCOUNTS_DROP_DOWN).change(function () {
         var discountStr = $('#' + ID_OF_DISCOUNTS_DROP_DOWN).val();
-        alert("discountStr is:" + discountStr);
+       // alert("discountStr is:" + discountStr);
         var discountJSON = JSON.parse(discountStr);
         var operator = discountJSON["thenYouGet"]["operator"];
         if(operator === ONE_OF)
         {
-            alert("Discount has been chosen!");
+          //  alert("Discount has been chosen!");
             emptyAddItemContainer();
             createItemsDropDownListAndAppendToAddItemContainer(discountJSON);
+        }
+        else
+        {
+            emptyAddItemContainer();
         }
     });
 }
@@ -251,9 +255,9 @@ export function setItemsFromDiscountsDropDownList(discountJSON)
 
     $.each(offerListJSON || [], function(index, offerJSON) {
         //  var offerStr = JSON.stringify(offerJSON);
-        alert("Adding offer to itemsFromDiscountDropDownList" + offerJSON);
+    //    alert("Adding offer to itemsFromDiscountDropDownList" + offerJSON);
         var optionHTML = getOfferMessage(offerJSON);
-        alert("optionHTML: " + optionHTML);
+      //  alert("optionHTML: " + optionHTML);
         appendHTMLToElement(optionHTML, ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN);
     });
 }

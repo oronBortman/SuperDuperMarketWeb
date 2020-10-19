@@ -16,12 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import static sdm.constants.Constants.ZONENAME;
 
 @WebServlet("/items-in-zone-list")
 public class GetAllItemsInZoneServlet extends HttpServlet {
+    DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -65,7 +67,7 @@ public class GetAllItemsInZoneServlet extends HttpServlet {
             jsonObject.put("name", item.getName());
             jsonObject.put("typeOfMeasureBy", item.getTypeOfMeasureStr());
             jsonObject.put("howManyShopsSellesAnItem", zone.getHowManyShopsSellesAnItem(itemSerialNumber));
-            jsonObject.put("avgPriceOfItemInSK", zone.getAvgPriceOfItemInSDK(itemSerialNumber));
+            jsonObject.put("avgPriceOfItemInSK", decimalFormat.format(zone.getAvgPriceOfItemInSDK(itemSerialNumber)));
             jsonObject.put("howMuchTimesTheItemHasBeenOrdered", zone.getHowMuchTimesTheItemHasBeenOrdered(itemSerialNumber));
             jsonArray.add(i,jsonObject);
             i++;

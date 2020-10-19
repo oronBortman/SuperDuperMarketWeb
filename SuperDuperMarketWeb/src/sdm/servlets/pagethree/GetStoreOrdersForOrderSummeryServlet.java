@@ -97,7 +97,7 @@ public class GetStoreOrdersForOrderSummeryServlet extends HttpServlet {
             jsonObject.put("PPK", store.getPPK());
             jsonObject.put("distanceToCustomer", decimalFormat.format(store.getLocation().getAirDistanceToOtherLocation(openedCustomerOrder.getCustomerLocation())));
             jsonObject.put("deliveryCost", decimalFormat.format(openedStoreOrder.calcTotalDeliveryPrice()));
-            jsonObject.put("date",decimalFormat.format(store.calcProfitOfDelivers()));
+            jsonObject.put("date",openedStoreOrder.getDateStr());
             JSONArray itemsInStoreOrder= readingItemsFromStoreToJsonObject(openedStoreOrder.generateListOfGeneralOrderedItems());
             jsonObject.put("itemsList", itemsInStoreOrder);
             jsonArray.add(i,jsonObject);

@@ -15,9 +15,9 @@ const ID_OF_NEXT_BUTTON = "nextButton";
 const ID_OF_STORE_ORDERS_TABLE = "storeOrdersTable";
 const ID_OF_STORE_ORDERS_TABLE_BODY = "storeOrdersTableBody";
 const ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER = "storeOrderStatusContainer";
-const ID_OF_CHOOSE_ITEMS_DROP_DOWN_LIST_CONTAINER = chooseItemsInDropDownListElement;
+const ID_OF_CHOOSE_ITEMS_DROP_DOWN_LIST_CONTAINER = "chooseItemsInDropDownListElement";
 
-export function initiateShowingSummeryOfOrder(orderType, idOfMakeAnOrderContainer)
+export function initiateShowingSummeryOfOrder(idOfMakeAnOrderContainer)
 {
     $.ajax({
         method: 'GET',
@@ -30,7 +30,6 @@ export function initiateShowingSummeryOfOrder(orderType, idOfMakeAnOrderContaine
             alert('error in  initiateTheChoosingItemDropDownInOrder\n' + e);
         },
         success: function (r) {
-            initiateChoosingStoreOrderDropDownHTMLInOrder();
             emptyElementByID(idOfMakeAnOrderContainer);
             appendHTMLToElement(createEmptyHTMLContainer(ID_OF_CHOOSE_ITEMS_DROP_DOWN_LIST_CONTAINER), idOfMakeAnOrderContainer)
             appendHTMLToElement(createEmptyDropDownListHTML("storeOrders", "Choose store order:", ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST), idOfMakeAnOrderContainer)
@@ -72,8 +71,8 @@ export function setStoreOrdersListInDropDownInOrder(storeOrdersList)
         var itemsList = storeOrder["itemsList"];
         //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
         var itemsListStr =JSON.stringify(itemsList);
-        console.log("Adding storeOrder #" + storeID + ": " + storeName);
-       // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
+        console.log("Adding storeOrder #" + storeID + ": " + itemsListStr);
+        alert("Adding store #" + storeName + ": " + storeID + "\n" + itemsListStr);
         $('<option value=' + itemsListStr + '>' + 'storeID: ' + storeID + ', Store Name: ' + storeName + '</option>').appendTo(chooseStoreOrdersDropDownListElement);
         if(index === 0)
         {
@@ -83,10 +82,10 @@ export function setStoreOrdersListInDropDownInOrder(storeOrdersList)
     });
 }
 
-export function setStoreOrderStatusContainer()
+export function setStoreOrderStatusContainer(storeOrder)
 {
     emptyElementByID(ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER);
-    appendHTMLToElement(createStoreStatusHTML(),ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER);
+    appendHTMLToElement(createStoreStatusHTML(storeOrder),ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER);
 }
 
 export function createStoreStatusHTML(storeOrder)
