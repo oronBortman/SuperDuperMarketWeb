@@ -40,12 +40,13 @@ var itemsChosenForStoreArray = [];
 
 export function initiateTheChoosingItemDropDownInOrder()
 {
-    emptyElementByID(ID_OF_ADD_A_NEW_STORE_BUTTON);
+    emptyElementByID(ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER);
     appendHTMLToElement(generateInformingUserAboutAddingANewStoreToZoneHTML(), ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER);
     appendHTMLToElement(createEmptyForm(ID_OF_ADD_A_NEW_STORE_FORM), ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER);//creating form
     buildFormElements(ID_OF_ADD_A_NEW_STORE_FORM);
     appendHTMLToElement(generateMessageOnAddStoreButtonHTML(), ID_OF_ADD_A_NEW_STORE_FORM);
     appendHTMLToElement(createButton(ID_OF_ADD_A_NEW_STORE_BUTTON, 'Add a new store'), ID_OF_ADD_A_NEW_STORE_FORM);
+    disableElement(ID_OF_ADD_A_NEW_STORE_BUTTON);
     setAddStoreToZoneButtonEvent();
     appendHTMLToElement('<p id =' + ID_OF_ADD_STORE_ERROR + '></p>')
 }
@@ -268,6 +269,7 @@ export function setAddItemToOrderButtonClickedEvent() {
             item["serialID"] = serialID;
             item["price"] = price;
             itemsChosenForStoreArray.push(item);
+            enableElement(ID_OF_ADD_A_NEW_STORE_BUTTON);
         }
     });
 }
