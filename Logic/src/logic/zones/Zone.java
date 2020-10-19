@@ -722,6 +722,16 @@ public class Zone {
         storesSerialIDMap.put(newStoreToAdd.getSerialNumber(), newStoreToAdd);
     }
 
+    public Integer getMaximumSerialIDOfStoreIntStoresMap()
+    {
+        return storesSerialIDMap.keySet().stream().max(Integer::compareTo).get();
+    }
+
+    public Integer getAvailableStoreID()
+    {
+        return getMaximumSerialIDOfStoreIntStoresMap() + 1;
+    }
+
     public void addItem(Item newItemToAdd) {
         itemsSerialIDMap.put(newItemToAdd.getSerialNumber(), newItemToAdd);
     }

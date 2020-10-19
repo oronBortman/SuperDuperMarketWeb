@@ -1,56 +1,165 @@
-import {createEmptyHTMLContainer,
+import {
+    createEmptyHTMLContainer,
     createEmptyDropDownListHTML,
     createButton,
     disableElement,
-    enableElement,} from "./general-functions.js";
+    enableElement, appendHTMLToElement, createEmptyForm, emptyElementByID,
+} from "./general-functions.js";
+import {
+    buildingChoosingGradeElementAndAppendToForm,
+    buildingFeedbackElementAndAppendToForm,
+    generateSubmitFunctionInFormHTML, setAddFeedbackButtonEvent
+} from "./rate-seller";
+import {creatingCoordinatesHTMLAndSetEvents} from "./creating-coordinate-elements.js";
 
-import {prepareAndInitiateChoosingDiscountsToApply} from "./choosing-discounts-to-apply.js"
-import {initiateShowStoresStatusTable} from "./show-store-status-in-dynamic-order.js"
-
+const GET_ITEMS_IN_ZONE_URL = buildUrlWithContextPath("items-in-zone-list");
+const ADD_A_NEW_STORE_TO_ZONE_URL=buildUrlWithContextPath("add-a-new-store-to-zone");
 const ITEMS_NOT_CHOSEN_IN_ORDER_URL=buildUrlWithContextPath("get-items-that-are-available-in-order");
 const ACTIVATE_DYNAMIC_ALGORITHM_IN_DYNAMIC_ORDER_URL = buildUrlWithContextPath("activate-dynamic-algorithm-in-dynamic-order");
 
 const ADD_ITEM_TO_ORDER = buildUrlWithContextPath("add-item-to-order");
 //ID's of HTML Elements
-const ID_OF_MINUS_BUTTON = "minusButton";
-const ID_OF_PLUS_BUTTON = "plusButton";
 const ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN = 'valueOfAmountOfItemChosen';
-const ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT = "chooseItemsInDropDownListElement";
 const ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
-const ID_OF_MAKE_ORDER_BODY = "makeOrderBody";
 const ID_OF_ADD_ITEM_TO_ORDER = 'addItemToOrder';
 const ID_OF_ITEM_ELEMENT = 'itemElement';
 const ID_OF_NEXT_BUTTON = "nextButton";
+const ID_OF_PRICE_TEXT_FIELD = 'priceTextField';
+const ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER = 'addANewStoreToZoneContainer';
+const ID_OF_ADD_A_NEW_STORE_FORM = 'addANewStoreForm';
+const ID_OF_ADD_A_NEW_STORE_BUTTON = 'addANewStoreButton';
+const ID_OF_STORE_NAME_TEXT_FIELD = 'storeNameTextField';
+const ID_OF_PPK_TEXT_FIELD = 'PPKTextField';
+const ID_OF_VALUE_OF_COORDINATE_X_CHOSEN = "valueOfSelectedCoordinateX";
+const ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN = "valueOfSelectedCoordinateY";
+const ID_OF_CHOOSING_ITEM_DROP_DOWN_CONTAINER = 'chooseItemsInDropDownListContainer'
+const ID_OF_PRICE_ERROR = "priceError";
+const ID_OF_ADD_STORE_ERROR = "addStoreError";
 
-const STATIC = 'static';
-const DYNAMIC = 'dynamic';
+var itemsChosenForStoreArray = [];
 
-const QUANTITY_DIFFERENCE = 1;
-const WEIGHT_DIFFERENCE = 0.25;
-const MIN_QUANTITY_AMOUNT = 1;
-const MIN_WEIGHT_AMOUNT = 0.25;
-const QUANTITY = "Quantity";
-const WEIGHT = "Weight";
-
-export function initiateTheChoosingItemDropDownInOrder(orderType)
+export function initiateTheChoosingItemDropDownInOrder()
 {
-    initiateChoosingItemDropDownHTMLInOrder();
-    $(createChooseItemsDropDownListHTML()).appendTo($("#" + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT));
-    createItemElementHTMLAndAppendToMakeOrderBody();
-    createNextButtonHTMLAndAppendToMakeOrderBody(ID_OF_NEXT_BUTTON);
-    disableElement(ID_OF_NEXT_BUTTON)
-    setNextButtonEvent(orderType);
-    setChoosingItemFromDropDownListEvent(orderType);
-    getItemsListFromServerAndSetTheItemsList(orderType);
+    emptyElementByID(ID_OF_ADD_A_NEW_STORE_BUTTON);
+    appendHTMLToElement(generateInformingUserAboutAddingANewStoreToZoneHTML(), ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER);
+    appendHTMLToElement(createEmptyForm(ID_OF_ADD_A_NEW_STORE_FORM), ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER);//creating form
+    buildFormElements(ID_OF_ADD_A_NEW_STORE_FORM);
+    appendHTMLToElement(generateMessageOnAddStoreButtonHTML(), ID_OF_ADD_A_NEW_STORE_FORM);
+    appendHTMLToElement(createButton(ID_OF_ADD_A_NEW_STORE_BUTTON, 'Add a new store'), ID_OF_ADD_A_NEW_STORE_FORM);
+    setAddStoreToZoneButtonEvent();
+    appendHTMLToElement('<p id =' + ID_OF_ADD_STORE_ERROR + '></p>')
+}
+export function buildFormElements()
+{
+    emptyElementByID(ID_OF_ADD_A_NEW_STORE_FORM);
+    buildingStoreNameElementAndAppendToForm();
+    buildingEnteringLocationAndAppendToForm();
+    buildingPPKElementAndAppendToForm();
+
+    appendHTMLToElement(createEmptyHTMLContainer(ID_OF_CHOOSING_ITEM_DROP_DOWN_CONTAINER), ID_OF_ADD_A_NEW_STORE_FORM);
+    appendHTMLToElement(createChooseItemsDropDownListHTML(), ID_OF_CHOOSING_ITEM_DROP_DOWN_CONTAINER)
+    appendHTMLToElement(createEmptyHTMLContainer(ID_OF_ITEM_ELEMENT), ID_OF_ADD_A_NEW_STORE_FORM);
+
+    setChoosingItemFromDropDownListEvent();
+    setDropDownItemsListEvent();
+    getItemsListFromServerAndSetTheItemsList();
 }
 
-export function initiateChoosingItemDropDownHTMLInOrder()
+export function setAddStoreToZoneButtonEvent()
 {
-    var makeOrderBody = $("#" + ID_OF_MAKE_ORDER_BODY);
-    emptyMakeOrderBody();
-    console.log("In function initiateChoosingItemDropDownHTMLInOrder()\n")
-    var chooseItemsDropDownList = '<div id="chooseItemsInDropDownListElement"></div>';
-    $(chooseItemsDropDownList).appendTo(makeOrderBody);
+
+    $("#" + ID_OF_ADD_A_NEW_STORE_BUTTON).click(function() {
+        var storeName = $('#' + ID_OF_STORE_NAME_TEXT_FIELD).val();
+        var coordinateX = $('#' + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
+        var coordinateY = $('#' + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
+        var PPK = $('#' + ID_OF_PPK_TEXT_FIELD).val();
+        $.ajax({
+            method: 'GET',
+            data: {"storeName":storeName, "coordinateX":coordinateX, "coordinateY":coordinateY, "PPK":PPK, "itemsChosenForStoreArray": itemsChosenForStoreArray },
+            url: ADD_A_NEW_STORE_TO_ZONE_URL,
+            dataType: "json",
+            timeout: 4000,
+            error: function (e) {
+                console.error(e);
+                alert('error in setAddStoreToZoneButtonEvent\n' + e);
+            },
+            success: function (r) {
+                if(r["storeLocationIsUnique"] != "true")
+                {
+                    $("#" + ID_OF_ADD_STORE_ERROR).text="Can't create store because there is already a store in these coordinates!"
+                }
+                else
+                {
+                    disableElement(ID_OF_ADD_A_NEW_STORE_BUTTON);
+                    $("#" + ID_OF_ADD_STORE_ERROR).text="Added store to zone successfully!"
+                }
+            }
+        })
+    });
+}
+
+
+export function buildingEnteringLocationAndAppendToForm()
+{
+    creatingCoordinatesHTMLAndSetEvents(ID_OF_VALUE_OF_COORDINATE_X_CHOSEN, ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN, ID_OF_ADD_A_NEW_STORE_FORM);
+}
+
+export function buildingStoreNameElementAndAppendToForm()
+{
+    appendHTMLToElement(getStoreNameInstructionHTML(),ID_OF_ADD_A_NEW_STORE_FORM);
+    appendHTMLToElement(getStoreNameTextFieldHTML(),ID_OF_ADD_A_NEW_STORE_FORM);
+}
+
+export function buildingPPKElementAndAppendToForm()
+{
+    appendHTMLToElement(getPPKInstructionHTML(),ID_OF_ADD_A_NEW_STORE_FORM);
+    appendHTMLToElement(getPPKTextFieldHTML(),ID_OF_ADD_A_NEW_STORE_FORM);
+}
+
+export function getPPKInstructionHTML()
+{
+    return '<label for="PPKInstruction">Enter PPK:</label><br>';
+}
+
+export function getPPKTextFieldHTML()
+{
+    return '<input type="text" id=' + ID_OF_PPK_TEXT_FIELD+ 'name="PPKTextField"><br><br>';
+}
+
+export function getStoreNameInstructionHTML()
+{
+    return '<label for="storeNameInstruction">Enter store name:</label><br>';
+}
+
+export function getStoreNameTextFieldHTML()
+{
+    return '<input type="text" id=' + ID_OF_STORE_NAME_TEXT_FIELD+ 'name="storeNameTextField"><br><br>';
+}
+
+export function getPriceInstructionHTML()
+{
+    return '<label for="priceInstruction">Enter price:</label><br>';
+}
+
+export function getPriceErrorHTML()
+{
+    return '<P id=' + ID_OF_PRICE_ERROR + '></P><br>';
+}
+
+export function getPriceTextFieldHTML()
+{
+    return '<input type="text" id=' + ID_OF_PRICE_TEXT_FIELD+ 'name="priceTextField"><br><br>';
+}
+
+export function generateInformingUserAboutAddingANewStoreToZoneHTML()
+{
+    return '<p>If you would like,<br>' +
+        'You can choose a store and give it a feedback.<br>';
+}
+
+export function generateMessageOnAddStoreButtonHTML()
+{
+    return '<p>For Adding the store, just click on the button "Add store"</p>';
 }
 
 export function setChoosingItemFromDropDownListEvent(orderType)
@@ -61,54 +170,18 @@ export function setChoosingItemFromDropDownListEvent(orderType)
     });
 }
 
-export function setNextButtonEvent(orderType)
+export function createHTMLElementsAndAppendThemToItemElement(itemStr)
 {
-    $('#' + ID_OF_NEXT_BUTTON).click(function () {
-        alert('Clicked On next button!');
-        if(orderType === STATIC)
-        {
-            alert('order is static!');
-            prepareAndInitiateChoosingDiscountsToApply();
-        }
-        else if(orderType === DYNAMIC)
-        {
-            alert('order is dynamic!');
-            activateDynamicAlgorithm();
-            initiateShowStoresStatusTable();
-        }
-    });
+    appendHTMLToElement(getHTMLOfItemToChooseInOrder(itemStr),ID_OF_ITEM_ELEMENT)
+    appendHTMLToElement(createButton(ID_OF_ADD_ITEM_TO_ORDER, "Add item to order"),ID_OF_ITEM_ELEMENT);
 }
 
-export function appendElementToItemElement(elementToAppend)
+export function createItemToChooseElement(itemStr)
 {
-    elementToAppend.appendTo($("#" + ID_OF_ITEM_ELEMENT));
-}
-
-export function setItemEvents(typeToMeasureBy, orderType, serialIDOfItem)
-{
-    setMinusButtonEvent(typeToMeasureBy);
-    setPlusButtonEvent(typeToMeasureBy);
-    setAddItemToOrderButtonClickedEvent(orderType,serialIDOfItem);//,typeToMeasureBy);
-}
-
-export function createHTMLElementsAndAppendThemToItemElement(itemStr, typeToMeasureBy, orderType)
-{
-    appendElementToItemElement($(getHTMLOfItemToChooseInOrder(itemStr, orderType)));
-    appendElementToItemElement($(getHTMLOfTableOfEnteringAmountOfItem(typeToMeasureBy, orderType)));
-    appendElementToItemElement($(getAddItemToOrderButtonHTML()));
-}
-
-export function createItemToChooseElement(itemStr, orderType)
-{
-    var itemJSON = JSON.parse(itemStr);
-    var typeToMeasureBy = itemJSON["typeToMeasureBy"];
-    var serialIDOfItem = itemJSON["serialNumber"];
     emptyItemElement();
-    createHTMLElementsAndAppendThemToItemElement(itemStr, typeToMeasureBy,orderType);
-    setItemEvents(typeToMeasureBy,orderType,serialIDOfItem);
-
+    createHTMLElementsAndAppendThemToItemElement(itemStr);
+    setAddItemToOrderButtonClickedEvent();
 }
-
 
 export function createChooseItemsDropDownListHTML()
 {
@@ -123,110 +196,84 @@ export function emptyChooseItemsDropDownList()
 }
 
 //The values in here are good
-export function setItemsListInItemDropDownInOrder(itemsList, orderType)
+export function setItemsListInItemDropDown(itemsList)
 {
     var chooseItemsDropDownList = $("#"+ ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST);
     $.each(itemsList || [], function(index, item) {
         var itemID = item["serialNumber"];
-        var itemName = item["name"]["value"];
-        var itemPrice = item["pricePerUnit"];
-        var itemTypeOfMeasure = item["typeToMeasureBy"];
-        var itemJson = {
-            "serialNumber": itemID,
-            "name": itemName,
-            "pricePerUnit": itemPrice,
-            "typeToMeasureBy": itemTypeOfMeasure
-        };
+        var itemName = item["name"];
         //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
-
-        var itemStr =JSON.stringify(itemJson);
+        var itemStr =JSON.stringify(item);
         console.log("Adding item #" + itemID + ": " + itemName);
        // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
-        $('<option value=' + itemStr + '>' + 'availableItem serialID: ' + itemID + ', available Item Name: ' + itemName + '</option>').appendTo(chooseItemsDropDownList);
+        $('<option value=' + itemStr + '>' + 'Item serialID: ' + itemID + ', Item name: ' + itemName + '</option>').appendTo(chooseItemsDropDownList);
         if(index === 0)
         {
-            createItemToChooseElement(itemStr, orderType);
+            createItemToChooseElement(itemStr);
         }
     });
 }
 
-export function getHTMLOfItemToChooseInOrder(itemStr, orderType)
+export function createPriceElementHTML()
+{
+    return getPriceInstructionHTML() + getPriceTextFieldHTML() + getPriceErrorHTML();
+}
+
+export function getHTMLOfItemToChooseInOrder(itemStr)
 {
     var itemJSON = JSON.parse(itemStr);
-    var res;
     var serialIDOfItem = itemJSON["serialNumber"];
- //   alert('chose item!!!! ' + serialIDOfItem);
-    var nameOfItem = itemJSON["name"];
-   // alert('chose item with name ' + nameOfItem);
+    var itemName = itemJSON["name"]["value"]; //TODO - not sure if this is the right way to read the json
+    var itemTypeOfMeasure = itemJSON["typeOfMeasureBy"];
 
-    var table='<table class ="tableOfItemForm">';
+    var startOfTable='<table class ="tableOfItemForm">';
     var serialIdRow='<tr><th>serial id:</th><th>' + serialIDOfItem + '</th></tr>';
-    var namRow='<tr><th>name:</th><th>' + nameOfItem + '</th></tr>';
+    var namRow='<tr><th>name:</th><th>' + itemName + '</th></tr>';
+    var typeOfMeasureRow='<tr><th>type of measure:</th><th>' + itemTypeOfMeasure + '</th></tr>';
+    var endOfTable = '</tbody>';
+    var table = startOfTable + serialIdRow + namRow + typeOfMeasureRow + endOfTable;
 
-    if(orderType === STATIC)
-    {
-        var availableItemPrice = itemJSON["pricePerUnit"];
-    //    alert("in getHTMLOfItemToChooseInOrder and pricePerUnit is:" + availableItemPrice );
-     //   alert('chose item with price ' + availableItemPrice);
-        var priceRow='<tr><th>price:</th><th>' + availableItemPrice + '</th></tr>';
-        res = table + '<tbody>' + serialIdRow + namRow + priceRow + '</tbody>' + '</table>';
-    }
-    else
-    {
-        res = table + '<tbody>' + serialIdRow + namRow + '</tbody>' + '</table>';
-    }
-    return res;
+    return table + createPriceElementHTML();
 }
-
-export function getAddItemToOrderButtonHTML()
-{
-    return createButton(ID_OF_ADD_ITEM_TO_ORDER, "Add item to order");
-}
-
 
 export function emptyItemElement()
 {
     $( "#" + ID_OF_ITEM_ELEMENT ).empty();
 }
 
-export function createItemElementHTMLAndAppendToMakeOrderBody()
+//  item["serialID"];
+// item["price"];
+
+export function setDropDownItemsListEvent()
 {
-    createEmptyHTMLContainer(ID_OF_ITEM_ELEMENT);
+    $('#' + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST).change(function() {
+        $('#' + ID_OF_PRICE_ERROR).text='';
+    });
 }
 
-
-//Value in here are not good
-export function getHTMLOfTableOfEnteringAmountOfItem(typeToMeasureBy)
-{
-
-    var amount;
-    if(typeToMeasureBy === QUANTITY)
-    {
-        amount=QUANTITY_DIFFERENCE;
-    }
-    else if(typeToMeasureBy === WEIGHT)
-    {
-        amount=WEIGHT_DIFFERENCE;
-    }
-   // alert("in getHTMLOfTableOfEnteringAmountOfItem and amount is:" + amount );
-
-
-    return '<table class ="tableOfEnteringAmountOfItem">' +
-        '<tr>' +
-        '<th id="minus"><button type="button" id=' + ID_OF_MINUS_BUTTON + '>-</button></th>' +
-        '<th><p id=' + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN + '>' + amount + '</p></th>' +
-        '<th><button type="button" id=' + ID_OF_PLUS_BUTTON + '>+</button></th>' +
-        '</tr>' +
-        '</table>';
-}
-
-export function setAddItemToOrderButtonClickedEvent(orderType, serialIDOfItem)
-{
+export function setAddItemToOrderButtonClickedEvent() {
     //   alert("in getItemsListFromServerAndSetTheItemsList: " + orderType);
-    $("#" + ID_OF_ADD_ITEM_TO_ORDER).click(function() {
-        var amountOfItem =  $('#' + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN).text();
+    $("#" + ID_OF_ADD_ITEM_TO_ORDER).click(function () {
+        var price = $('#' + ID_OF_PRICE_TEXT_FIELD).val();
+        var serialID = $('#' + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST).val();
+        if (isNaN(price)) {
+            $('#' + ID_OF_PRICE_ERROR).text ="Error:You didn't entered a positive number in price text field!"
+        }
+        else if(price < 0) {
+            $('#' + ID_OF_PRICE_ERROR).text = "Error:Price can't be negative!"
+        }
+        else
+        {
+            var item = {};
+            item["serialID"] = serialID;
+            item["price"] = price;
+            itemsChosenForStoreArray.push(item);
+        }
+    });
+}
+
      //   alert("Inside setAddItemToOrderButtonClickedEvent and value are: orderType:"+ orderType + " serialIDOfITem:" + serialIDOfItem + " amountOfItem:" + amountOfItem)
-        $.ajax({
+      /*  $.ajax({
             method: 'POST',
             data: {"orderType":orderType, "serialIDOfItem":serialIDOfItem, "amountOfItem":amountOfItem},
             url: ADD_ITEM_TO_ORDER,
@@ -246,99 +293,15 @@ export function setAddItemToOrderButtonClickedEvent(orderType, serialIDOfItem)
                 setItemsListInItemDropDownInOrder(r, orderType);
             }
         })
-    })
-}
+    })*/
 
-export function addSelectedItemToOrder(orderType)
-{
-
-}
-
-export function subbingAmount(amount, minAmount, difference)
-{
-    if(amount > minAmount)
-    {
-        amount=amount-difference;
-        updateValueOfAmountOfItemChosen(amount);
-    }
-}
-
-export function addingAmount(amount, minAmount, difference)
-{
-    amount=amount+difference;
-    updateValueOfAmountOfItemChosen(amount);
-}
-
-export function setMinusButtonEvent(typeToMeasureBy)
-{
-    console.log("inside setMinusButtonOnCoordinate function")
-
-    $("#" + ID_OF_MINUS_BUTTON).click(function() {
-       // console.log("Coordinate value before checking the value: " + coordinateValueNum);
-        var amount;
-
-        if(typeToMeasureBy === QUANTITY )
-        {
-            amount = getValueOfQuantityOfItemChosen();
-        //    alert("chose to add quantity " + amount + " " + QUANTITY_DIFFERENCE + " " + QUANTITY_DIFFERENCE);
-            subbingAmount(amount, MIN_QUANTITY_AMOUNT, QUANTITY_DIFFERENCE);
-        }
-        else if(typeToMeasureBy === WEIGHT)
-        {
-            amount = getValueOfWeightOfItemChosen();
-          //  alert("chose to add weight " + amount + " " + MIN_WEIGHT_AMOUNT + " " + WEIGHT_DIFFERENCE);
-            subbingAmount(amount,MIN_WEIGHT_AMOUNT,WEIGHT_DIFFERENCE);
-        }
-    });
-}
-
-export function getValueOfQuantityOfItemChosen()
-{
-    var valueStr = $("#" + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN).text();
-    return parseInt(valueStr);
-}
-
-export function getValueOfWeightOfItemChosen()
-{
-    var valueStr = $("#" + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN).text();
-    return parseFloat(valueStr);
-}
-
-export function updateValueOfAmountOfItemChosen(value)
-{
-    $("#" + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN).text(value);
-
-}
-
-function setPlusButtonEvent(typeToMeasureBy)
-{
-    console.log("inside setPlusButtonOnCoordinate");
-    $("#" + ID_OF_PLUS_BUTTON).click(function() {
-
-        //console.log("Coordinate value before checking the value: " + coordinateValueNum);
-        var amount;
-        if(typeToMeasureBy === QUANTITY )
-        {
-            amount = getValueOfQuantityOfItemChosen();
-           // alert("chose to add quantity " + amount + " " + QUANTITY_DIFFERENCE + " " + QUANTITY_DIFFERENCE);
-            addingAmount(amount, MIN_QUANTITY_AMOUNT, QUANTITY_DIFFERENCE);
-        }
-        else if(typeToMeasureBy === WEIGHT)
-        {
-            amount = getValueOfWeightOfItemChosen();
-       //     alert("chose to add weight " + amount + " " + MIN_WEIGHT_AMOUNT + " " + WEIGHT_DIFFERENCE);
-            addingAmount(amount,MIN_WEIGHT_AMOUNT,WEIGHT_DIFFERENCE);
-        }
-    });
-}
-
-export function getItemsListFromServerAndSetTheItemsList(orderType)
+export function getItemsListFromServerAndSetTheItemsList()
 {
  //   alert("in getItemsListFromServerAndSetTheItemsList: " + orderType);
     $.ajax({
         method: 'GET',
-        data: {"orderType":orderType},
-        url: ITEMS_NOT_CHOSEN_IN_ORDER_URL,
+        data: {},
+        url: GET_ITEMS_IN_ZONE_URL,
         dataType: "json",
         timeout: 4000,
         error: function (e) {
@@ -346,29 +309,19 @@ export function getItemsListFromServerAndSetTheItemsList(orderType)
             alert('error in  getItemsListFromServerAndSetTheItemsList\n' + e);
         },
         success: function (r) {
-            if(r.length == 0)
-            {
-                $('#' + ID_OF_ADD_ITEM_TO_ORDER).prop("disabled",true);
+            let i;
+            let j;
+            for (i = 0; i < r.length; i++) {
+                for(j = 0; j < itemsChosenForStoreArray.length; j++)
+                {
+                    if(r[i]["serialNumber"] === itemsChosenForStoreArray[j]["serialNumber"])
+                    {
+                        delete r[i];
+                    }
+                }
             }
-            setItemsListInItemDropDownInOrder(r, orderType);
+            setItemsListInItemDropDown(r);
         }
     })
 }
 
-export function activateDynamicAlgorithm()
-{
-    $.ajax({
-        method: 'POST',
-        data: {},
-        url: ACTIVATE_DYNAMIC_ALGORITHM_IN_DYNAMIC_ORDER_URL,
-        dataType: "json",
-        timeout: 4000,
-        error: function (e) {
-            console.error(e);
-            alert('error in  getItemsListFromServerAndSetTheItemsList\n' + e);
-        },
-        success: function (r) {
-            alert('succeed to activate dynamic algorithm.This is the json of the items added to order:\n' + r);
-        }
-    })
-}
