@@ -136,7 +136,7 @@ export function setItemsListInItemDropDownInOrder(itemsList, orderType)
         var itemStr =JSON.stringify(itemJson);
         console.log("Adding item #" + itemID + ": " + itemName);
        // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
-        $('<option value=' + itemStr + '>' + 'availableItem serialID: ' + itemID + ', available Item Name: ' + itemName + '</option>').appendTo(chooseItemsDropDownList);
+        $("<option value='" + itemStr + "'>" + "availableItem serialID: " + itemID + ", available Item Name: '" + itemName + "'</option>").appendTo(chooseItemsDropDownList);
         if(index === 0)
         {
             createItemToChooseElement(itemStr, orderType);

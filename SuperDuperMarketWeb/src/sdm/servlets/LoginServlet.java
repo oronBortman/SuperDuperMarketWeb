@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet {
         final String SDM_MAIN_PAGE_URL = request.getContextPath() + "/pages/sdmmainpage/sdm-main-page.html";
         final String LOGIN_ERROR_URL = request.getContextPath() + "/pages/loginerror/login_attempt_after_error.html";  // must start with '/' since will be used in request dispatcher...
         response.setContentType("text/html;charset=UTF-8");
-        System.out.println("In LoginServlet");
+      //  System.out.println("In LoginServlet");
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
         String usernameFromSession = SessionUtils.getUsername(request);
         String userType = request.getParameter(Constants.USERTYPE);
@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
                 System.out.println(Constants.SELLER);
             }*/
         if (userType == null) {
-            System.out.println("null");
+           // System.out.println("null");
             String errorMessage = "you didn't choose your type";
             //getServletContext().getRequestDispatcher(LOGIN_ERROR_URL + "?errorMessage=" + errorMessage).forward(request, response);
             response.sendRedirect(LOGIN_ERROR_URL + "?errorMessage=" + errorMessage);
@@ -79,9 +79,9 @@ public class LoginServlet extends HttpServlet {
                         } else {
                             userManager.addUser(usernameFromParameter, userType);
                             User user = userManager.getUserByName(usernameFromParameter);
-                            System.out.println("After creation of user");
-                            System.out.println("Username:" + user.getUserName());
-                            System.out.println("UserType:" + user.getUserName());
+                     //       System.out.println("After creation of user");
+                       //     System.out.println("Username:" + user.getUserName());
+                         //   System.out.println("UserType:" + user.getUserName());
                             request.getSession(true).setAttribute(Constants.USERNAME, usernameFromParameter);
                             request.getSession(true).setAttribute(Constants.USERTYPE, userType);
 
@@ -90,7 +90,7 @@ public class LoginServlet extends HttpServlet {
                             //  response.sendRedirect( SDM_MAIN_PAGE_URL + "?" + Constants.USERNAME + "=" + usernameFromParameter + "&" + Constants.USERTYPE + "=" + userType);
                             Gson gson = new Gson();
                             String json = gson.toJson(user);
-                            System.out.println(json + "!!!!");
+                         //   System.out.println(json + "!!!!");
                         }
                     }
                 }

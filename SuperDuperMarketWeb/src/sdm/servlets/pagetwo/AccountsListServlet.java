@@ -33,8 +33,8 @@ public class AccountsListServlet extends HttpServlet {
             Set<ActionOnAccount> historyOfActionsOnAccountSet = user.getAccount().getHistoryOfActionsOnAccountSet();
             String json = gson.toJson(historyOfActionsOnAccountSet);
             out.println(json);
-            System.out.println("AAAAA");
-            System.out.println(json);
+            //System.out.println("AAAAA");
+           // System.out.println(json);
             out.flush();
         }
     }

@@ -57,7 +57,7 @@ public class GetCustomerOrdersDetailsInSpecificZoneServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In GetCustomerOrdersDetailsServlet :)))))");
+       // System.out.println("In GetCustomerOrdersDetailsServlet :)))))");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
@@ -69,8 +69,8 @@ public class GetCustomerOrdersDetailsInSpecificZoneServlet extends HttpServlet {
                 JSONArray jsonArray = readListOfClosedCustomersOrderToJSONObject(closedCustomerOrdersList);
                 String json = gson.toJson(jsonArray);
                 out.println(json);
-                System.out.println("This is the details on the openedCustomerOrder!!\n\n\n\n\n\n");
-                System.out.println(json);
+           //     System.out.println("This is the details on the openedCustomerOrder!!\n\n\n\n\n\n");
+          //      System.out.println(json);
                 out.flush();
             }
             else

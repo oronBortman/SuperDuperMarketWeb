@@ -9,7 +9,8 @@ import {
     createButton,
     emptyElementByID,
     createEmptyTable,
-    appendHTMLToElement} from "./general-functions.js";
+    appendHTMLToElement, disableElement
+} from "./general-functions.js";
 
 import {initiateShowingSummeryOfOrder} from "./show-summery-of-order.js";
 
@@ -62,6 +63,7 @@ export function initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer)
             return("error");
         },
         success: function (r) {
+            alert('in initiateChoosingDiscountsToApply');
             //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
             emptyElementByID(idOfMakeAnOrderContainer);
             appendHTMLToElement(createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY), idOfMakeAnOrderContainer);
@@ -73,7 +75,14 @@ export function initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer)
             setDiscountTable(r);
             setDiscountDropDownList(r);
             setChoosingDiscountFromDropDownListEvent();
-            setAddDiscountButtonEvent();
+            if(r.length === 0)
+            {
+                disableElement(ID_OF_ADD_DISCOUNT_BUTTON);
+            }
+            else
+            {
+                setAddDiscountButtonEvent(idOfMakeAnOrderContainer);
+            }
             setNextButtonEvent(idOfMakeAnOrderContainer);
         }
     })
@@ -117,7 +126,7 @@ export function setDiscountDropDownList(discountsJSON)
         $("<option value='" + discountStr + "'>" + discountName + "</option>").appendTo(discountDropDownList);
         if(operator === ONE_OF && firstOperatorOneOF === true)
         {
-            alert("first discount with operator ONE_OF");
+           // alert("first discount with operator ONE_OF");
             emptyAddItemContainer();
            // alert("The first value of ONE_OF and and discountsJSON is: " + JSON.stringify(discountJSON));
             createItemsDropDownListAndAppendToAddItemContainer(discountJSON);
@@ -139,13 +148,9 @@ export function setAddDiscountButtonEvent(idOfMakeAnOrderContainer)
         var discountStr = $('#' + ID_OF_DISCOUNTS_DROP_DOWN).val();
         var discountJSON = JSON.parse(discountStr);
         var discountName = discountJSON["discountName"];
-        var operator = discountJSON["ifYouBuy"]["operator"];
-        alert('clicked on setAddDiscountButtonEvent');
+        var operator = discountJSON["thenYouGet"]["operator"];
+        alert('clicked on setAddDiscountButtonEvent' + discountStr);
         if(operator === ONE_OF)
-        {
-            postToServerTheChosenAllOrNothingDiscount(discountName, idOfMakeAnOrderContainer);
-        }
-        else if(operator === ALL_OR_NOTHING || operator === IRRELEVANT)
         {
             var offerStr = $("#" + ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN).val();
             var offerJSON = JSON.parse(offerStr);
@@ -154,13 +159,17 @@ export function setAddDiscountButtonEvent(idOfMakeAnOrderContainer)
             var itemId = offerJSON["itemId"];
             postToServerTheChosenOneOfDiscount(discountName, itemId, quantity,forAdditional, idOfMakeAnOrderContainer);
         }
-        alert("non of the operator! + discountName + ' ' + operator");
+        else if(operator === ALL_OR_NOTHING || operator === IRRELEVANT)
+        {
+            postToServerTheChosenAllOrNothingDiscount(discountName, idOfMakeAnOrderContainer);
+        }
+     //   alert("non of the operator! " + discountName  + " " + operator);
     });
 }
 
 export function postToServerTheChosenOneOfDiscount(discountName, itemSerialIDFromChosenOffer, quantityFromChosenOffer,forAdditionalFromChosenOffer, idOfMakeAnOrderContainer)
 {
-    alert('in postToServerTheChosenOneOfDiscount');
+  //  alert('in postToServerTheChosenOneOfDiscount');
     var discountsStr= {"discountName":discountName, "itemSerialIDFromChosenOffer":itemSerialIDFromChosenOffer, "quantityFromChosenOffer":quantityFromChosenOffer, "forAdditional": forAdditionalFromChosenOffer};
     $.ajax({
         method: 'POST',
@@ -180,7 +189,7 @@ export function postToServerTheChosenOneOfDiscount(discountName, itemSerialIDFro
 
 export function postToServerTheChosenAllOrNothingDiscount(discountName, idOfMakeAnOrderContainer)
 {
-    alert('in postToServerTheChosenAllOrNothingDiscount');
+  //  alert('in postToServerTheChosenAllOrNothingDiscount');
     var discountsStr= {"discountName":discountName};
 
     $.ajax({
@@ -208,7 +217,7 @@ export function emptyAddItemContainer() {
 export function createItemsDropDownListAndAppendToAddItemContainer(discountJSON) {
     var itemsFromDiscountDropDownListHTML = createEmptyDropDownListHTML('itemFromDiscount', 'Choose an item', ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN);
     //alert("The itemsFromDiscountDropDownListHTML is: \n" + itemsFromDiscountDropDownListHTML);
-    alert("inside createItemsDropDownListAndAppendToAddItemContainer and discountsJSON is: \n" + JSON.stringify(discountJSON));
+  //  alert("inside createItemsDropDownListAndAppendToAddItemContainer and discountsJSON is: \n" + JSON.stringify(discountJSON));
 
     appendHTMLElementToAddItemContainer(itemsFromDiscountDropDownListHTML); //good
    // alert("1");
@@ -243,14 +252,14 @@ export function setChoosingDiscountFromDropDownListEvent()
 
 export function setItemsFromDiscountsDropDownList(discountJSON)
 {
-
-    alert("in setItemsFromDiscountsDropDownList and discountJSON is: " + JSON.stringify(discountJSON));
+//
+  //  alert("in setItemsFromDiscountsDropDownList and discountJSON is: " + JSON.stringify(discountJSON));
     //  var discountJSON = JSON.parse(discountStr);
     var name = discountJSON["discountName"];
     var ifYouBuy = discountJSON["ifYouBuy"];
     var ifYouBuy = discountJSON["thenYouGet"];
     var offerListJSON = discountJSON["thenYouGet"]["offerList"];
-    alert("in setItemsFromDiscountsDropDownList and offerListJSON:\n" + JSON.stringify(offerListJSON));
+ //   alert("in setItemsFromDiscountsDropDownList and offerListJSON:\n" + JSON.stringify(offerListJSON));
     //var offerListStr = JSON.stringify(offerListJSON);
 
     $.each(offerListJSON || [], function(index, offerJSON) {

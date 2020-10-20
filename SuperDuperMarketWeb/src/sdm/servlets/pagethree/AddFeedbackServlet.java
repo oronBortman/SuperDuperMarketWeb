@@ -47,9 +47,25 @@ public class AddFeedbackServlet extends HttpServlet {
 
             Integer gradeInt = Integer.parseInt(gradeStr);
             Integer storeIDInt = Integer.parseInt(storeIDStr);
-
+            System.out.println("There are the parameters are: grad:" + gradeInt + " storeID:" + storeIDStr + " feedbackText:" + feedbackText);
             Store store = zone.getStoreBySerialID(storeIDInt);
-            store.addFeedback(user.getUserName(),openedCustomerOrder.getDateStr(), gradeInt, feedbackText);
+            if(store == null)
+            {
+                System.out.println("store is null!!");
+            }
+            else if(user == null)
+            {
+                System.out.println("user is null!!");
+
+            }
+            else if(openedCustomerOrder == null)
+            {
+                System.out.println("openedCustomerOrder is null!!");
+            }
+            else
+            {
+                store.addFeedback(user.getUserName(),openedCustomerOrder.getDateStr(), gradeInt, feedbackText);
+            }
 
             String json = gson.toJson(zone);
             out.println(json);

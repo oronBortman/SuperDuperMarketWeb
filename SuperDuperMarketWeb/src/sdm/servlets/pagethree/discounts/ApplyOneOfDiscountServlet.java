@@ -32,7 +32,7 @@ public class ApplyOneOfDiscountServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In ApplyOneOfDiscountServlet");
+       // System.out.println("In ApplyOneOfDiscountServlet");
         //    var discountsStr= {"discountName":discountName, "itemSerialIDFromChosenOffer":itemSerialIDFromChosenOffer, "quantityFromChosenOffer":quantityFromChosenOffer, "forAdditional": forAdditionalFromChosenOffer};
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();

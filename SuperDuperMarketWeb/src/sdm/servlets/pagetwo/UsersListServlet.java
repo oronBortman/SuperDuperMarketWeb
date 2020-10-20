@@ -39,7 +39,7 @@ public class UsersListServlet extends HttpServlet {
             }*/
             String json = gson.toJson(usersList);
             //System.out.println("1");
-            System.out.println("1" + json);
+           // System.out.println("1" + json);
             out.println(json);
             out.flush();
         }

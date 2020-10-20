@@ -179,16 +179,16 @@ function setActionBasedOnRole(user)
 
 function setAddANewStoreButtonEvent()
 {
-    $("#" + ID_OF_SHOW_FEEDBACKS_BUTTON).click(function() {
+    $("#" + ID_OF_ADD_NEW_STORE_TO_ZONE_BUTTON).click(function() {
         initiateAddANewStoreToZone();
-    })
+    });
 }
 
 function setShowFeedbacksButtonEvent()
 {
     $("#" + ID_OF_SHOW_FEEDBACKS_BUTTON).click(function() {
         initiateShowFeedbacksInCertainZone();
-    })
+    });
 }
 
 function setShowOrdersInSellerStoresButtonEvent()

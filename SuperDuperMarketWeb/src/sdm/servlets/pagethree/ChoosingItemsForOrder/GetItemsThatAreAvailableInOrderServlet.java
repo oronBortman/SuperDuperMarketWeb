@@ -26,13 +26,13 @@ public class GetItemsThatAreAvailableInOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In get-items-that-are-available-in-order\n\n\n\n\n\n\n");
+      //  System.out.println("In get-items-that-are-available-in-order\n\n\n\n\n\n\n");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             String json="";
             String orderType = request.getParameter("orderType");
             OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(getServletContext(), request);
-            System.out.println("A5");
+           // System.out.println("A5");
             if(openedCustomerOrder == null)
             {
                 System.out.println("openedCustomerOrder1 NULL!!!");
@@ -45,27 +45,27 @@ public class GetItemsThatAreAvailableInOrderServlet extends HttpServlet {
             else if(orderType.equals("static"))
             {
                 List<AvailableItemInStore> availableItemInStoreList = openedCustomerOrder.generateListsOfItemsInStoreThatAreNotInOrderAndNotFromSale();
-                System.out.println("A6");
+              //  System.out.println("A6");
                 json = gson.toJson(availableItemInStoreList);
-                System.out.println("About to print Available item list");
-                for(AvailableItemInStore availableItemInStore : availableItemInStoreList)
+             //   System.out.println("About to print Available item list");
+               /* for(AvailableItemInStore availableItemInStore : availableItemInStoreList)
                 {
                     System.out.println("Available item id: " + availableItemInStore.getSerialNumber());
-                };
+                };*/
             }
             else if(orderType.equals("dynamic"))
             {
-                System.out.println("A7");
+             //   System.out.println("A7");
                 Zone zone = getZoneByRequest(getServletContext(), request);
-                System.out.println("A8");
+              //  System.out.println("A8");
                 Map<Integer, Item> itemsMap = zone.getItemsSerialIDMap();
-                System.out.println("A9");
+                //System.out.println("A9");
                 List<Item> itemInZoneList = openedCustomerOrder.generateListsOfItemsThatAreNotInOrderAndNotFromSale(itemsMap);
-                System.out.println("A10");
+          //      System.out.println("A10");
                 json = gson.toJson(itemInZoneList);
             }
             out.println(json);
-            System.out.println(json);
+          //  System.out.println(json);
             out.flush();
         }
         catch (Exception e)

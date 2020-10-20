@@ -97,7 +97,7 @@ function setStoresListInStoreDropDownInOrder(detailsOnStoresInZone)
         var storeID = storeInZone["serialNumber"];
         var storeName = storeInZone["name"];
         console.log("Adding store #" + storeID + ": " + storeName);
-        $('<option value=' + storeID + '>' + 'storeID: ' + storeID + ', store Name: ' + storeName + '</option>').appendTo(chooseStoresDropDownList);
+        $("<option value=" + storeID + ">" + "storeID: " + storeID + ", store Name: '" + storeName + "'</option>").appendTo(chooseStoresDropDownList);
 
     });
 }
@@ -204,54 +204,3 @@ function OpeningANewDynamicOrderInServer(date,coordinateX, coordinateY)
         }
     });
 }
-/*
-
-function setNextButtonInShowStoresStatusInDynamicOrderElement() { // onload...do
-    $("#makeANewOrder").submit(function() {
-        var makeOrderBody = $("#makeOrderBody");
-        emptyMakeOrderBody();
-        var selectOrderTypeHTML = '<p>Please select your type:</p>' +
-            '<input type="radio" id="static" name="ordertype" value="static">'+
-            '<label for="static">static</label><br>' +
-            '<input type="radio" id="dynamic" name="ordertype" value="dynamic">' +
-            '<label for="dynamic">dynamic</label><br>';
-        var selectDateHTML = '';
-        var nextButtonHTML = '';
-        $(selectOrderTypeHTML + selectDateHTML).appendTo(makeOrderBody);
-        return false;
-    })
-}
-
-function setNextButtonInSalesScreenInOrderElement() { // onload...do
-    $("#makeANewOrder").submit(function() {
-        var makeOrderBody = $("#makeOrderBody");
-        emptyMakeOrderBody();
-        var selectOrderTypeHTML = '<p>Please select your type:</p>' +
-            '<input type="radio" id="static" name="ordertype" value="static">'+
-            '<label for="static">static</label><br>' +
-            '<input type="radio" id="dynamic" name="ordertype" value="dynamic">' +
-            '<label for="dynamic">dynamic</label><br>';
-        var selectDateHTML = '';
-        var nextButtonHTML = '';
-        $(selectOrderTypeHTML + selectDateHTML).appendTo(makeOrderBody);
-        return false;
-    })
-}
-
-function setFinishButtonInShowStatusOfOrderInOrderElement() { // onload...do
-    $("#makeANewOrder").submit(function() {
-        var makeOrderBody = $("#makeOrderBody");
-        emptyMakeOrderBody();
-        var selectOrderTypeHTML = '<p>Please select your type:</p>' +
-            '<input type="radio" id="static" name="ordertype" value="static">'+
-            '<label for="static">static</label><br>' +
-            '<input type="radio" id="dynamic" name="ordertype" value="dynamic">' +
-            '<label for="dynamic">dynamic</label><br>';
-        var selectDateHTML = '';
-        var nextButtonHTML = '';
-        $(selectOrderTypeHTML + selectDateHTML).appendTo(makeOrderBody);
-        return false;
-    })
-}
-
-*/

@@ -47,16 +47,19 @@ export function initiateShowingSummeryOfOrder(idOfMakeAnOrderContainer)
 export function setChoosingStoreOrderDropDownListEvent()
 {
     $('#' + ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST).change(function () {
-        var itemListStr = $('#' + ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST).val();
-        var itemListJSON = JSON.parse(itemListStr);
-        buildTableBodyHTMLAndUpdateStoresOrderTable(itemListJSON);
+        var storeOrderStr = $('#' + ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST).val();
+        //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
+        var storeOrderJSON =JSON.parse(storeOrderStr);
+        var itemsListJSON = storeOrderJSON["itemsList"];
+        buildTableBodyHTMLAndUpdateStoresOrderTable(itemsListJSON);
+        setStoreOrderStatusContainer(storeOrderJSON);
     });
 }
 
 export function setNextButtonEvent(idOfMakeAnOrderContainer)
 {
     $('#' + ID_OF_NEXT_BUTTON).click(function () {
-        alert('Clicked On next button!');
+      //  alert('Clicked On next button!');
         initiateRateStore(idOfMakeAnOrderContainer);
     });
 }
@@ -70,10 +73,11 @@ export function setStoreOrdersListInDropDownInOrder(storeOrdersList)
         var storeName = storeOrder["name"];
         var itemsList = storeOrder["itemsList"];
         //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
-        var itemsListStr =JSON.stringify(itemsList);
-        console.log("Adding storeOrder #" + storeID + ": " + itemsListStr);
-        alert("Adding store #" + storeName + ": " + storeID + "\n" + itemsListStr);
-        $('<option value=' + itemsListStr + '>' + 'storeID: ' + storeID + ', Store Name: ' + storeName + '</option>').appendTo(chooseStoreOrdersDropDownListElement);
+        var storeOrderStr =JSON.stringify(storeOrder);
+        //        $("<option value='" + discountStr + "'>" + discountName + "</option>").appendTo(discountDropDownList);
+      //  console.log("Adding storeOrder #" + storeID + ": " + itemsListStr);
+   //     alert("Adding store #" + storeName + ": " + storeID + "\n" + itemsListStr);
+        $("<option value='" + storeOrderStr + "'>" + "storeID: " + storeID + ", Store Name: '" + storeName + "'</option>").appendTo(chooseStoreOrdersDropDownListElement);
         if(index === 0)
         {
             buildTableBodyHTMLAndUpdateStoresOrderTable(itemsList);
@@ -125,11 +129,6 @@ itemsList{
 }
 */
 
-export function emptyTableBody()
-{
-    $( "#makeOrderBody" ).empty();
-}
-
 export function generateFirstRowInDiscountsHTMLTable()
 {
     return "<tr><th>Serial ID</th>" +
@@ -162,9 +161,9 @@ export function generateRowInDiscountsHTMLTable(itemInOrder)
 
 export function buildTableBodyHTMLAndUpdateStoresOrderTable(itemsList)
 {
+    emptyElementByID(ID_OF_STORE_ORDERS_TABLE_BODY);
     appendHTMLToElement(generateFirstRowInDiscountsHTMLTable(), ID_OF_STORE_ORDERS_TABLE_BODY);
     $.each(itemsList || [], function(index, itemInOrder) {
-        emptyTableBody();
-        generateRowInDiscountsHTMLTable(itemInOrder);
+        appendHTMLToElement(generateRowInDiscountsHTMLTable(itemInOrder), ID_OF_STORE_ORDERS_TABLE_BODY);
     });
 }

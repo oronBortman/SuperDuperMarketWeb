@@ -144,8 +144,7 @@ export function getPriceTextFieldHTML()
 
 export function generateInformingUserAboutAddingANewStoreToZoneHTML()
 {
-    return '<p>If you would like,<br>' +
-        'You can choose a store and give it a feedback.<br>';
+    return '<p>Here you create a new store and add it to the zone</p>'
 }
 
 export function generateMessageOnAddStoreButtonHTML()
@@ -196,8 +195,8 @@ export function setItemsListInItemDropDown(itemsList)
         //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
         var itemStr =JSON.stringify(item);
         console.log("Adding item #" + itemID + ": " + itemName);
-       // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
-        $('<option value=' + itemStr + '>' + 'Item serialID: ' + itemID + ', Item name: ' + itemName + '</option>').appendTo(chooseItemsDropDownList);
+        // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
+        $("<option value='" + itemStr + "'>" + "Item serialID: " + itemID + ", Item name: '" + itemName + "'</option>").appendTo(chooseItemsDropDownList);
         if(index === 0)
         {
             createItemToChooseElement(itemStr);

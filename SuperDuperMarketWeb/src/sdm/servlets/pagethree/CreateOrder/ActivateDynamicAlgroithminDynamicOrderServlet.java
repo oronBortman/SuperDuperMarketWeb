@@ -24,21 +24,21 @@ public class ActivateDynamicAlgroithminDynamicOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In create-dynamic-order servlet");
+      //  System.out.println("In create-dynamic-order servlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
             Zone zone = getZoneByRequest(servletContext,request);
             OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(servletContext, request);
             zone.updateItemsWithAmountAndCreateOpenedDynamicCustomerOrder(openedCustomerOrder);
-            System.out.println("There are the parameters of the order in the dynamic algorithm!!:\n\n\n\n");
-            String json = gson.toJson(openedCustomerOrder.generateListsOfItemNotFromSale());
-            for(Item item : openedCustomerOrder.generateListsOfItemNotFromSale())
+         //   System.out.println("There are the parameters of the order in the dynamic algorithm!!:\n\n\n\n");
+           String json = gson.toJson(openedCustomerOrder.generateListsOfItemNotFromSale());
+           /* for(Item item : openedCustomerOrder.generateListsOfItemNotFromSale())
             {
                 System.out.println("Item with serial id: " + item.getSerialNumber());
-            }
+            }*/
             out.println(json);
-            System.out.println(json);
+          //  System.out.println(json);
             out.flush();
         }
         catch(Exception e)

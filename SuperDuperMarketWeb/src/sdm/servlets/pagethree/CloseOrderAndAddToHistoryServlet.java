@@ -32,7 +32,6 @@ import static sdm.general.GeneralMethods.*;
 
 @WebServlet("/close-order-and-add-to-history")
 public class CloseOrderAndAddToHistoryServlet extends HttpServlet {
-    DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -44,17 +43,21 @@ public class CloseOrderAndAddToHistoryServlet extends HttpServlet {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
             Zone zone = getZoneByRequest(servletContext,request);
-            UserManager userManager = getUserManagerByServletContext(servletContext);
-            User user = userManager.getUserByName(SessionUtils.getUsername(request));
+            User user = getUserByRequestAndServletContext(servletContext,request);
             String userType = SessionUtils.getUserType(request);
 
             if(userType.equals(CUSTOMER))
             {
                 Customer customer = ((Customer)user);
+                System.out.println("A1");
                 OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(servletContext, request);
+                System.out.println("A2");
                 ClosedCustomerOrder closedCustomerOrder = openedCustomerOrder.closeCustomerOrder();
+                System.out.println("A3");
                 zone.addClosedOrderToHistory(closedCustomerOrder);
+                System.out.println("A4");
                 customer.addClosedCustomerOrderToMap(closedCustomerOrder);
+                System.out.println("A5");
             }
 
             String json = gson.toJson(zone);

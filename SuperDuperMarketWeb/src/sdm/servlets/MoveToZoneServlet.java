@@ -28,21 +28,21 @@ public class MoveToZoneServlet extends HttpServlet {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
         final String SDM_MAIN_STORES_PAGE_URL = request.getContextPath() + "/pages/mainstorescreen/sdm-main-stores-page.html";
-        System.out.println("In move to zone servlet");
+      //  System.out.println("In move to zone servlet");
         String zoneName = request.getParameter(ZONENAME);
-        System.out.println("Zone name=" + zoneName);
+      //  System.out.println("Zone name=" + zoneName);
         request.getSession(true).setAttribute(ZONENAME, zoneName);
-        System.out.println("C");
+    //    System.out.println("C");
        // response.sendRedirect(SDM_MAIN_STORES_PAGE_URL);
-        System.out.println("D" + zoneName);
+     //   System.out.println("D" + zoneName);
 
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ZoneManager sdManager = ServletUtils.getZoneManager(getServletContext());
             Zone zone = sdManager.getZoneByName(zoneName);
-            System.out.println(zone.getZoneName() + "????");
+            //System.out.println(zone.getZoneName() + "????");
             String json = gson.toJson(zone);
-            System.out.println(json + "!!!!");
+         //   System.out.println(json + "!!!!");
             out.println(json);
             out.flush();
         }

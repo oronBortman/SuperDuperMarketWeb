@@ -39,11 +39,10 @@ public class GetStoreOrdersForOrderSummeryServlet extends HttpServlet {
         //returning JSON objects, not HTML
 
         response.setContentType("application/json");
-        System.out.println("In GetStoreOrdersForOrderSummeryServlet");
+       // System.out.println("In GetStoreOrdersForOrderSummeryServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
-            Zone zone = getZoneByRequest(servletContext,request);
             OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(servletContext, request);
             if(openedCustomerOrder != null)
             {
@@ -51,8 +50,8 @@ public class GetStoreOrdersForOrderSummeryServlet extends HttpServlet {
                 JSONArray jsonArray = readingFromStoresListToJsonObject(openedStoreOrderList, openedCustomerOrder);
                 String json = gson.toJson(jsonArray);
                 out.println(json);
-                System.out.println("This is the list of stores!!");
-                System.out.println(json);
+           //     System.out.println("This is the list of stores!!\n\n\n");
+           //     System.out.println(json);
                 out.flush();
             }
             else

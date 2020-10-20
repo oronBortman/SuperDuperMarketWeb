@@ -33,7 +33,7 @@ public class AddNewStoreToZoneServlet extends HttpServlet {
         //                                              item["price"] = price;
         //response:["storeNameIsUnique"] != "true"
         response.setContentType("application/json");
-        System.out.println("In AddNewStoreToZoneServlet");
+     //   System.out.println("In AddNewStoreToZoneServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();

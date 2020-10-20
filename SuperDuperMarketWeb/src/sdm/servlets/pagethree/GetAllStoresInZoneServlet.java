@@ -29,7 +29,7 @@ public class GetAllStoresInZoneServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In showAllStoresInZoneServlet");
+      //  System.out.println("In showAllStoresInZoneServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
@@ -41,8 +41,8 @@ public class GetAllStoresInZoneServlet extends HttpServlet {
                 JSONArray jsonArray = readingFromStoresListToJsonObject(storeList);
                 String json = gson.toJson(jsonArray);
                 out.println(json);
-                System.out.println("This is the list of stores!!");
-                System.out.println(json);
+              //  System.out.println("This is the list of stores!!");
+              //  System.out.println(json);
                 out.flush();
             }
             else

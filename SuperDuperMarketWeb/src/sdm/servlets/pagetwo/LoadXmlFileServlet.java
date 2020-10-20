@@ -118,7 +118,7 @@ public class LoadXmlFileServlet extends HttpServlet {
            }
             else
             {
-                 System.out.println("G");
+                // System.out.println("G");
                 message="User doesn't have a permission to upload an xml file to Super Duper Market";
            }
 

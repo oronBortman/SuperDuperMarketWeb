@@ -23,14 +23,14 @@ public class UserTypeAndNameServlet extends HttpServlet {
         response.setContentType("application/json");
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
         User user = userManager.getUserByName(SessionUtils.getUsername(request));
-        System.out.println("Username from servlet user-type-and-name22: " + user.getUserName());
-        System.out.println("UserType from servlet user-type-and-name: " + user.getUserType());
+       // System.out.println("Username from servlet user-type-and-name22: " + user.getUserName());
+      //  System.out.println("UserType from servlet user-type-and-name: " + user.getUserType());
 
         try(PrintWriter out = response.getWriter())
         {
             Gson gson = new Gson();
             String userInJson = gson.toJson(user);
-            System.out.println(userInJson);
+         //   System.out.println(userInJson);
             out.println(userInJson);
             out.flush();
         }catch (Exception ignored){

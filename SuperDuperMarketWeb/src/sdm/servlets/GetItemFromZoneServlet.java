@@ -49,7 +49,7 @@ public class GetItemFromZoneServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json");
-        System.out.println("In GetItemFromZone");
+      //  System.out.println("In GetItemFromZone");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
@@ -61,7 +61,7 @@ public class GetItemFromZoneServlet extends HttpServlet {
                 Item item = zone.getItemBySerialID(itemSerialIDInt);
                 String json = gson.toJson(item);
                 out.println(json);
-                System.out.println("This is the item!!");
+           //     System.out.println("This is the item!!");
                 System.out.println(json);
                 out.flush();
             }

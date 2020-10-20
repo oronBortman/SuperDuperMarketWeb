@@ -27,7 +27,7 @@ public class CreateStaticOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In create-static-order servlet");
+        //System.out.println("In create-static-order servlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
 
@@ -38,19 +38,19 @@ public class CreateStaticOrderServlet extends HttpServlet {
             String coordinateY = request.getParameter("coordinateY");
             String storeIDSelected = request.getParameter("storeIDSelected");
 
-            System.out.println("There are the parameters of the order:");
+       /*     System.out.println("There are the parameters of the order:");
             System.out.println(date);
             System.out.println(coordinateX);
             System.out.println(coordinateY);
             System.out.println(storeIDSelected);
-            System.out.println("\n\n\n\n\n\n\n");
+            System.out.println("\n\n\n\n\n\n\n");*/
 
             if (date != null && coordinateX != null && coordinateY != null) {
                 int coordinateXInt = Integer.parseInt(coordinateX);
                 int coordinateYInt = Integer.parseInt(coordinateY);
                 int storeIDSelectedInt = Integer.parseInt(storeIDSelected);
 
-                System.out.println("After parsing:" + date + " " + coordinateX + " " + coordinateY + " " + storeIDSelectedInt);
+             //   System.out.println("After parsing:" + date + " " + coordinateX + " " + coordinateY + " " + storeIDSelectedInt);
                 //LocalDate date, Customer customer, boolean isOrderStatic, SDMLocation locationOfCustomer
                 //TODO
                 //Need to check if there is no store in this coordinates
@@ -63,8 +63,8 @@ public class CreateStaticOrderServlet extends HttpServlet {
                 user.setCurrentOpenedOrder(openedCustomerOrder);
                 String json = gson.toJson(openedCustomerOrder);
                 out.println(json);
-                System.out.println("About to print json of the stqtaic order");
-                System.out.println(json);
+       //         System.out.println("About to print json of the stqtaic order");
+        //        System.out.println(json);
                 out.flush();
             } else {
                 System.out.println("one of the parameters is null");

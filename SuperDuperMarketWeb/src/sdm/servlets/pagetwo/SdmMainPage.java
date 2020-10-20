@@ -17,12 +17,12 @@ import java.io.IOException;
 public class SdmMainPage extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("POST");
+        //System.out.println("POST");
         processRequest(request,response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("GET");
+       // System.out.println("GET");
 
         processRequest(request,response);
     }
@@ -33,7 +33,7 @@ public class SdmMainPage extends HttpServlet {
 
         response.setContentType("text/html;charset=UTF-8");
         UserManager userManager = ServletUtils.getUserManager(getServletContext());
-        System.out.println("AAAAA");
+      //  System.out.println("AAAAA");
         String usernameFromSession = SessionUtils.getUsername(request);
         String userTypeFromSession = SessionUtils.getUserType(request);
 
@@ -44,7 +44,7 @@ public class SdmMainPage extends HttpServlet {
         }
         else
         {
-            System.out.println("great");
+           // System.out.println("great");
           //  response.getOutputStream().
            // response.sendRedirect( SDM_MAIN_PAGE_URL + "?" + Constants.USERNAME + "=" + usernameFromSession + "&" + Constants.USERTYPE + "=" + userTypeFromSession);
         }

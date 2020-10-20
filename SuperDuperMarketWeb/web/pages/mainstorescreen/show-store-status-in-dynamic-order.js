@@ -25,14 +25,14 @@ export function initiateShowStoresStatusTable(idOfMakeAnOrderContainer)
     appendHTMLToElement(createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY), idOfMakeAnOrderContainer);
     setStoresTable();
     appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
-    setNextButtonEvent();
+    setNextButtonEvent(idOfMakeAnOrderContainer);
 }
 
-export function setNextButtonEvent()
+export function setNextButtonEvent(idOfMakeAnOrderContainer)
 {
-    $('#' + ID_OF_NEXT_BUTTON).change(function () {
+    $('#' + ID_OF_NEXT_BUTTON).click(function () {
         alert("Clicked on next!");
-        prepareAndInitiateChoosingDiscountsToApply('dynamic');
+        prepareAndInitiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
     });
 }
 

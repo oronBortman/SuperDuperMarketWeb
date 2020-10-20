@@ -33,7 +33,7 @@ public class GetDiscountsFromServerServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In GetDiscountsFromServerServlet");
+       // System.out.println("In GetDiscountsFromServerServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
@@ -44,8 +44,8 @@ public class GetDiscountsFromServerServlet extends HttpServlet {
             JSONArray jsonArray = readingFromDiscountsListToJsonObject(discountList, zone);
             String json = gson.toJson(jsonArray);
             out.println(json);
-            System.out.println("This is the list of discounts!!\n\n\n\n\n");
-            System.out.println(json);
+       //     System.out.println("This is the list of discounts!!\n\n\n\n\n");
+      //      System.out.println(json);
             out.flush();
 
         } catch (Exception e) {

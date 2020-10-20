@@ -10,7 +10,7 @@ const CLOSE_ORDER_AND_ADD_TO_HISTORY_URL = buildUrlWithContextPath("close-order-
 const ADD_FEEDBACK_URL = buildUrlWithContextPath("add-feedback");
 
 //ID's of HTML Elements
-const ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
+const ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST = "chooseStoreDropDownList";
 const ID_OF_FEEDBACK_FORM = "feedbackForm";
 const ID_OF_FINISH_ORDER_BUTTON = "finishOrderButton";
 const ID_OF_ADD_FEEDBACK_BUTTON = "addFeedbackButton";
@@ -24,6 +24,7 @@ const ID_OF_FEEDBACK_TEXT_FIELD = 'feedbackTextField';
 
 export function initiateRateStore(idOfMakeAnOrderContainer)
 {
+    emptyElementByID(idOfMakeAnOrderContainer);
     $.ajax({
         method: 'GET',
         data: {},
@@ -103,7 +104,7 @@ export function buildingFeedbackElementAndAppendToForm()
 
 export function getFeedbackTextFieldHTML()
 {
-    return '<input type="text" id=' + ID_OF_FEEDBACK_TEXT_FIELD+ 'name="feedback"><br><br>';
+    return '<input type="text" id=' + ID_OF_FEEDBACK_TEXT_FIELD + ' name="feedback"><br><br>';
 }
 export function getFeedbackInstructionHTML()
 {
@@ -115,7 +116,7 @@ export function setAddFeedbackButtonEvent()
         var storeID = $('#' + ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST).val();
         //Get infromation from feedback and send them to servlet
         var feedbackText = $("#" + ID_OF_FEEDBACK_TEXT_FIELD).val();
-        var grade = $("#" +ID_OF_VALUE_OF_AMOUNT_OF_GRADE_CHOSEN).val();
+        var grade = getValueOfGrade();
         alert("in setAddFeedbackButtonEvent and storeID: " + storeID + " feedbackText: " +feedbackText + " grade: " + grade);
 
         //Active servlet that add feedback to store
@@ -127,7 +128,7 @@ export function setAddFeedbackButtonEvent()
             timeout: 4000,
             error: function(e) {
                 console.error(e);
-                alert('error in closeOrderAndAddToHistory\n' + e);
+                alert('error in setAddFeedbackButtonEvent\n' + e);
             },
             success: function(r) {
                 console.log("Succesfully!!!");
@@ -227,13 +228,16 @@ export function generateChooseGradeMessageHTML()
 //The values in here are good
 export function setStoreOrdersListInDropDownInOrder(storeOrdersList)
 {
-    var chooseStoreOrdersDropDownListElement = $("#"+ ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST);
+    var storeOrdersListString = JSON.stringify(storeOrdersList);
+    alert("in setStoreOrdersListInDropDownInOrder and the storeOrdersList json is: " + storeOrdersListString);
     $.each(storeOrdersList || [], function(index, storeOrder) {
         var storeID = storeOrder["serialNumber"];
         var storeName = storeOrder["name"];
         //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
         console.log("Adding storeOrder #" + storeID + ": " + storeName);
         // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
-        $('<option value=' + storeID + '>' + 'storeID: ' + storeID + ', Store Name: ' + storeName + '</option>').appendTo(chooseStoreOrdersDropDownListElement);
+        var optionHTML = "<option value=" + storeID + ">" + "storeID: " + storeID + ", Store Name: '" + storeName + "'</option>";
+        appendHTMLToElement(optionHTML, ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST);
+
     });
 }
