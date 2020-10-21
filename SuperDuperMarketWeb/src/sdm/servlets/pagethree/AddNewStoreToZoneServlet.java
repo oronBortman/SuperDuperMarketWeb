@@ -8,7 +8,9 @@ import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.users.User;
 import logic.users.UserManager;
 import logic.zones.Zone;
+import logic.zones.ZoneManager;
 import org.json.simple.JSONObject;
+import sdm.utils.ServletUtils;
 import sdm.utils.SessionUtils;
 
 import javax.servlet.ServletContext;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 
+import static sdm.constants.Constants.ZONENAME;
 import static sdm.general.GeneralMethods.*;
 
 @WebServlet("/add-a-new-store-to-zone")
@@ -38,12 +41,14 @@ public class AddNewStoreToZoneServlet extends HttpServlet {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
             String json=null;
+            ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
+            String zoneName = request.getParameter(ZONENAME);
+            Zone zone = zoneManager.getZoneByName(zoneName);
             String storeName = request.getParameter("storeName");
             String coordinateX = request.getParameter("coordinateX");
             String coordinateY = request.getParameter("coordinateY");
             String PPK = request.getParameter("PPK");
             String itemsChosenForStoreArray = request.getParameter("itemsChosenForStoreArray");
-            Zone zone = getZoneByRequest(servletContext,request);
             UserManager userManager = getUserManagerByServletContext(servletContext);
             User user = userManager.getUserByName(SessionUtils.getUsername(request));
 

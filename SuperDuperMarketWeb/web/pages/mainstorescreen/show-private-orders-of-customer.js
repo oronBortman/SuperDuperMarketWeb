@@ -11,7 +11,7 @@ const ID_OF_CUSTOMER_ORDERS_TABLE = "customerOrdersTable";
 const ID_OF_CUSTOMER_ORDERS_TABLE_BODY = "customerOrdersTableBody";
 const ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE = "specificCustomerOrderTable";
 const ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE_BODY = "specificCustomerOrderTableBody";
-const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER = "showPrivateOrdersOfSellerContainer";
+const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER = "showPrivateOrdersOfCustomerContainer";
 
 export function initiateShowPrivateOrdersOfCustomer() {
 
@@ -49,12 +49,17 @@ export function initiateShowPrivateOrdersOfCustomer() {
             alert('error in  initiateTheChoosingItemDropDownInOrder\n' + e);
         },
         success: function (r) {
-            emptyElementByID(ID_OF_CUSTOMER_ORDERS_TABLE);
-            appendHTMLToElement(createEmptyTable(ID_OF_CUSTOMER_ORDERS_TABLE, ID_OF_CUSTOMER_ORDERS_TABLE_BODY), ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER);
-            appendHTMLToElement(createEmptyTable(ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE, ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE_BODY), ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER);
+            emptyElementByID(ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER);
+            appendHTMLToElement('<br><br>' + createEmptyTable(ID_OF_CUSTOMER_ORDERS_TABLE, ID_OF_CUSTOMER_ORDERS_TABLE_BODY), ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER);
+            appendHTMLToElement(getSpecificOrderForCustomerMessage() + createEmptyTable(ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE, ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE_BODY), ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER);
             setCustomerOrdersListInTable(r);
         }
     })
+}
+
+export function getSpecificOrderForCustomerMessage()
+{
+    return "<br><br><p>Details on the items in the store:</p><br>"
 }
 
 
@@ -67,7 +72,7 @@ export function setCustomerOrdersListInTable(customerOrdersList)
         var itemsListInOrder = customerOrder["itemsListInOrder"];
         var idOfShowItemsDetailsInStoreOrderButton = "showItemsDetailsInStoreOrderButton" + index;
         // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
-        appendHTMLToElement(generateRowInCustomerOrdersHTMLTable(customerOrder, index),ID_OF_CUSTOMER_ORDERS_TABLE_BODY);
+        appendHTMLToElement(generateRowInCustomerOrdersHTMLTable(customerOrder, idOfShowItemsDetailsInStoreOrderButton),ID_OF_CUSTOMER_ORDERS_TABLE_BODY);
         setShowItemsInOrderTableButtonEvent(itemsListInOrder, idOfShowItemsDetailsInStoreOrderButton);
     });
 }
@@ -100,6 +105,7 @@ export function generateFirstRowInItemsFromStoreOrderHTMLTable() {
 export function setShowItemsInOrderTableButtonEvent(itemsList, idOfButton)
 {
     $("#" + idOfButton).click(function() {
+        alert("clicked on " + idOfButton)
         emptyElementByID(ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE_BODY);
         appendHTMLToElement(generateFirstRowInItemsFromStoreOrderHTMLTable(),ID_OF_SPECIFIC_CUSTOMER_ORDER_TABLE_BODY);
         $.each(itemsList || [], function(index, itemInOrder) {
@@ -111,7 +117,7 @@ export function setShowItemsInOrderTableButtonEvent(itemsList, idOfButton)
 export function generateRowInCustomerOrdersHTMLTable(customerOrder, idOfButton)
 {
     var serialID = customerOrder["serialID"];
-    var date = customerOrder["date"];;
+    var date = customerOrder["date"];
     var location = customerOrder["location"];
     var totalStores = customerOrder["totalStores"];
     var totalItemsInOrder = customerOrder["totalItemsInOrder"];
@@ -138,7 +144,8 @@ export function generateRowInItemsFromStoreOrderHTMLTable(itemInOrder)
     var nameOfItem = itemInOrder["nameOfItem"];
     var typeToMeasureBy = itemInOrder["typeToMeasureBy"];
     var AmountOfItemPurchased = itemInOrder["AmountOfItemPurchased"];
-
+    var storeSerialID = itemInOrder["storeID"]
+    var storeName = itemInOrder["storeName"]
 
     var pricePerUnit = itemInOrder["pricePerUnit"];
     var totalPriceOfItem = itemInOrder["totalPriceOfItem"];

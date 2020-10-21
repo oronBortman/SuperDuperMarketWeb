@@ -119,7 +119,7 @@ public class OpenedCustomerOrder extends Order {
         List<OrderedItemFromStore> orderedItemNotFromSaleFromStoresList = new ArrayList<OrderedItemFromStore>();
         for(OpenedStoreOrder openedStoreOrder : openedStoresOrderMap.values())
         {
-            List<OrderedItemFromStore> orderedItemFromStoreListNotFromSale = openedStoreOrder.generateListOfOrdereItemsNotFromSale();
+            List<OrderedItemFromStore> orderedItemFromStoreListNotFromSale = openedStoreOrder.generateListOfOrdersItemsNotFromSale();
             orderedItemNotFromSaleFromStoresList = Stream.concat(orderedItemNotFromSaleFromStoresList.stream(), orderedItemFromStoreListNotFromSale.stream()).collect(Collectors.toList());;
         }
         return orderedItemNotFromSaleFromStoresList;
@@ -267,14 +267,15 @@ public class OpenedCustomerOrder extends Order {
     public ClosedCustomerOrder closeCustomerOrder()
     {
         Map<Integer, ClosedStoreOrder> closedStoresOrderMapByStoreSerialID = new HashMap<>();
-
-        for(OpenedStoreOrder openedStoreOrder : openedStoresOrderMap.values())
-        {
-            Store store = openedStoreOrder.getStoreUsed();
-            int serialNumber = store.getSerialNumber();
-            ClosedStoreOrder closedStoreOrder = openedStoreOrder.closeOrder();
-            store.addClosedOrderToHistory(closedStoreOrder);
-            closedStoresOrderMapByStoreSerialID.put(serialNumber, closedStoreOrder);
+        if (openedStoresOrderMap != null) {
+            for(OpenedStoreOrder openedStoreOrder : openedStoresOrderMap.values())
+            {
+                Store store = openedStoreOrder.getStoreUsed();
+                int serialNumber = store.getSerialNumber();
+                ClosedStoreOrder closedStoreOrder = openedStoreOrder.closeOrder();
+                store.addClosedOrderToHistory(closedStoreOrder);
+                closedStoresOrderMapByStoreSerialID.put(serialNumber, closedStoreOrder);
+            }
         }
 
         ClosedCustomerOrder closedCustomerOrder = new ClosedCustomerOrder(getDateStr(), closedStoresOrderMapByStoreSerialID, isOrderStatic(), customerName,locationOfCustomer);

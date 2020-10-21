@@ -18,7 +18,9 @@ import java.util.stream.Collectors;
 public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
 
     private Map<Integer, AvailableItemInStore> ItemsSerialIDMap;
-    private Map<Integer, ClosedStoreOrder> ordersSerialIDMap;
+    //private Map<Integer, ClosedStoreOrder> ordersSerialIDMap;
+    private List<Integer> listOrdersSerialID;
+
     private Map<String, Discount> discountNameDMap;
     private Seller storeOwner;
     private Integer PPK;
@@ -29,9 +31,10 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         super(serialNumber, name, SDMLocationOfShop);
         this.storeOwner =  storeOwner;
         ItemsSerialIDMap = new HashMap<>();
-        ordersSerialIDMap = new HashMap<>();
+    //   ordersSerialIDMap = new HashMap<>();
         discountNameDMap = new HashMap<>();
         feedbackList = new ArrayList<>();
+        listOrdersSerialID = new ArrayList<>();
 
         this.PPK = PPK;
     }
@@ -42,9 +45,10 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         this.storeOwner =  storeOwner;
 
         this.ItemsSerialIDMap = itemsSerialIDMap;
-        ordersSerialIDMap = new HashMap<Integer, ClosedStoreOrder>();
-        discountNameDMap = new HashMap<String, Discount>();
-
+     //   ordersSerialIDMap = new HashMap<Integer, ClosedStoreOrder>();
+        discountNameDMap = new HashMap<>();
+        feedbackList = new ArrayList<>();
+        listOrdersSerialID = new ArrayList<>();
         this.PPK = PPK;
     }
 
@@ -53,9 +57,15 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         super(shop.getId(), shop.getName(), new SDMLocation(shop.getLocation()));
         this.storeOwner = storeOwner;
         ItemsSerialIDMap = new HashMap();
-        ordersSerialIDMap = new HashMap();
+       // ordersSerialIDMap = new HashMap();
         discountNameDMap = new HashMap();
+        feedbackList = new ArrayList<>();
+        listOrdersSerialID = new ArrayList<>();
         this.PPK = shop.getDeliveryPpk();
+    }
+
+    public List<Integer> getListOrdersSerialID() {
+        return listOrdersSerialID;
     }
 
     public List<Feedback> getFeedbackList() {
@@ -65,7 +75,17 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     public void addFeedback(String customerName, String orderDate, Integer grade, String feedbackText)
     {
         //String customerName, String orderDate, Integer rating, String feedbackText
+        System.out.println("A1");
         feedbackList.add(new Feedback(customerName,orderDate,grade,feedbackText));
+        System.out.println("A2");
+        if (feedbackList != null) {
+
+            for(Feedback feedback : feedbackList)
+            {
+                System.out.println("Feedback added: " + customerName + " " + orderDate + " grade " + grade + feedbackText);
+            }
+        }
+
     }
 
     public Seller getStoreOwner() {
@@ -153,20 +173,30 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
 
     }
 
-    public Set<Integer> getSetOfOrdersSerialID()
+   /* public Set<Integer> getSetOfOrdersSerialID()
     {
         return GeneralMethods.<Integer, ClosedStoreOrder>getSetOfDictionary(ordersSerialIDMap);
 
-    }
+    }*/
 
     public boolean checkIfItemIdIsUnique(String serialNumber)
     {
         return ItemsSerialIDMap.containsKey(serialNumber) ;
     }
 
-    public double calcProfitOfDelivers()
+    /*public double calcProfitOfDelivers()
     {
-        return ordersSerialIDMap.values().stream().mapToDouble(ClosedStoreOrder::calcTotalDeliveryPrice).sum();
+        return ordersSerialIDMap.values().stream().mapToDouble(x->x.calcTotalDeliveryPrice()).sum();
+    }*/
+
+        /*public double calcProfitOfDelivers()
+    {
+        return ordersSerialIDMap.values().stream().mapToDouble(x->x.calcTotalDeliveryPrice()).sum();
+    }*/
+
+    public double calcProfitOfDelivers(List<ClosedStoreOrder> closedStoreOrderList)
+    {
+        return closedStoreOrderList.stream().mapToDouble(x->x.calcTotalDeliveryPrice()).sum();
     }
 
 
@@ -175,10 +205,10 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         return ItemsSerialIDMap.get(serialID);
     }
 
-    public ClosedStoreOrder getOrderBySerialID(Integer serialID)
+   /* public ClosedStoreOrder getOrderBySerialID(Integer serialID)
     {
         return ordersSerialIDMap.get(serialID);
-    }
+    }*/
 
     public Integer getPPK() {
         return this.PPK;
@@ -194,7 +224,7 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         ItemsSerialIDMap.put(item.getSerialNumber(), item);
     }
 
-    public Integer calcTotalOrdersFromStore()
+    /*public Integer calcTotalOrdersFromStore()
     {
         return ordersSerialIDMap.size();
     }
@@ -202,28 +232,63 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     public Double calcTotalProfitOfSoledItems()
     {
         return ordersSerialIDMap.values().stream().mapToDouble(StoreOrder::calcTotalPriceOfItems).sum();
+    }*/
+
+    public Integer calcTotalOrdersFromStore(List<ClosedStoreOrder> closedStoreOrderList)
+    {
+        return closedStoreOrderList.size();
     }
+
+    public Double calcTotalProfitOfSoledItems(List<ClosedStoreOrder> closedStoreOrderList)
+    {
+        Double totalProfit = 0.0;
+        if(closedStoreOrderList != null)
+        {
+            totalProfit = closedStoreOrderList.stream().mapToDouble(StoreOrder::calcTotalPriceOfItems).sum();
+        }
+        return totalProfit;
+    }
+
+    /*public void addClosedOrderToHistory(ClosedStoreOrder order)
+    {
+        ordersSerialIDMap.put(order.getSerialNumber(), order);
+    }*/
 
     public void addClosedOrderToHistory(ClosedStoreOrder order)
     {
-        ordersSerialIDMap.put(order.getSerialNumber(), order);
+        listOrdersSerialID.add(order.getSerialNumber());
     }
+
+    /*public int getAmountOfOrder()
+    {
+        return ordersSerialIDMap.size();
+    }*/
 
     public int getAmountOfOrder()
     {
-        return ordersSerialIDMap.size();
+        return listOrdersSerialID.size();
     }
+
     public Map<Integer, AvailableItemInStore> getStoresSerialIDMap()
     {
         return ItemsSerialIDMap;
     }
-    public double getAmountOfItemSoledByUnit(Integer itemID)
+  /*  public double getAmountOfItemSoledByUnit(Integer itemID)
     {
         return ordersSerialIDMap.values().stream().mapToDouble(closedStoreOrder -> closedStoreOrder.calcAmountOfCertainItemByUnit(itemID)).sum();
     }
     public double getAmountOfItemSoledByTypeOfMeasure(Integer itemID)
     {
         return ordersSerialIDMap.values().stream().mapToDouble(closedStoreOrder -> closedStoreOrder.calcAmountOfCertainItemByTypeOfMeasure(itemID)).sum();
+    }*/
+
+    public double getAmountOfItemSoledByUnit(List<ClosedStoreOrder> closedStoreOrderList, Integer itemID)
+    {
+        return closedStoreOrderList.stream().mapToDouble(closedStoreOrder -> closedStoreOrder.calcAmountOfCertainItemByUnit(itemID)).sum();
+    }
+    public double getAmountOfItemSoledByTypeOfMeasure(List<ClosedStoreOrder> closedStoreOrderList, Integer itemID)
+    {
+        return closedStoreOrderList.stream().mapToDouble(closedStoreOrder -> closedStoreOrder.calcAmountOfCertainItemByTypeOfMeasure(itemID)).sum();
     }
 
     public boolean checkIfItemIsTheOnlyOneInStore(Integer itemID)
@@ -252,16 +317,21 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         ItemsSerialIDMap.get(itemID).setPricePerUnit(priceOfItem);
     }
 
-    public List<ClosedStoreOrder> getOrdersList() {
+   /* public List<ClosedStoreOrder> getOrdersList() {
         /*List<ClosedStoreOrder> list = new ArrayList<ClosedStoreOrder>();
         for( ClosedStoreOrder closedStoreOrder: ordersSerialIDMap.values())
         {
             list.add(closedStoreOrder);
         }
         return list;*/
-        return ordersSerialIDMap.values().stream().collect(Collectors.toCollection(ArrayList::new));
+     //   return ordersSerialIDMap.values().stream().collect(Collectors.toCollection(ArrayList::new));
 
         //srcCollection.stream().collect(toCollection(ArrayList::new));
+ //   }
+
+    public List<Integer> getOrdersList() {
+       return listOrdersSerialID;
+
     }
 
     public List<Discount> getDiscountsList()

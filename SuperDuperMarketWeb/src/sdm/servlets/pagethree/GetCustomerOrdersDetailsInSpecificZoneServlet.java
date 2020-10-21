@@ -105,7 +105,7 @@ public class GetCustomerOrdersDetailsInSpecificZoneServlet extends HttpServlet {
         Integer coordinateY = locationOfCustomer.getY();
         jsonObject.put("serialID", closedCustomerOrder.getSerialNumber());
         jsonObject.put("date", closedCustomerOrder.getDateStr());
-        jsonObject.put("location", "(" + coordinateX + "," + coordinateY);
+        jsonObject.put("location", "(" + coordinateX + "," + coordinateY + ")");
         jsonObject.put("totalStores", closedCustomerOrder.getTotalAmountOfStoresInOrder());
         jsonObject.put("totalItemsInOrder", closedCustomerOrder.getTotalItemsInOrder());
         jsonObject.put("totalItemsPriceInOrder", decimalFormat.format(closedCustomerOrder.getTotalItemCostInOrder()));
@@ -129,7 +129,8 @@ public class GetCustomerOrdersDetailsInSpecificZoneServlet extends HttpServlet {
             {
                 jsonObject.put("storeID", store.getSerialNumber());
                 jsonObject.put("storeName", store.getName());
-
+                jsonObject.put("typeToMeasureBy", orderedItem.getTypeOfMeasureStr());
+                jsonObject.put("pricePerUnit", orderedItem.getPricePerUnit());
                 jsonObject.put("serialID", orderedItem.getSerialNumber());
                 jsonObject.put("nameOfItem", orderedItem.getName());
                 jsonObject.put("AmountOfItemPurchased", decimalFormat.format(orderedItem.getTotalAmountOfItemOrderedByTypeOfMeasure()));

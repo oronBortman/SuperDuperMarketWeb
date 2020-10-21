@@ -3,12 +3,15 @@ package sdm.servlets.pagethree;
 import com.google.gson.Gson;
 import logic.AvailableItemInStore;
 import logic.Store;
+import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.zones.Zone;
 import logic.zones.ZoneManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import sdm.general.GeneralMethods;
 import sdm.utils.ServletUtils;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,25 +55,27 @@ public class GetStoreInZoneByStoreIDServlet extends HttpServlet {
         }
         catch (Exception e)
         {
-            System.out.println("Error inget store in zone\n" + e);
+            System.out.println("Error in store in zone\n" + e);
         }
     }
 
     public JSONArray readingFromStoresListToJsonObject(List<Store> storeList)
     {
+        ServletContext servletContext = getServletContext();
         JSONArray jsonArray = new JSONArray();
         int i=0;
         for(Store store : storeList)
         {
+            List<ClosedStoreOrder> closedStoreOrderList = GeneralMethods.getClosedStoreOrderListByIDListOfOrders(servletContext,store.getListOrdersSerialID());
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("serialNumber", store.getSerialNumber());
             jsonObject.put("name", store.getName());
             jsonObject.put("ownerName", store.getStoreOwner().getUserName());
-            jsonObject.put("totalOrdersFromStore", store.calcTotalOrdersFromStore());
-            jsonObject.put("totalProfitOfSoledItems", decimalFormat.format(store.calcTotalProfitOfSoledItems()));
+            jsonObject.put("totalOrdersFromStore", store.calcTotalOrdersFromStore(closedStoreOrderList));
+            jsonObject.put("totalProfitOfSoledItems", decimalFormat.format(store.calcTotalProfitOfSoledItems(closedStoreOrderList)));
             jsonObject.put("PPK", store.getPPK());
-            jsonObject.put("totalProfitOfDeliveris",decimalFormat.format(store.calcProfitOfDelivers()));
-            JSONArray itemsInStore = readingItemsFromStoreToJsonObject(store.getAvailableItemsList(), store);
+            jsonObject.put("totalProfitOfDeliveris",decimalFormat.format(store.calcProfitOfDelivers(closedStoreOrderList)));
+            JSONArray itemsInStore = readingItemsFromStoreToJsonObject(store.getAvailableItemsList(), store, closedStoreOrderList);
             jsonObject.put("availableItemsList", itemsInStore);
             jsonArray.add(i,jsonObject);
             i++;
@@ -78,7 +83,7 @@ public class GetStoreInZoneByStoreIDServlet extends HttpServlet {
         return jsonArray;
     }
 
-    public JSONArray readingItemsFromStoreToJsonObject(List<AvailableItemInStore> availableItemInStoreList, Store store)
+    public JSONArray readingItemsFromStoreToJsonObject(List<AvailableItemInStore> availableItemInStoreList, Store store, List<ClosedStoreOrder> closedStoreOrderList)
     {
         JSONArray jsonArray = new JSONArray();
         int i=0;
@@ -90,7 +95,7 @@ public class GetStoreInZoneByStoreIDServlet extends HttpServlet {
             jsonObject.put("name", availableItemInStore.getName());
             jsonObject.put("typeToMeasureBy", availableItemInStore.getTypeOfMeasureStr());
             jsonObject.put("pricePerUnit", availableItemInStore.getPricePerUnit());
-            jsonObject.put("totalSoledItemsFromStore", decimalFormat.format(store.getAmountOfItemSoledByTypeOfMeasure(itemSerialId)));
+            jsonObject.put("totalSoledItemsFromStore", decimalFormat.format(store.getAmountOfItemSoledByTypeOfMeasure(closedStoreOrderList , itemSerialId)));
             jsonArray.add(i,jsonObject);
             i++;
         }

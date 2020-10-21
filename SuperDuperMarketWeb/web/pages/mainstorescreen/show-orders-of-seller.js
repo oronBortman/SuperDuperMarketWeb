@@ -12,7 +12,11 @@ const ID_OF_STORE_ORDERS_TABLE_BODY = "storeOrdersTableBody";
 const ID_OF_SPECIFIC_STORE_ORDER_TABLE = "specificStoreOrderTable";
 const ID_OF_SPECIFIC_STORE_ORDER_TABLE_BODY = "specificStoreOrderTableBody";
 
-const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER = "showOrdersInSellerStoresContainer";
+var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
+var detailsOnZoneJSONFormat = JSON.parse(localStorage.getItem('detailsOnZone'));
+var zoneName = detailsOnZoneJSONFormat.zoneName;
+
+const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER = "showPrivateOrdersOfSellerContainer";
 /*
 storeOrder["serialID"]
 storeOrder["date"];
@@ -37,7 +41,7 @@ export function initiateShowOrdersOfSellerStoresInCertainZone()
 {
     $.ajax({
         method: 'GET',
-        data: {},
+        data: {"zoneName":zoneName},
         url: GET_STORE_ORDERS_DETAILS_URL,
         dataType: "json",
         timeout: 4000,
@@ -46,14 +50,17 @@ export function initiateShowOrdersOfSellerStoresInCertainZone()
             alert('error in  initiateTheChoosingItemDropDownInOrder\n' + e);
         },
         success: function (r) {
-            emptyElementByID(ID_OF_STORE_ORDERS_TABLE);
-            appendHTMLToElement(createEmptyTable(ID_OF_STORE_ORDERS_TABLE, ID_OF_STORE_ORDERS_TABLE_BODY), ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER);
-            appendHTMLToElement(createEmptyTable(ID_OF_SPECIFIC_STORE_ORDER_TABLE, ID_OF_SPECIFIC_STORE_ORDER_TABLE_BODY), ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER);
+            emptyElementByID(ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER);
+            appendHTMLToElement('<br><br>' + createEmptyTable(ID_OF_STORE_ORDERS_TABLE, ID_OF_STORE_ORDERS_TABLE_BODY), ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER);
+            appendHTMLToElement(getSpecificOrderForSellerMessage() + createEmptyTable(ID_OF_SPECIFIC_STORE_ORDER_TABLE, ID_OF_SPECIFIC_STORE_ORDER_TABLE_BODY), ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER);
             setStoreOrdersListInTable(r);
         }
     })
 }
-
+export function getSpecificOrderForSellerMessage()
+{
+    return "<br><br><p>Details on the items in the store order:</p><br>"
+}
 
 //The values in here are good
 export function setStoreOrdersListInTable(storeOrdersList)
@@ -61,10 +68,10 @@ export function setStoreOrdersListInTable(storeOrdersList)
     appendHTMLToElement(generateFirstRowInStoreOrdersHTMLTable(),ID_OF_STORE_ORDERS_TABLE_BODY);
     $.each(storeOrdersList || [], function(index, storeOrder) {
         console.log("Adding storeOrder #" + index);
-        var itemsListInOrder = storeOrder["itemsListInOrder"];
+        var itemsListInOrder = storeOrder["itemListInOrder"];
         var idOfShowItemsDetailsInStoreOrderButton = "showItemsDetailsInStoreOrderButton" + index;
         // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
-        appendHTMLToElement(generateRowInStoreOrdersHTMLTable(storeOrder, index),ID_OF_STORE_ORDERS_TABLE_BODY);
+        appendHTMLToElement(generateRowInStoreOrdersHTMLTable(storeOrder, idOfShowItemsDetailsInStoreOrderButton),ID_OF_STORE_ORDERS_TABLE_BODY);
         setShowItemsInOrderTableButtonEvent(itemsListInOrder, idOfShowItemsDetailsInStoreOrderButton);
     });
 }
@@ -106,7 +113,7 @@ export function setShowItemsInOrderTableButtonEvent(itemsList, idOfButton)
 export function generateRowInStoreOrdersHTMLTable(storeOrder, idOfButton)
 {
     var serialID = storeOrder["serialID"];
-    var date = storeOrder["date"];;
+    var date = storeOrder["date"];
     var customerName = storeOrder["customerName"];
     var locationOfCustomer = storeOrder["locationOfCustomer"];
     var totalItemsInOrder = storeOrder["totalItemsInOrder"];
@@ -132,7 +139,6 @@ export function generateRowInItemsFromStoreOrderHTMLTable(itemInOrder)
     var pricePerUnit = itemInOrder["pricePerUnit"]
     var totalPriceOfItem = itemInOrder["totalPriceOfItem"]
     var FromDiscount = itemInOrder["FromDiscount"]
-
     return "<tr><th>" + serialID + "</th>" +
         "<th>" + nameOfItem + "</th>" +
         "<th>" + typeToMeasureBy + "</th>" +

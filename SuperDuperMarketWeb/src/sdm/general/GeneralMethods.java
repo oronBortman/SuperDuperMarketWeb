@@ -3,6 +3,8 @@ package sdm.general;
 import logic.Customer;
 import logic.Seller;
 import logic.order.CustomerOrder.OpenedCustomerOrder;
+import logic.order.OrderManager;
+import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.users.User;
 import logic.users.UserManager;
 import logic.zones.Zone;
@@ -12,12 +14,41 @@ import sdm.utils.SessionUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GeneralMethods {
 
     public static UserManager getUserManagerByServletContext(ServletContext servletContext)
     {
         return ServletUtils.getUserManager(servletContext);
+    }
+
+    public static OrderManager getOrderManagerByServletContext(ServletContext servletContext)
+    {
+        return ServletUtils.getOrderManager(servletContext);
+    }
+
+    public static List<ClosedStoreOrder> getClosedStoreOrderListByIDListOfOrders(ServletContext servletContext, List<Integer> listOfSerialIDOfClosedStoreOrders)
+    {
+        List<ClosedStoreOrder> closedStoreOrderList = new ArrayList<>();
+        OrderManager orderManager = getOrderManagerByServletContext(servletContext);
+       // System.out.println("D1");
+        if(orderManager == null)
+        {
+            System.out.println("Order manager is null!!");
+        }
+        else
+        {
+           // System.out.println("D2");
+            closedStoreOrderList = orderManager.getClosedStoreOrderListByIDListOfOrders(listOfSerialIDOfClosedStoreOrders);
+           // System.out.println("D3");
+        }
+        for(ClosedStoreOrder closedStoreOrder : closedStoreOrderList)
+        {
+            System.out.println("Serial id of order:" + closedStoreOrder.getSerialNumber());
+        }
+        return closedStoreOrderList;
     }
 
     public static OpenedCustomerOrder getCurrentOrderByRequest(ServletContext servletContext, HttpServletRequest request)

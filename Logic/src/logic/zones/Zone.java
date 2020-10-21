@@ -700,10 +700,26 @@ public class Zone {
     public List<ClosedStoreOrder> getListOfClosedStoreOrderByStoreOwnerName(String storeOwnerName)
     {
         List<ClosedStoreOrder> closedStoreOrderList = new ArrayList<>();
-        for(ClosedCustomerOrder closedCustomerOrder : ordersSerialIDMap.values()) {
-            List<ClosedStoreOrder> closedStoreOrderListFilteredByOwnerName = closedCustomerOrder.getListOfClosedStoreOrders().stream().filter(x -> x.getStoreUsed().getStoreOwner().getUserName().equals(storeOwnerName)).collect(Collectors.toList());
-            closedStoreOrderList = Stream.concat(closedStoreOrderList.stream(), closedStoreOrderListFilteredByOwnerName.stream()).collect(Collectors.toList());
+        System.out.println("C1");
+        if(ordersSerialIDMap != null)
+        {
+            System.out.println("C2");
+            for(ClosedCustomerOrder closedCustomerOrder : ordersSerialIDMap.values()) {
+                System.out.println("C3");
+                List<ClosedStoreOrder> closedStoreOrderListFilteredByOwnerName = closedCustomerOrder.getListOfClosedStoreOrders();
+                if(closedStoreOrderListFilteredByOwnerName != null)
+                {
+                    closedStoreOrderListFilteredByOwnerName = closedStoreOrderListFilteredByOwnerName.stream()
+                                                    .filter(x -> x.getStoreOwner().getUserName().equals(storeOwnerName))
+                                                    .collect(Collectors.toList());
+                    closedStoreOrderList = Stream.concat(closedStoreOrderList.stream(), closedStoreOrderListFilteredByOwnerName.stream()).collect(Collectors.toList());
+                    System.out.println("C5");
+                }
+                System.out.println("C4");
+
+            }
         }
+
         return closedStoreOrderList;
     }
 
@@ -711,10 +727,14 @@ public class Zone {
     {
         List<Store> listOfStoresByStoreOwnerName = storesSerialIDMap.values().stream().filter(x->x.getStoreOwner().getUserName().equals(storeOwnerName)).collect(Collectors.toList());
         List<Feedback> feedbackList = new ArrayList<>();
-        for(Store store : listOfStoresByStoreOwnerName)
+        if(listOfStoresByStoreOwnerName != null)
         {
-            feedbackList = Stream.concat(feedbackList.stream(), store.getFeedbackList().stream()).collect(Collectors.toList());
+            for(Store store : listOfStoresByStoreOwnerName)
+            {
+                feedbackList = Stream.concat(feedbackList.stream(), store.getFeedbackList().stream()).collect(Collectors.toList());
+            }
         }
+
         return feedbackList;
     }
 

@@ -10,6 +10,9 @@ import {creatingCoordinatesHTMLAndSetEvents} from "./creating-coordinate-element
 const GET_ITEMS_IN_ZONE_URL = buildUrlWithContextPath("items-in-zone-list");
 const ADD_A_NEW_STORE_TO_ZONE_URL=buildUrlWithContextPath("add-a-new-store-to-zone");
 ;
+var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
+var detailsOnZoneJSONFormat = JSON.parse(localStorage.getItem('detailsOnZone'));
+var zoneName = detailsOnZoneJSONFormat.zoneName;
 //ID's of HTML Elements
 const ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST = "chooseItemsDropDownList";
 const ID_OF_ADD_ITEM_TO_ORDER = 'addItemToOrder';
@@ -64,9 +67,10 @@ export function setAddStoreToZoneButtonEvent()
         var coordinateX = $('#' + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
         var coordinateY = $('#' + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
         var PPK = $('#' + ID_OF_PPK_TEXT_FIELD).val();
+       // var dataString = "zoneName="+zoneName;
         $.ajax({
             method: 'GET',
-            data: {"storeName":storeName, "coordinateX":coordinateX, "coordinateY":coordinateY, "PPK":PPK, "itemsChosenForStoreArray": itemsChosenForStoreArray },
+            data: {"zoneName":zoneName,"storeName":storeName, "coordinateX":coordinateX, "coordinateY":coordinateY, "PPK":PPK, "itemsChosenForStoreArray": itemsChosenForStoreArray },
             url: ADD_A_NEW_STORE_TO_ZONE_URL,
             dataType: "json",
             timeout: 4000,
@@ -213,7 +217,7 @@ export function getHTMLOfItemToChooseInOrder(itemStr)
 {
     var itemJSON = JSON.parse(itemStr);
     var serialIDOfItem = itemJSON["serialNumber"];
-    var itemName = itemJSON["name"]["value"]; //TODO - not sure if this is the right way to read the json
+    var itemName = itemJSON["name"];
     var itemTypeOfMeasure = itemJSON["typeOfMeasureBy"];
 
     var startOfTable='<table class ="tableOfItemForm">';
@@ -291,7 +295,7 @@ export function getItemsListFromServerAndSetTheItemsList()
  //   alert("in getItemsListFromServerAndSetTheItemsList: " + orderType);
     $.ajax({
         method: 'GET',
-        data: {},
+        data: {"zoneName":zoneName},
         url: GET_ITEMS_IN_ZONE_URL,
         dataType: "json",
         timeout: 4000,

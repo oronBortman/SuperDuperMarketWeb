@@ -3,6 +3,7 @@ package logic.order.CustomerOrder;
 import logic.SDMLocation;
 import logic.order.Order;
 import logic.order.StoreOrder.ClosedStoreOrder;
+import logic.order.StoreOrder.StoreOrder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,7 @@ public class ClosedCustomerOrder extends Order {
 
     public List<ClosedStoreOrder> getListOfClosedStoreOrders()
     {
-        return closedStoresOrderMapByStoreSerialID.values().stream().collect(toCollection(ArrayList::new));
+        return new ArrayList<>(closedStoresOrderMapByStoreSerialID.values());
     }
 
     public void setSerialNumber(Integer serialNumber) {
@@ -84,23 +85,23 @@ public class ClosedCustomerOrder extends Order {
 
     public Double getTotalItemCostInOrder()
     {
-        return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(x->x.calcTotalPriceOfItems()).sum();
+        return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(StoreOrder::calcTotalPriceOfItems).sum();
     }
 
     public Double getTotalOrderPriceWithoutDelivery()
     {
-        return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(x->x.calcTotalPriceOfItems()).sum();
+        return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(StoreOrder::calcTotalPriceOfItems).sum();
     }
 
     public Double getTotalDeliveryPriceInOrder()
     {
-        return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(x->x.calcTotalDeliveryPrice()).sum();
+        return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(StoreOrder::calcTotalDeliveryPrice).sum();
 
     }
 
     public Double getTotalOrderPrice()
     {
-        return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(x->x.calcTotalPriceOfOrder()).sum();
+        return closedStoresOrderMapByStoreSerialID.values().stream().mapToDouble(StoreOrder::calcTotalPriceOfOrder).sum();
 
     }
 

@@ -13,12 +13,12 @@ import static java.util.stream.Collectors.toCollection;
 
 public class OpenedStoreOrder extends StoreOrder{
 
-    Map<String, Discount> discountsInStoresThatAreValidInOrder = new HashMap<String, Discount>();
-    Map<Integer, Double> itemsAmountLeftToUseInSalesMap = new HashMap<Integer, Double>();
+    Map<String, Discount> discountsInStoresThatAreValidInOrder = new HashMap<>();
+    Map<Integer, Double> itemsAmountLeftToUseInSalesMap = new HashMap<>();
 
     public OpenedStoreOrder(Store store, String date, boolean isOrderStatic, SDMLocation customerLocation, String customerName)
     {
-        super(store, date, isOrderStatic, customerLocation, customerName);
+        super(date, isOrderStatic, customerLocation, customerName, store);
 
     }
 

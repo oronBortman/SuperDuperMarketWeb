@@ -64,6 +64,7 @@ public class AddFeedbackServlet extends HttpServlet {
             }
             else
             {
+                System.out.println(user.getUserName() + " " + openedCustomerOrder.getDateStr() + " " + gradeInt + " " + feedbackText);
                 store.addFeedback(user.getUserName(),openedCustomerOrder.getDateStr(), gradeInt, feedbackText);
             }
 
@@ -73,7 +74,7 @@ public class AddFeedbackServlet extends HttpServlet {
         }
         catch(Exception e)
         {
-            System.out.println("There was an error in ClosedOrderAndAddToHistory " + e.getMessage());
+            System.out.println("There was an error in AddFeedbackServlet " + e.getMessage());
         }
     }
 

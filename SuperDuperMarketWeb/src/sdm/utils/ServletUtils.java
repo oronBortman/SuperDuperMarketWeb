@@ -1,6 +1,7 @@
 package sdm.utils;
 
 //import engine.chat.ChatManager;
+import logic.order.OrderManager;
 import logic.zones.ZoneManager;
 import logic.users.UserManager;
 
@@ -13,6 +14,7 @@ public class ServletUtils {
 
 	private static final String USER_MANAGER_ATTRIBUTE_NAME = "userManager";
 	private static final String ZONE_MANAGER_ATTRIBUTE_NAME = "zoneManager";
+	private static final String ORDER_MANAGER_ATTRIBUTE_NAME = "orderManager";
 
 	/*
 	Note how the synchronization is done only on the question and\or creation of the relevant managers and once they exists -
@@ -20,6 +22,7 @@ public class ServletUtils {
 	 */
 	private static final Object userManagerLock = new Object();
 	private static final Object zoneManagerLock = new Object();
+	private static final Object orderManagerLock = new Object();
 
 	public static UserManager getUserManager(ServletContext servletContext) {
 
@@ -39,6 +42,16 @@ public class ServletUtils {
 			}
 		}
 		return (ZoneManager) servletContext.getAttribute(ZONE_MANAGER_ATTRIBUTE_NAME);
+	}
+
+	public static OrderManager getOrderManager(ServletContext servletContext)
+	{
+		synchronized (orderManagerLock) {
+			if (servletContext.getAttribute(ORDER_MANAGER_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(ORDER_MANAGER_ATTRIBUTE_NAME, new OrderManager());
+			}
+		}
+		return (OrderManager) servletContext.getAttribute(ORDER_MANAGER_ATTRIBUTE_NAME);
 	}
 
 	/*public static ChatManager getChatManager(ServletContext servletContext) {

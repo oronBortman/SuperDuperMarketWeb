@@ -63,6 +63,7 @@ function createItemsTableFromItemsListInStore(listOfItemsInStore)
 {
     var itemsTableHeadline=generateItemsHTMLTableHeadline();
     var itemTableBody="";
+
     $.each(listOfItemsInStore || [], function(index, item) {
         console.log("Adding item #" + index + ": " + name);
         itemTableBody = itemTableBody + generateRowInItemsInStoreHTMLTable(item);
@@ -136,11 +137,15 @@ function ajaxStoresList() {
     $.ajax({
         method:'GET',
         url: STORES_LIST_URL,
-        data: dataString,
+        data: {"zoneName":zoneName},
         dataType: "json",
         success: function(detailsOnStoresInZone) {
             console.log("Succeed ajaxStoresList")
             refreshStoresInZoneList(detailsOnStoresInZone);
+        },
+        error: function(e) {
+            console.error(e);
+            alert('error in ajaxStoresList\n' + e);
         }
     });
 }
@@ -150,10 +155,14 @@ function ajaxItemsInZoneList() {
     $.ajax({
         method:'GET',
         url: ITEMS_LIST_URL,
-        data: dataString,
+        data: {"zoneName":zoneName},
         dataType: "json",
         success: function(itemsInZone) {
             refreshItemsInZoneList(itemsInZone);
+        },
+        error: function(e) {
+            console.error(e);
+            alert('error in ajaxItemsInZoneList\n' + e);
         }
     });
 }

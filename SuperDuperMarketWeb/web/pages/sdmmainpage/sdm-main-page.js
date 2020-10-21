@@ -89,12 +89,12 @@ function refreshZonesList(zones) {
 function setMoveToZoneButton(zoneNameInput, idOfMoveToZoneForm) { // onload...do
     var idOfMoveToZoneFormWithSharp = "#" + idOfMoveToZoneForm
     console.log(zoneNameInput + " in setMoveToZoneButton");
-    var dataString = "zoneName="+zoneNameInput;
+    //var dataString = "zoneName="+zoneNameInput;
     // console.log(idOfMoveToZoneFormWithSharp)
     $(idOfMoveToZoneFormWithSharp).click(function() {
         $.ajax({
             method:'GET',
-            data: dataString,
+            data: {"zoneName":zoneNameInput},
             url: MOVE_TO_ZONE_URL,
             dataType: "json",
             timeout: 4000,

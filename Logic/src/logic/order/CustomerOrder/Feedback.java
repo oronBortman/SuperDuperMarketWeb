@@ -12,6 +12,7 @@ public class Feedback {
         this.orderDate = orderDate;
         this.rating = rating;
         this.feedbackText = feedbackText;
+
     }
 
     public int getRating() {

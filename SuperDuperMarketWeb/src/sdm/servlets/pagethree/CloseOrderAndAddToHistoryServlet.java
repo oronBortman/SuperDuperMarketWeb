@@ -13,6 +13,7 @@ import logic.users.UserManager;
 import logic.zones.Zone;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import sdm.general.GeneralMethods;
 import sdm.utils.SessionUtils;
 
 import javax.servlet.ServletContext;
@@ -49,15 +50,15 @@ public class CloseOrderAndAddToHistoryServlet extends HttpServlet {
             if(userType.equals(CUSTOMER))
             {
                 Customer customer = ((Customer)user);
-                System.out.println("A1");
                 OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(servletContext, request);
-                System.out.println("A2");
+                if(openedCustomerOrder == null)
+                {
+                    System.out.println("openCustomerOrder is null!!");
+                }
                 ClosedCustomerOrder closedCustomerOrder = openedCustomerOrder.closeCustomerOrder();
-                System.out.println("A3");
                 zone.addClosedOrderToHistory(closedCustomerOrder);
-                System.out.println("A4");
                 customer.addClosedCustomerOrderToMap(closedCustomerOrder);
-                System.out.println("A5");
+                GeneralMethods.getOrderManagerByServletContext(servletContext).addClosedCustomerOrderToHistory(closedCustomerOrder);
             }
 
             String json = gson.toJson(zone);

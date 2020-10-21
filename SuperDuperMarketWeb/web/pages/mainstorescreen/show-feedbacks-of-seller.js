@@ -9,6 +9,9 @@ const GET_FEEDBACKS_DETAILS_URL = buildUrlWithContextPath("get-feedbacks-in-zone
 const ID_OF_FEEDBACKS_TABLE = "storeOrdersTable";
 const ID_OF_FEEDBACKS_TABLE_BODY = "storeOrdersTableBody";
 const ID_OF_SHOW_FEEDBACKS_CONTAINER = 'showFeedbacksContainer';
+var detailsOnZoneJSONFormat = JSON.parse(localStorage.getItem('detailsOnZone'));
+var zoneName = detailsOnZoneJSONFormat.zoneName;
+alert("The zone name is: " + zoneName);
 /*
     this.customerName = customerName;
                 this.orderDate = orderDate;
@@ -18,9 +21,11 @@ const ID_OF_SHOW_FEEDBACKS_CONTAINER = 'showFeedbacksContainer';
 
 export function initiateShowFeedbacksInCertainZone()
 {
+   // var dataString = "zoneName="+zoneName;
+    alert("The zone name is: " + zoneName);
     $.ajax({
         method: 'GET',
-        data: {},
+        data: {"zoneName":zoneName},
         url: GET_FEEDBACKS_DETAILS_URL,
         dataType: "json",
         timeout: 4000,

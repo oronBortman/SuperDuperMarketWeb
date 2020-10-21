@@ -11,8 +11,10 @@ import logic.order.itemInOrder.OrderedItem;
 import logic.order.itemInOrder.OrderedItemFromSale;
 import logic.users.User;
 import logic.zones.Zone;
+import logic.zones.ZoneManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import sdm.utils.ServletUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -25,6 +27,7 @@ import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import static sdm.constants.Constants.ZONENAME;
 import static sdm.general.GeneralMethods.*;
 
 @WebServlet("/get-store-orders-details")
@@ -61,7 +64,9 @@ public class GetStoreOrdersDetailsInSpecificZoneServlet extends HttpServlet {
             User user = getUserByRequestAndServletContext(servletContext, request);
             if(user instanceof Seller)
             {
-                Zone zone = getZoneByRequest(servletContext, request);
+                ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
+                String zoneName = request.getParameter(ZONENAME);
+                Zone zone = zoneManager.getZoneByName(zoneName);
                 String sellerName = user.getUserName();
                 List<ClosedStoreOrder> closedStoreOrderList = zone.getListOfClosedStoreOrderByStoreOwnerName(sellerName);
                 if(closedStoreOrderList != null)

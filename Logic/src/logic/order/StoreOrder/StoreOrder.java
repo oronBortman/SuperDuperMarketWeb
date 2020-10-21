@@ -21,7 +21,25 @@ public class StoreOrder extends Order {
     private Map<Integer, OrderedItemFromStore> orderedItemsNotFromSale;
     private Map<String, Map<Integer, OrderedItemFromStore>> orderedItemsFromSale;
 
-    public StoreOrder(Store store, String date, boolean isOrderStatic, SDMLocation customerLocation, String customerName){
+   /* public StoreOrder(Store store, String date, boolean isOrderStatic, SDMLocation customerLocation, String customerName){
+        super(date, isOrderStatic);
+        this.customerLocation = customerLocation;
+        this.customerName = customerName;
+      //  this.storeUsed = store;
+        orderedItemsNotFromSale = new HashMap<Integer, OrderedItemFromStore>();
+        orderedItemsFromSale = new HashMap<String,Map<Integer, OrderedItemFromStore>>();
+    }*/
+
+    /*public StoreOrder(String date, boolean isOrderStatic, SDMLocation customerLocation, String customerName, Store store){
+        super(date, isOrderStatic);
+        this.customerLocation = customerLocation;
+        this.customerName = customerName;
+        this.storeUsed = store;
+        orderedItemsNotFromSale = new HashMap<Integer, OrderedItemFromStore>();
+        orderedItemsFromSale = new HashMap<String,Map<Integer, OrderedItemFromStore>>();
+    }*/
+
+    public StoreOrder(String date, boolean isOrderStatic, SDMLocation customerLocation, String customerName, Store store){
         super(date, isOrderStatic);
         this.customerLocation = customerLocation;
         this.customerName = customerName;
@@ -29,6 +47,7 @@ public class StoreOrder extends Order {
         orderedItemsNotFromSale = new HashMap<Integer, OrderedItemFromStore>();
         orderedItemsFromSale = new HashMap<String,Map<Integer, OrderedItemFromStore>>();
     }
+
 
     public String getCustomerName() {
         return customerName;
@@ -53,9 +72,22 @@ public class StoreOrder extends Order {
     {
         super(storeOrder.getDateStr(), storeOrder.isOrderStatic());
         this.storeUsed = storeOrder.storeUsed;
+        this.customerName = storeOrder.customerName;
         this.customerLocation = storeOrder.customerLocation;;
         this.orderedItemsFromSale = storeOrder.orderedItemsFromSale;;
         this.orderedItemsNotFromSale = storeOrder.orderedItemsNotFromSale;
+    }
+
+    public Double calcTotalDeliveryPrice() {
+        SDMLocation storeLocation = storeUsed.getLocation();
+        int PPK = storeUsed.getPPK();
+        double distanceBetweenTwoLocations = customerLocation.getAirDistanceToOtherLocation(storeLocation);
+        return(PPK * distanceBetweenTwoLocations);
+    }
+
+    public Double calcTotalPriceOfOrder()
+    {
+         return calcTotalDeliveryPrice() + calcTotalPriceOfItems();
     }
 
     @Override
@@ -91,13 +123,12 @@ public class StoreOrder extends Order {
         return storeUsed;
     }
 
-
     public List<OrderedItem> generateListOfGeneralOrderedItems()
     {
-        return Stream.concat(generateListOfOrderedItemFromSaleWithDiscountName().stream(), generateListOfOrdereItemsNotFromSale().stream()).collect(Collectors.toList());
+        return Stream.concat(generateListOfOrderedItemFromSaleWithDiscountName().stream(), generateListOfOrdersItemsNotFromSale().stream()).collect(Collectors.toList());
     }
 
-    public List<OrderedItemFromStore> generateListOfOrdereItemsNotFromSale()
+    public List<OrderedItemFromStore> generateListOfOrdersItemsNotFromSale()
     {
         return getOrderedItemsNotFromSale().values().stream().collect(toCollection(ArrayList::new));
     }
@@ -120,17 +151,8 @@ public class StoreOrder extends Order {
     }
 
     //public Double calcDistanceToCustomer()
-    public Double calcTotalDeliveryPrice() {
-        SDMLocation storeLocation = storeUsed.getLocation();
-        int PPK = storeUsed.getPPK();
-        double distanceBetweenTwoLocations = customerLocation.getAirDistanceToOtherLocation(storeLocation);
-        return(PPK * distanceBetweenTwoLocations);
-    }
 
-    public Double calcTotalPriceOfOrder()
-    {
-        return  calcTotalPriceOfItems() + calcTotalDeliveryPrice();
-    }
+
 
     public Double calcTotalPriceOfItems()
     {
@@ -150,10 +172,7 @@ public class StoreOrder extends Order {
         return totalPrice;
     }
 
-    public Double calcDistanceToCustomer()
-    {
-        return customerLocation.getAirDistanceToOtherLocation(storeUsed.getLocation());
-    }
+
 
     public Double calcTotalAmountOfItemsNotFromSaleByUnit()
     {

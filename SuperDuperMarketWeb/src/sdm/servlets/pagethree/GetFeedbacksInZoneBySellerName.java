@@ -56,7 +56,7 @@ public class GetFeedbacksInZoneBySellerName extends HttpServlet {
         }
         catch (Exception e)
         {
-            System.out.println("Error inget store in zone\n" + e);
+            System.out.println("Error in get store in zone\n" + e);
         }
     }
 

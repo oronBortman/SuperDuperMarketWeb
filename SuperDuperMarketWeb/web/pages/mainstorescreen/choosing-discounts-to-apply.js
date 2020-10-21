@@ -43,9 +43,9 @@ export function prepareAndInitiateChoosingDiscountsToApply(idOfMakeAnOrderContai
         },
         success: function (r) {
             alert('initial successfully');
+            initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
         }
     })
-    initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
 
 }
 
