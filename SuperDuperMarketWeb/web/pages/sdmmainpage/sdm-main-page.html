@@ -2,75 +2,49 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Online Chat</title>
     <script src="../../common/jquery-2.0.3.min.js"></script>
     <script src="../../common/context-path-helper.js"></script>
-    <script src="sdm-main-page.js"></script>
+    <script type="module" src="sdm-main-page.js"></script>
+    <script type="module" src="charging-money.js"></script>
     <link rel="stylesheet" href="../../common/bootstrap.min.css">
     <link rel="stylesheet" href="sdm-main-page.css">
 </head>
-<body style="background-color:powderblue;">
-<div class="container-fluid">
+
+<div class="jumbotron text-center">
+    <h1>Welcome to Super Duper Market</h1>
+    <p id="greeting"></p>
+</div>
+
+<div class="container">
     <div class="row">
-        <div class="col-xs-6">
-            <div class="sidebar">
-                <h1>Welcome to Super Duper Market</h1>
-            </div>
-        </div>
-    </div>
-    <hr></hr>
-    <div class="row">
-        <div class="col-xs-6">
-            <div id="greeting"></div>
-        </div>
-    </div>
-    <hr></hr>
-    <div class="row">
-        <!--<div class="col-xs-3">-->
-            <div class="content">
+        <div class="col-lg-4">
                 <div id="showAllUsers">
                     <h4>Show all users</h4>
-                    <table id="userstable">
-                    <thead>
-                    <tr class = "tableFirstRow">
-                        <th>name</th>
-                        <th>type</th>
-                    </tr>
-                    <tbody id="tbody">
-                    </tbody>
-                    </thead>
-                    </table>
+                    <div class="table-responsive">
+                        <table id="userstable" class="tableWithBorder">
+                            <thead>
+                            <tr class = "tableFirstRow">
+                                <th>name</th>
+                                <th>type</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
-            </div>
-        <!--</div>-->
-    </div>
-    <hr>
-    <div id="loadFromXml">
-        <div class="row">
-            <div class="col-xs-3">
-                <div class="content">
-                    <form id = "uploadXmlFile" name = "uploadXmlFile" action = "/SuperDuperMarketWeb_Web_exploded/load-xml-file" enctype = "multipart/form-data" method = "POST" class = "uploadXmlFile">
-                        <h4>Load xml file</h4>
-                        <h5>Here you can add a zone to Super Duper Market</h5>
-                        <br>
-                        <br>
-                        <input type = "file" id="file" name = "file" accept="xml" required>
-                        <br>
-                        <button name="Submit" type="submit" id="contact-submit-xml">Upload file</button>
-                        <br>
-                        <div id = "result"></div>
-                    </form>
-                </div>
-            </div>
         </div>
-        <hr>
     </div>
+
     <div class="row">
-       <!-- <div class="col-xs-3">-->
-            <div class="content">
-                <div id="showZones">
-                    <h4>Show all zones</h4>
-                    <table id="zonesTable">
+        <div class="col-lg-12">
+            <div id="showZones">
+                <h4>Show all zones</h4>
+                <div class="table-responsive">
+                    <table id="zonesTable" class="tableWithBorder">
                         <thead>
                         <tr class = "tableFirstRow">
                             <th>zoneOwner</th>
@@ -86,16 +60,36 @@
                         </thead>
                     </table>
                 </div>
+
             </div>
-       <!-- </div>-->
+        </div>
     </div>
-    <hr>
-    <div class="row">
-        <!--<div class="col-xs-3">-->
-            <div class="content">
-                <div id="manageAccount">
-                    <h4>Manage account</h4>
-                    <table id="manageAccountTable">
+
+    <div id="loadFromXml">
+        <div class="row">
+            <div class="col-lg-4">
+                <form id = "uploadXmlFile" name = "uploadXmlFile" action = "/SuperDuperMarketWeb_Web_exploded/load-xml-file" enctype = "multipart/form-data" method = "POST" class = "uploadXmlFile">
+                    <h4>Load xml file</h4>
+                    <h5>Here you can add a zone to Super Duper Market</h5>
+                    <br>
+                    <br>
+                    <input type = "file" id="file" name = "file" accept="xml" required>
+                    <br>
+                    <button name="Submit" type="submit" id="contact-submit-xml">Upload file</button>
+                    <br>
+                    <div id = "result"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="manageAccount">
+        <div class="row">
+            <div class="col-lg-8">
+                <h2>Manage account</h2>
+                <h4>Transactions history</h4>
+                <div class="table-responsive">
+                    <table id="manageAccountTable" class="tableWithBorder">
                         <thead>
                         <tr class = "tableFirstRow">
                             <th>Type of action</th>
@@ -104,31 +98,50 @@
                             <th>Account balance before Action</th>
                             <th>Account balance after Action</th>
                         </tr>
+                        </thead>
                         <tbody id="tbodyOfManageAccountTable">
                         </tbody>
-                        </thead>
                     </table>
-                    <br>
-                    <br>
-                    <form id = "chargingMoney" name = "chargingMoney" action = "/SuperDuperMarketWeb_Web_exploded/charging-money" method = "POST" class = "charging-money">
-                        <h5>Charging Money</h5>
-                        <br>
-                        <h6>Please add amount of money to charge</h6>
-                        <br>
-                        <input type="text" id="chargingMoneyTextField" name = "chargingMoneyTextField">
-                        <br>
-                        <h6>Enter the date</h6>
-                        <input type="date" id="dateOfChargingMoney" name="dateOfChargingMoney">
-                        <br>
-                        <button name="Charge money" type="submit" id="chargingMoneyButton" value="Charge money"> Charge money</button>
-                        <br>
-                        <div id = "resultOfChargingMoney"></div>
-                    </form>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <div id="chargingMoneyContainer">
+        <div class="row">
+            <div class="col-lg-8">
+                <h5>Charging Money</h5>
+                <pre class="chargingMoneyPre">
+                <br>
+                <p>Please add amount of money to charge</p>
+                <br>
+                <input type="text" id="chargingMoneyTextField" name = "chargingMoneyTextField">
+                <br>
+                <p style="color:red;" id="dateError"></p>
+                <p>Enter the date</p>
+                <input type="date" id="dateOfChargingMoney" name="dateOfChargingMoney">
+                <p style="color:red;" id="moneyError"></p>
+                <br>
+                <button name="Charge money" type="button" id="chargingMoneyButton" value="Charge money">Charge money</button>
+                <br>
+                <p id="resultOfChargingMoney"></p>
+                </pre>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" id="alerts">
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="content">
+                    <div id="alertsWindows">
+                        <h4>Alerts</h4>
+                        <div id="alertsArea" class="span6"></div>
+                    </div>
                 </div>
             </div>
-        <!--</div>-->
+        </div>
     </div>
-    <hr>
 </div>
-</body>
 </html>

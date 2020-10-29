@@ -88,6 +88,12 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
 
     }
 
+    public void addFeedback(Feedback feedback)
+    {
+        //String customerName, String orderDate, Integer rating, String feedbackText
+        feedbackList.add(feedback);
+    }
+
     public Seller getStoreOwner() {
         return storeOwner;
     }

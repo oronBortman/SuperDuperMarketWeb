@@ -1,5 +1,5 @@
 import {createEmptyDropDownListHTML,
-    createEmptyTable,
+    createEmptyTableWithBorder,
     createEmptyHTMLContainer,
     appendHTMLToElement,
     emptyElementByID,
@@ -33,8 +33,10 @@ export function initiateShowingSummeryOfOrder(idOfMakeAnOrderContainer)
             emptyElementByID(idOfMakeAnOrderContainer);
             appendHTMLToElement(createEmptyHTMLContainer(ID_OF_CHOOSE_ITEMS_DROP_DOWN_LIST_CONTAINER), idOfMakeAnOrderContainer)
             appendHTMLToElement(createEmptyDropDownListHTML("storeOrders", "Choose store order:", ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST), idOfMakeAnOrderContainer)
-            appendHTMLToElement(createEmptyTable(ID_OF_STORE_ORDERS_TABLE, ID_OF_STORE_ORDERS_TABLE_BODY), idOfMakeAnOrderContainer);
+            appendHTMLToElement(createEmptyTableWithBorder(ID_OF_STORE_ORDERS_TABLE, ID_OF_STORE_ORDERS_TABLE_BODY), idOfMakeAnOrderContainer);
+            appendHTMLToElement('<br>',idOfMakeAnOrderContainer);
             appendHTMLToElement(createEmptyHTMLContainer(ID_OF_SHOW_STORE_ORDER_STATUS_CONTAINER), idOfMakeAnOrderContainer);
+            appendHTMLToElement('<br><br>',idOfMakeAnOrderContainer);
             appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
 
             setStoreOrdersListInDropDownInOrder(r);
@@ -131,13 +133,13 @@ itemsList{
 
 export function generateFirstRowInDiscountsHTMLTable()
 {
-    return "<tr><th>Serial ID</th>" +
-        "<th>Name</th>" +
-        "<th>MeasureType</th>" +
-        "<th>Amount</th>" +
-        "<th>Price per unit</th>" +
-        "<th>Total Price</th>" +
-        "<th>Bought on sale</th>";
+    return "<tr class='withBorder'><th class='withBorder'>Serial ID</th>" +
+        "<th class='withBorder'>Name</th>" +
+        "<th class='withBorder'>MeasureType</th>" +
+        "<th class='withBorder'>Amount</th>" +
+        "<th class='withBorder'>Price per unit</th>" +
+        "<th class='withBorder'>Total Price</th>" +
+        "<th class='withBorder'>Bought on sale</th>";
 }
 
 export function generateRowInDiscountsHTMLTable(itemInOrder)
@@ -150,13 +152,13 @@ export function generateRowInDiscountsHTMLTable(itemInOrder)
     var totalPrice = itemInOrder["totalPrice"];
     var boughtOnSale = itemInOrder["boughtOnSale"];
 
-    return "<tr><th>" + serialID + "</th>" +
-        "<th>" + itemName + "</th>" +
-        "<th>" + measureType + "</th>" +
-        "<th>" + amount + "</th>" +
-        "<th>" + pricePerUnit + "</th>" +
-        "<th>" + totalPrice + "</th>" +
-        "<th>" + boughtOnSale + "</th>";
+    return "<tr class='withBorder'><th class='withBorder'>" + serialID + "</th>" +
+        "<th class='withBorder'>" + itemName + "</th>" +
+        "<th class='withBorder'>" + measureType + "</th>" +
+        "<th class='withBorder'>" + amount + "</th>" +
+        "<th class='withBorder'>" + pricePerUnit + "</th>" +
+        "<th class='withBorder'>" + totalPrice + "</th>" +
+        "<th class='withBorder'>" + boughtOnSale + "</th>";
 }
 
 export function buildTableBodyHTMLAndUpdateStoresOrderTable(itemsList)

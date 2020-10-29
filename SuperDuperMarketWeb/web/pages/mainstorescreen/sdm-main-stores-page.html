@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Online Chat</title>
+    <title>Super Duper Market</title>
     <script src="../../common/jquery-2.0.3.min.js"></script>
     <script src="../../common/context-path-helper.js"></script>
     <script type="module"  src="choosing-item-drop-down.js"></script>
@@ -15,101 +15,225 @@
 
     <link rel="stylesheet" href="../../common/bootstrap.min.css">
     <link rel="stylesheet" href="sdm-main-stores-page.css">
+
 </head>
-<body style="background-color:powderblue;">
-<div class="container-fluid">
+
+<div class="jumbotron text-center">
+    <h1>Details and actions on zone</h1>
+</div>
+
+<div class="container">
     <div class="row">
-        <div class="col-xs-6">
-            <div class="sidebar">
-                <h1>Details on the zone</h1>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-xs-3">
-            <div class="content">
+        <div class="col-lg-12">
                 <div id="showAllItemsInZone">
                     <h4>Show all items</h4>
-                    <table id="itemsTableInZone">
-                    <thead>
-                    <tr class = "tableFirstRow">
-                        <th>SerialID</th>
-                        <th>Name</th>
-                        <th>Type of buying</th>
-                        <th>Total stores that sell the item</th>
-                        <th>Average price of item</th>
-                        <th>How much times the items has been soled</th>
-                    </tr>
-                    <tbody id="tbodyOfZoneItemsTable">
-                    </tbody>
-                    </thead>
-                    </table>
+                    <div class="table-responsive">
+                        <table id="itemsTableInZone" class="tableWithBorder">
+                            <thead>
+                            <tr class = "tableFirstRow">
+                                <th class='withBorder'>SerialID</th>
+                                <th class='withBorder'>Name</th>
+                                <th class='withBorder'>Type of buying</th>
+                                <th class='withBorder'>Total stores that sell the item</th>
+                                <th class='withBorder'>Average price of item</th>
+                                <th class='withBorder'>How much times the items has been soled</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbodyOfZoneItemsTable"></tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
         </div>
     </div>
+
     <hr>
+
     <div class="row">
-        <div class="col-xs-3">
-            <div class="content">
+        <div class="col-lg-12">
                 <div id="showAllStoresInZone">
                     <h4>Details on all the Stores</h4>
-                    <table>
-                        <tr>
-                            <th>StoreID</th>
-                            <th>Store Name</th>
-                            <th>Store Owner</th>
-                            <th>Details On Item In Store</th>
-                            <th>Total Orders From Store</th>
-                            <th>Total Profit Of Soled Items</th>
-                            <th>PPK</th>
-                            <th>Total Profit Of Deliveris</th>
+                    <div class="table-responsive" table="tableWithBorder">
+                        <table>
+                            <thead>
+                            <tr class="tableFirstRow">
+                                <th class='withBorder'>Store ID</th>
+                                <th class='withBorder'>Store Name</th>
+                                <th class='withBorder'>Store Owner</th>
+                                <th class='withBorder'>Details On Item In Store</th>
+                                <th class='withBorder'>Total Orders From Store</th>
+                                <th class='withBorder'>Total Profit Of Soled Items</th>
+                                <th class='withBorder'>PPK</th>
+                                <th class='withBorder'>Total Profit Of Deliveris</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbodyOfDetailsOnStoresInZone" tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div id="makeANewOrderContainer">
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>Make An Order</h4>
+                <button name="makeANewOrderButton" type="button" id="makeANewOrderButton">Make a new order</button>
+                <!-- <button data-toggle="collapse" id="makeANewOrderButton" data-target="#makeOrderBody">Make a new order</button>-->
+                <!-- <div id="makeOrderBody" class="collapse"></div>-->
+                <br>
+                <div class="container" id="makeOrderBody"></div>
+            </div>
+        </div>
+        <hr>
+    </div>
+
+    <div id="showPrivateOrdersOfSellerContainer">
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>Show orders in seller's stores</h4>
+                <div class="table-responsive" table="tableWithBorder">
+                    <table id="storeOrdersTable">
+                        <thead>
+                        <tr class='withBorder'>
+                            <th class='withBorder'>Serial ID</th>
+                            <th class='withBorder'>Date</th>
+                            <th class='withBorder'>Customer Name</th>
+                            <th class='withBorder'>Location Of Customer</th>
+                            <th class='withBorder'>Total Items In Order</th>
+                            <th class='withBorder'>Total Items Price In Order</th>
+                            <th class='withBorder'>Total Delivery Price</th>
+                            <th class='withBorder'>Show details On Items In Order</th>
                         </tr>
-                        <tbody id="tbodyOfDetailsOnStoresInZone" tbody></tbody>
+                        </thead>
+                        <tbody id="storeOrdersTableBody"></tbody>
                     </table>
                 </div>
             </div>
-      </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>Show orders in seller's stores</h4>
+                <div class="table-responsive" table="tableWithBorder">
+                    <table id="specificStoreOrderTable">
+                        <thead>
+                        <tr class='withBorder'>
+                            <th class='withBorder'>Serial ID</th>
+                            <th class='withBorder'>Name</th>
+                            <th class='withBorder'>MeasureType</th>
+                            <th class='withBorder'>Amount</th>
+                            <th class='withBorder'>Price per unit</th>
+                            <th class='withBorder'>Total Price</th>
+                            <th class='withBorder'>Bought on sale</th>
+                        </tr>
+                        </thead>
+                        <tbody id="specificStoreOrderTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr>
     </div>
+
+    <div id="showPrivateOrdersOfCustomerContainer">
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>Show orders of customer</h4>
+                <div class="table-responsive" table="tableWithBorder">
+                    <table id="customerOrdersTable">
+                        <thead>
+                        <tr class='withBorder'>
+                            <th class='withBorder'>Serial ID</th>
+                            <th class='withBorder'>date</th>
+                            <th class='withBorder'>Location</th>
+                            <th class='withBorder'>Total Stores</th>
+                            <th class='withBorder'>Total Items In Order</th>
+                            <th class='withBorder'>Total Items Price In Order</th>
+                            <th class='withBorder'>Total Delivery Price</th>
+                            <th class='withBorder'>Total Order Price</th>
+                            <th class='withBorder'>Show details On Items In Order</th>
+                        </thead>
+                        <tbody id="customerOrdersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h4>Show items in customer order</h4>
+                <div class="table-responsive" table="tableWithBorder">
+                    <table id="specificCustomerOrderTable">
+                        <thead>
+                        <tr class='withBorder'><th class='withBorder'>Serial ID</th>
+                            <th class='withBorder'>Name</th>
+                            <th class='withBorder'>Measure Type</th>
+                            <th class='withBorder'>Store serialID</th>
+                            <th class='withBorder'>Store Name</th>
+                            <th class='withBorder'>Amount</th>
+                            <th class='withBorder'>Price per unit</th>
+                            <th class='withBorder'>Total Price</th>
+                            <th class='withBorder'>Bought on sale</th>
+                        </thead>
+                        <tbody id="specificCustomerOrderTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+
+    <div id="showFeedbacksContainer">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="table-responsive" table="tableWithBorder">
+                    <table id="feedbacksTable">
+                        <thead>
+                        <tr>
+                            <th class='withBorder'>Customer name</th>
+                            <th class='withBorder'>Date</th>
+                            <th class='withBorder'>Rating</th>
+                            <th class='withBorder'>Feedback text</th>
+                        </tr>
+                        </thead>
+                        <tbody id="feedbacksTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+
+    <div id="addANewStoreContainer">
+        <div class="row">
+            <div class="col-xs-12">
+                <button id="addANewStoreToZoneButton">Add new store to zone</button>
+                <br>
+                <div id="addANewStoreToZoneContainer"></div>
+            </div>
+        </div>
+        <hr>
+    </div>
+
     <div class="row">
-        <div class="col-xs-3">
-       <!-- <form id = "makeANewOrder" name = "makeANewOrder" action = "/SuperDuperMarketWeb_Web_exploded/make-a-new-order">!-->
-        <form id = "makeANewOrder" name = "makeANewOrder" style="background-color:#3399ff;">
-            <h5>Make An Order</h5>
-            <button name="Submit" type="submit" id="makeANewOrderButton">Make a new order</button>
-            <div id="makeOrderBody"></div>
-        </form>
-        <div id="makeAnOrderContainer">
-        </div>
+        <div class="col-xs-12">
+            <form id = "moveToSDMMainPage" name = "moveToSDMMainPage">
+                <button name="moveToSDMMainPageButton" type="submit" id="moveToSDMMainPageButton" value="moveToSDMMainPageButton">Move to main page</button>
+            </form>
         </div>
     </div>
-    <hr>
-    <div class="row">
-        <div class="col-xs-3">
-        <button id="showPrivateOrdersInSellerStoresButton">Show orders in seller's stores</button>
-        <div id = "showPrivateOrdersOfSellerContainer"></div>
-        <button id="showPrivateOrdersOfCustomerButton">Show orders of customer in zone</button>
-        <div id = "showPrivateOrdersOfCustomerContainer"></div>
+
+    <div class="container-fluid" id="alerts">
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="content">
+                    <div id="alertsWindows">
+                        <h4>Alerts</h4>
+                        <div id="alertsArea" class="span6"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <hr>
-    <div class="row">
-        <div class="col-xs-3">
-        <button id="showFeedbacksButton">Show seller's feedbacks</button>
-        <div id = "showFeedbacksContainer"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-3">
-        <button id="addANewStoreToZoneButton">Add new store to zone</button>
-        <div id = "addANewStoreToZoneContainer"></div>
-        </div>
-    </div>
-    <hr>
-    <form id = "moveToSDMMainPage" name = "moveToSDMMainPage">
-        <button name="moveToSDMMainPageButton" type="submit" id="moveToSDMMainPageButton" value="moveToSDMMainPageButton">Move to main page</button>
-    </form>
 </div>
-</body>
 </html>

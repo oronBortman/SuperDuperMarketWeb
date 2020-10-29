@@ -3,6 +3,7 @@ import {initiateShowOrdersOfSellerStoresInCertainZone} from "./show-orders-of-se
 import {initiateShowPrivateOrdersOfCustomer} from "./show-private-orders-of-customer.js";
 import {initiateShowFeedbacksInCertainZone} from "./show-feedbacks-of-seller.js";
 import {initiateAddANewStoreToZone} from "./adding-new-store-to-zone.js";
+import {getAlertsFromServerAndUpdateOwner} from "../show-alerts.js";
 
 var refreshRate = 5000; //milli seconds
 var STORES_LIST_URL = buildUrlWithContextPath("stores-in-zone-list");
@@ -21,6 +22,12 @@ const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER = "showOrdersInSellerStoresCo
 const ID_OF_SHOW_FEEDBACKS_BUTTON = 'showFeedbacksButton';
 const ID_OF_SHOW_FEEDBACKS_CONTAINER = 'showFeedbacksContainer';
 const ID_OF_ADD_NEW_STORE_TO_ZONE_BUTTON = 'addANewStoreToZoneButton';
+const ID_OF_ADD_NEW_STORE_CONTAINER = 'addANewStoreContainer';
+const ID_OF_SHOW_FEEDBACKS = 'showFeedbacksContainer';
+const ID_OF_MAKE_A_NEW_ORDER_CONTAINER = 'makeANewOrderContainer';
+const ID_OF_SHOW_PRIVATE_ORDER_OF_SELLER_CONTAINER = 'showPrivateOrdersOfSellerContainer';
+const ID_OF_SHOW_PRIVATE_ORDER_OF_CUSTOMER_CONTAINER  = 'showPrivateOrdersOfCustomerContainer';
+
 
 function emptyStoresInZoneTable() {
     document.getElementById(ID_OF_TBODY_OF_STORE_TABLE).innerHTML = '';
@@ -49,14 +56,14 @@ function generateRowInStoresInZoneHTMLTable(storeInZone)
     var PPK = storeInZone["PPK"];
     var totalProfitOfDeliveris = storeInZone["totalProfitOfDeliveris"];
 
-    return "<tr><th>" + storeID + "</th>" +
-    "<th>" + storeName + "</th>" +
-    "<th>" + storeOwner + "</th>" +
-    "<th>" + detailsOnItemInStore + "</th>" +
-    "<th>" + totalOrdersFromStore + "</th>" +
-    "<th>" + totalProfitOfSoledItems + "</th>" +
-    "<th>" + PPK + "</th>" +
-    "<th>" + totalProfitOfDeliveris + "</th></tr>"
+    return "<tr class='withBorder'><th class='withBorder'>" + storeID + "</th>" +
+    "<th class='withBorder'>" + storeName + "</th>" +
+    "<th class='withBorder'>" + storeOwner + "</th>" +
+    "<th class='withBorder'>" + detailsOnItemInStore + "</th>" +
+    "<th class='withBorder'>" + totalOrdersFromStore + "</th>" +
+    "<th class='withBorder'>" + totalProfitOfSoledItems + "</th>" +
+    "<th class='withBorder'>" + PPK + "</th>" +
+    "<th class='withBorder'>" + totalProfitOfDeliveris + "</th></tr>"
 }
 
 function createItemsTableFromItemsListInStore(listOfItemsInStore)
@@ -73,12 +80,12 @@ function createItemsTableFromItemsListInStore(listOfItemsInStore)
 
 function generateItemsHTMLTableHeadline()
 {
-    return "<tr>" +
-        "<th>SerialNumber</th>" +
-        "<th>Name</th>" +
-        "<th>Type Of MeasureBy</th>" +
-        "<th>Price Per Unit</th>" +
-        "<th>Total Soled Items From Store</th>" +
+    return "<tr class='withBorder'>" +
+        "<th class='withBorder'>SerialNumber</th>" +
+        "<th class='withBorder'>Name</th>" +
+        "<th class='withBorder'>Type Of MeasureBy</th>" +
+        "<th class='withBorder'>Price Per Unit</th>" +
+        "<th class='withBorder'>Total Soled Items From Store</th>" +
         "</tr>";
 }
 
@@ -90,11 +97,11 @@ function generateRowInItemsInStoreHTMLTable(item)
     var pricePerUnit = item["pricePerUnit"];
     var totalSoledItemsFromStore = item["totalSoledItemsFromStore"];
 
-    return "<tr><th>" + serialNumber + "</th>" +
-        "<th>" + name + "</th>" +
-        "<th>" + typeOfMeasureBy + "</th>" +
-        "<th>" + pricePerUnit + "</th>" +
-        "<th>" + totalSoledItemsFromStore + "</th></tr>";
+    return "<tr class='withBorder'><th class='withBorder'>" + serialNumber + "</th>" +
+        "<th class='withBorder'>" + name + "</th>" +
+        "<th class='withBorder'>" + typeOfMeasureBy + "</th>" +
+        "<th class='withBorder'>" + pricePerUnit + "</th>" +
+        "<th class='withBorder'>" + totalSoledItemsFromStore + "</th></tr>";
 }
 
 function refreshItemsInZoneList(itemsInZone) {
@@ -115,12 +122,12 @@ function generateRowInItemsInZoneHTMLTable(item)
     var avgPriceOfItemInSK = item["avgPriceOfItemInSK"];
     var howMuchTimesTheItemHasBeenOrdered = item["howMuchTimesTheItemHasBeenOrdered"];
 
-    return "<tr><th>" + serialNumber + "</th>" +
-        "<th>" + name + "</th>" +
-        "<th>" + typeOfMeasureBy + "</th>" +
-        "<th>" + howManyShopsSellesAnItem + "</th>" +
-        "<th>" + avgPriceOfItemInSK + "</th>" +
-        "<th>" + howMuchTimesTheItemHasBeenOrdered + "</th></tr>";
+    return "<tr class='withBorder'><th class='withBorder'>" + serialNumber + "</th>" +
+        "<th class='withBorder'>" + name + "</th>" +
+        "<th class='withBorder'>" + typeOfMeasureBy + "</th>" +
+        "<th class='withBorder'>" + howManyShopsSellesAnItem + "</th>" +
+        "<th class='withBorder'>" + avgPriceOfItemInSK + "</th>" +
+        "<th class='withBorder'>" + howMuchTimesTheItemHasBeenOrdered + "</th></tr>";
 }
 
 function setMoveToTheMainPageButton() { // onload...do
@@ -174,15 +181,19 @@ function setActionBasedOnRole(user)
     if(userType === "seller")
     {
         //TODO
-        setShowOrdersInSellerStoresButtonEvent()
-        setShowFeedbacksButtonEvent();
+        //setShowOrdersInSellerStoresButtonEvent()
+       // setShowFeedbacksButtonEvent();
         setAddANewStoreButtonEvent();
-
+        setInterval(initiateShowFeedbacksInCertainZone, refreshRate);
+        setInterval(initiateShowOrdersOfSellerStoresInCertainZone, refreshRate);
+        setInterval(getAlertsFromServerAndUpdateOwner, refreshRate);
     }
+
     else if(userType === "customer")
     {
         setMakeANewOrderButton();
-        setShowCustomerOrdersButtonEvent();
+       // setShowCustomerOrdersButtonEvent();
+        setInterval(initiateShowPrivateOrdersOfCustomer, refreshRate);
     }
 }
 
@@ -193,13 +204,13 @@ function setAddANewStoreButtonEvent()
     });
 }
 
-function setShowFeedbacksButtonEvent()
+/*function setShowFeedbacksButtonEvent()
 {
     $("#" + ID_OF_SHOW_FEEDBACKS_BUTTON).click(function() {
         initiateShowFeedbacksInCertainZone();
     });
-}
-
+}*/
+/*
 function setShowOrdersInSellerStoresButtonEvent()
 {
     $("#" + ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON).click(function() {
@@ -212,7 +223,7 @@ function setShowCustomerOrdersButtonEvent()
     $("#" + ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON).click(function() {
         initiateShowPrivateOrdersOfCustomer();
     })
-}
+}*/
 
 /*
 const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON = "showPrivateOrdersOfCustomerButton";
@@ -226,15 +237,15 @@ function hideHTMLElementsByRole(user){
     var userType = user["userType"];
     if(userType === "seller")
     {
-         $("#makeANewOrder").hide();
-         $("#" + ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON).hide();
+         $("#" + ID_OF_MAKE_A_NEW_ORDER_CONTAINER).hide();
+         $("#" + ID_OF_SHOW_PRIVATE_ORDER_OF_CUSTOMER_CONTAINER).hide();
 
     }
     else if(userType === "customer")
     {
-        $("#" + ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON).hide();
-        $("#" + ID_OF_SHOW_FEEDBACKS_BUTTON).hide();
-        $("#" + ID_OF_ADD_NEW_STORE_TO_ZONE_BUTTON).hide();
+        $("#" + ID_OF_SHOW_PRIVATE_ORDER_OF_SELLER_CONTAINER).hide();
+        $("#" + ID_OF_SHOW_FEEDBACKS_CONTAINER).hide();
+        $("#" + ID_OF_ADD_NEW_STORE_CONTAINER).hide();
     }
 }
 
@@ -251,3 +262,8 @@ $(function() {
     setInterval(ajaxStoresList, refreshRate);
     setInterval(ajaxItemsInZoneList, refreshRate);
 });
+
+/*
+                    <form id = "chargingMoney" name = "chargingMoney" action = "/SuperDuperMarketWeb_Web_exploded/charging-money" method = "POST" class = "charging-money">
+
+ */

@@ -3,13 +3,13 @@ import {
     createEmptyDropDownListHTML,
     createButton,
     disableElement,
+    createEmptyPreContainer,
     enableElement, appendHTMLToElement, createEmptyForm, emptyElementByID,
 } from "./general-functions.js";
 import {creatingCoordinatesHTMLAndSetEvents} from "./creating-coordinate-elements.js";
 
 const GET_ITEMS_IN_ZONE_URL = buildUrlWithContextPath("items-in-zone-list");
 const ADD_A_NEW_STORE_TO_ZONE_URL=buildUrlWithContextPath("add-a-new-store-to-zone");
-;
 var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
 var detailsOnZoneJSONFormat = JSON.parse(localStorage.getItem('detailsOnZone'));
 var zoneName = detailsOnZoneJSONFormat.zoneName;
@@ -19,6 +19,7 @@ const ID_OF_ADD_ITEM_TO_ORDER = 'addItemToOrder';
 const ID_OF_ITEM_ELEMENT = 'itemElement';
 const ID_OF_PRICE_TEXT_FIELD = 'priceTextField';
 const ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER = 'addANewStoreToZoneContainer';
+const ID_OF_ADD_A_NEW_STORE_TO_ZONE_PRE = 'addANewStoreToZonePre';
 const ID_OF_ADD_A_NEW_STORE_FORM = 'addANewStoreForm';
 const ID_OF_ADD_A_NEW_STORE_BUTTON = 'addANewStoreButton';
 const ID_OF_STORE_NAME_TEXT_FIELD = 'storeNameTextField';
@@ -27,22 +28,28 @@ const ID_OF_VALUE_OF_COORDINATE_X_CHOSEN = "valueOfSelectedCoordinateX";
 const ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN = "valueOfSelectedCoordinateY";
 const ID_OF_CHOOSING_ITEM_DROP_DOWN_CONTAINER = 'chooseItemsInDropDownListContainer'
 const ID_OF_PRICE_ERROR = "priceError";
+const ID_OF_ADDING_ITEM_SUCCESSFULLY_INFO = "addingItemInfo";
 const ID_OF_ADD_STORE_ERROR = "addStoreError";
 
 var itemsChosenForStoreArray = [];
 
 export function initiateAddANewStoreToZone()
 {
+    itemsChosenForStoreArray=[];
     emptyElementByID(ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER);
-    appendHTMLToElement(generateInformingUserAboutAddingANewStoreToZoneHTML(), ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER);
-    appendHTMLToElement(createEmptyForm(ID_OF_ADD_A_NEW_STORE_FORM), ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER);//creating form
+    appendHTMLToElement(createEmptyPreContainer(ID_OF_ADD_A_NEW_STORE_TO_ZONE_PRE), ID_OF_ADD_A_NEW_STORE_TO_ZONE_CONTAINER);
+    appendHTMLToElement('<br><br>', ID_OF_ADD_A_NEW_STORE_TO_ZONE_PRE);
+    appendHTMLToElement(generateInformingUserAboutAddingANewStoreToZoneHTML(), ID_OF_ADD_A_NEW_STORE_TO_ZONE_PRE);
+    appendHTMLToElement(createEmptyForm(ID_OF_ADD_A_NEW_STORE_FORM), ID_OF_ADD_A_NEW_STORE_TO_ZONE_PRE);//creating form
     buildFormElements(ID_OF_ADD_A_NEW_STORE_FORM);
     appendHTMLToElement(generateMessageOnAddStoreButtonHTML(), ID_OF_ADD_A_NEW_STORE_FORM);
+    appendHTMLToElement('<br><br>', ID_OF_ADD_A_NEW_STORE_TO_ZONE_PRE);
     appendHTMLToElement(createButton(ID_OF_ADD_A_NEW_STORE_BUTTON, 'Add a new store'), ID_OF_ADD_A_NEW_STORE_FORM);
     disableElement(ID_OF_ADD_A_NEW_STORE_BUTTON);
     setAddStoreToZoneButtonEvent();
-    appendHTMLToElement('<p id =' + ID_OF_ADD_STORE_ERROR + '></p>')
+    appendHTMLToElement('<p id=' + ID_OF_ADD_STORE_ERROR + '></p>', ID_OF_ADD_A_NEW_STORE_FORM);
 }
+
 export function buildFormElements()
 {
     emptyElementByID(ID_OF_ADD_A_NEW_STORE_FORM);
@@ -52,7 +59,9 @@ export function buildFormElements()
 
     appendHTMLToElement(createEmptyHTMLContainer(ID_OF_CHOOSING_ITEM_DROP_DOWN_CONTAINER), ID_OF_ADD_A_NEW_STORE_FORM);
     appendHTMLToElement(createChooseItemsDropDownListHTML(), ID_OF_CHOOSING_ITEM_DROP_DOWN_CONTAINER)
-    appendHTMLToElement(createEmptyHTMLContainer(ID_OF_ITEM_ELEMENT), ID_OF_ADD_A_NEW_STORE_FORM);
+    appendHTMLToElement(createEmptyPreContainer(ID_OF_ITEM_ELEMENT), ID_OF_ADD_A_NEW_STORE_FORM);
+    appendHTMLToElement(getAddingItemSuccessfullyInfo(), ID_OF_ADD_A_NEW_STORE_FORM);
+    $("#" + ID_OF_ADDING_ITEM_SUCCESSFULLY_INFO).hide();
 
     setChoosingItemFromDropDownListEvent();
     setDropDownItemsListEvent();
@@ -61,35 +70,65 @@ export function buildFormElements()
 
 export function setAddStoreToZoneButtonEvent()
 {
-
     $("#" + ID_OF_ADD_A_NEW_STORE_BUTTON).click(function() {
         var storeName = $('#' + ID_OF_STORE_NAME_TEXT_FIELD).val();
         var coordinateX = $('#' + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
         var coordinateY = $('#' + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
         var PPK = $('#' + ID_OF_PPK_TEXT_FIELD).val();
-       // var dataString = "zoneName="+zoneName;
-        $.ajax({
-            method: 'GET',
-            data: {"zoneName":zoneName,"storeName":storeName, "coordinateX":coordinateX, "coordinateY":coordinateY, "PPK":PPK, "itemsChosenForStoreArray": itemsChosenForStoreArray },
-            url: ADD_A_NEW_STORE_TO_ZONE_URL,
-            dataType: "json",
-            timeout: 4000,
-            error: function (e) {
-                console.error(e);
-                alert('error in setAddStoreToZoneButtonEvent\n' + e);
-            },
-            success: function (r) {
-                if(r["storeLocationIsUnique"] != "true")
-                {
-                    $("#" + ID_OF_ADD_STORE_ERROR).text="Can't create store because there is already a store in these coordinates!"
+
+      //  alert('storeName:' + storeName + ' coordinateX:' + coordinateX + ' coordinateY:' + coordinateY + 'PPK:' + PPK);
+        if(storeName === '')
+        {
+          //  alert('storeName is empty');
+            $("#" + ID_OF_ADD_STORE_ERROR).css('color', 'red');
+            $("#" + ID_OF_ADD_STORE_ERROR).text("Error: Store name field is empty");
+        }
+        else if(PPK === '')
+        {
+          //  alert('PPK is empty')
+            $("#" + ID_OF_ADD_STORE_ERROR).css('color', 'red');
+            $("#" + ID_OF_ADD_STORE_ERROR).text("Error: PPK field is empty");
+        }
+        else if(isNaN(PPK))
+        {
+          //  alert("You didn't enter a number in PPK");
+            $("#" + ID_OF_ADD_STORE_ERROR).css('color', 'red');
+            $("#" + ID_OF_ADD_STORE_ERROR).text("Error: You didn't enter a number in PPK");
+        }
+        else if(PPK < 0)
+        {
+         //   alert("PPK x needs to be a non-negative number");
+            $("#" + ID_OF_ADD_STORE_ERROR).css('color', 'red');
+            $("#" + ID_OF_ADD_STORE_ERROR).text("Error: PPK x needs to be a non-negative number");
+        }
+        else
+        {
+            $.ajax({
+                method: 'GET',
+                data: {"zoneName":zoneName,"storeName":storeName, "coordinateX":coordinateX, "coordinateY":coordinateY, "PPK":PPK, "itemsChosenForStoreArray": JSON.stringify(itemsChosenForStoreArray) },
+                url: ADD_A_NEW_STORE_TO_ZONE_URL,
+                dataType: "json",
+                timeout: 4000,
+                error: function (e) {
+                    console.error(e);
+                    alert('error in setAddStoreToZoneButtonEvent\n' + e);
+                },
+                success: function (r) {
+                    if(r["thereIsAlreadyStoreInLocation"] === "true")
+                    {
+                       // alert("Can't create store because there is already a store in these coordinates!");
+                        $("#" + ID_OF_ADD_STORE_ERROR).css('color', 'red');
+                        $("#" + ID_OF_ADD_STORE_ERROR).text("Error: Can't create store because there is already a store in these coordinates!");
+                    }
+                    else
+                    {
+                        disableElement(ID_OF_ADD_A_NEW_STORE_BUTTON);
+                        $("#" + ID_OF_ADD_STORE_ERROR).css('color', 'green');
+                        $("#" + ID_OF_ADD_STORE_ERROR).text("Added store to zone successfully!");
+                    }
                 }
-                else
-                {
-                    disableElement(ID_OF_ADD_A_NEW_STORE_BUTTON);
-                    $("#" + ID_OF_ADD_STORE_ERROR).text="Added store to zone successfully!"
-                }
-            }
-        })
+            })
+        }
     });
 }
 
@@ -116,9 +155,15 @@ export function getPPKInstructionHTML()
     return '<label for="PPKInstruction">Enter PPK:</label><br>';
 }
 
+export function getAddingItemSuccessfullyInfo()
+{
+    return '<p style="color:green;" id=' + ID_OF_ADDING_ITEM_SUCCESSFULLY_INFO + '>Added item successfully</p><br>';
+
+}
+
 export function getPPKTextFieldHTML()
 {
-    return '<input type="text" id=' + ID_OF_PPK_TEXT_FIELD+ 'name="PPKTextField"><br><br>';
+    return '<input type="text" id=' + ID_OF_PPK_TEXT_FIELD+ ' name="PPKTextField"><br><br>';
 }
 
 export function getStoreNameInstructionHTML()
@@ -128,7 +173,7 @@ export function getStoreNameInstructionHTML()
 
 export function getStoreNameTextFieldHTML()
 {
-    return '<input type="text" id=' + ID_OF_STORE_NAME_TEXT_FIELD+ 'name="storeNameTextField"><br><br>';
+    return '<input type="text" id=' + ID_OF_STORE_NAME_TEXT_FIELD+ ' name="storeNameTextField"><br><br>';
 }
 
 export function getPriceInstructionHTML()
@@ -138,12 +183,12 @@ export function getPriceInstructionHTML()
 
 export function getPriceErrorHTML()
 {
-    return '<P id=' + ID_OF_PRICE_ERROR + '></P><br>';
+    return '<p id=' + ID_OF_PRICE_ERROR + '></p><br>';
 }
 
 export function getPriceTextFieldHTML()
 {
-    return '<input type="text" id=' + ID_OF_PRICE_TEXT_FIELD+ 'name="priceTextField"><br><br>';
+    return '<input type="text" id=' + ID_OF_PRICE_TEXT_FIELD+ ' name="priceTextField"><br><br>';
 }
 
 export function generateInformingUserAboutAddingANewStoreToZoneHTML()
@@ -167,14 +212,14 @@ export function setChoosingItemFromDropDownListEvent(orderType)
 export function createHTMLElementsAndAppendThemToItemElement(itemStr)
 {
     appendHTMLToElement(getHTMLOfItemToChooseInOrder(itemStr),ID_OF_ITEM_ELEMENT)
-    appendHTMLToElement(createButton(ID_OF_ADD_ITEM_TO_ORDER, "Add item to order"),ID_OF_ITEM_ELEMENT);
+    appendHTMLToElement(createButton(ID_OF_ADD_ITEM_TO_ORDER, "Add item to store"),ID_OF_ITEM_ELEMENT);
 }
 
 export function createItemToChooseElement(itemStr)
 {
     emptyItemElement();
     createHTMLElementsAndAppendThemToItemElement(itemStr);
-    setAddItemToOrderButtonClickedEvent();
+    setAddItemToStoreButtonClickedEvent();
 }
 
 export function createChooseItemsDropDownListHTML()
@@ -182,11 +227,6 @@ export function createChooseItemsDropDownListHTML()
     var forName = "itemInStore";
     var headline = "Choose item:";
     return createEmptyDropDownListHTML(forName, headline, ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST)
-}
-
-export function emptyChooseItemsDropDownList()
-{
-    $( "#" + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST ).empty();
 }
 
 //The values in here are good
@@ -237,32 +277,50 @@ export function emptyItemElement()
 
 //  item["serialID"];
 // item["price"];
-
 export function setDropDownItemsListEvent()
 {
     $('#' + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST).change(function() {
-        $('#' + ID_OF_PRICE_ERROR).text='';
+        $("#" + ID_OF_ADDING_ITEM_SUCCESSFULLY_INFO).hide();
     });
 }
 
-export function setAddItemToOrderButtonClickedEvent() {
+export function setAddItemToStoreButtonClickedEvent() {
     //   alert("in getItemsListFromServerAndSetTheItemsList: " + orderType);
     $("#" + ID_OF_ADD_ITEM_TO_ORDER).click(function () {
         var price = $('#' + ID_OF_PRICE_TEXT_FIELD).val();
-        var serialID = $('#' + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST).val();
-        if (isNaN(price)) {
-            $('#' + ID_OF_PRICE_ERROR).text ="Error:You didn't entered a positive number in price text field!"
+        var itemStr = $('#' + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST).val();
+        var itemJSON = JSON.parse(itemStr);
+        var serialID = itemJSON["serialNumber"];
+     //   alert('price: ' + price + 'serialID: ' + serialID);
+        if(price === '')
+        {
+            $("#" + ID_OF_PRICE_ERROR).css('color', 'red');
+            $('#' + ID_OF_PRICE_ERROR).text("Error: Price field is empty!");
+        }
+        else if (isNaN(price)) {
+           // alert('Error:You didnt entered a positive number in price text field!');
+            $("#" + ID_OF_PRICE_ERROR).css('color', 'red');
+            $('#' + ID_OF_PRICE_ERROR).text("Error: You didn't entered a positive number in price text field!");
         }
         else if(price < 0) {
-            $('#' + ID_OF_PRICE_ERROR).text = "Error:Price can't be negative!"
+            //alert('Error:You didnt entered a positive number in price text field!');
+            $("#" + ID_OF_PRICE_ERROR).css('color', 'red');
+            $('#' + ID_OF_PRICE_ERROR).text("Error: Price can't be negative!");
         }
         else
         {
+           // alert('price is good');
             var item = {};
-            item["serialID"] = serialID;
+            item["serialNumber"] = serialID;
             item["price"] = price;
+           // alert('itemChosenForStoreArry before push:' + JSON.stringify(itemsChosenForStoreArray));
             itemsChosenForStoreArray.push(item);
+            //alert(itemsChosenForStoreArray);
+         //   alert(JSON.stringify(itemsChosenForStoreArray));
+            emptyElementByID(ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST);
             enableElement(ID_OF_ADD_A_NEW_STORE_BUTTON);
+            getItemsListFromServerAndSetTheItemsList();
+            $("#" + ID_OF_ADDING_ITEM_SUCCESSFULLY_INFO).show();
         }
     });
 }
@@ -313,8 +371,10 @@ export function getItemsListFromServerAndSetTheItemsList()
                     {
                         delete r[i];
                     }
+                    r = r.filter(function(x) { return x !== null });
                 }
             }
+            alert('getItemsListFromServerAndSetTheItemsList\n' + JSON.stringify(r));
             setItemsListInItemDropDown(r);
         }
     })

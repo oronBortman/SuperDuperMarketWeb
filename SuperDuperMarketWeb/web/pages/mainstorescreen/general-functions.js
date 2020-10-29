@@ -8,6 +8,11 @@ export function createEmptyHTMLContainer(idOfElementToCreate)
     return'<div id=' + idOfElementToCreate + '></div>';
 }
 
+export function createEmptyPreContainer(idOfElementToCreate)
+{
+    return'<pre id=' + idOfElementToCreate + '></pre>';
+
+}
 export function createButton(idOfButton, valueOfButton)
 {
     return '<button type="button" id=' + idOfButton + '> ' + valueOfButton + '</button>';
@@ -33,11 +38,13 @@ export function enableElement(idOfElement)
 
 }
 
-export function createEmptyTable(idOfTable, idOfTableBody)
+export function createEmptyTableWithBorder(idOfTable, idOfTableBody)
 {
-    return '<table id=' + idOfTable + '>' +
-            '<tbody id =' + idOfTableBody + '></tbody>' +
-        '</table>';
+    return  '<div class="table-responsive">' +
+                '<table id=' + idOfTable + ' class="tableWithBorder"' + '>' +
+                    '<tbody id =' + idOfTableBody + '></tbody>' +
+                '</table>' +
+            '</div>';
 }
 
 export function appendHTMLToMakeAndOrderBody(itemElement)

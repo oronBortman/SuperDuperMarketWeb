@@ -1,13 +1,17 @@
 package sdm.servlets.pagethree;
 
 import com.google.gson.Gson;
+import logic.AlertOnOrder;
 import logic.Customer;
+import logic.Seller;
 import logic.Store;
 import logic.order.CustomerOrder.ClosedCustomerOrder;
 import logic.order.CustomerOrder.OpenedCustomerOrder;
+import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.order.StoreOrder.OpenedStoreOrder;
 import logic.order.itemInOrder.OrderedItem;
 import logic.order.itemInOrder.OrderedItemFromSale;
+import logic.users.Account;
 import logic.users.User;
 import logic.users.UserManager;
 import logic.zones.Zone;
@@ -58,6 +62,17 @@ public class CloseOrderAndAddToHistoryServlet extends HttpServlet {
                 ClosedCustomerOrder closedCustomerOrder = openedCustomerOrder.closeCustomerOrder();
                 zone.addClosedOrderToHistory(closedCustomerOrder);
                 customer.addClosedCustomerOrderToMap(closedCustomerOrder);
+
+                for(ClosedStoreOrder closedStoreOrder : closedCustomerOrder.getListOfClosedStoreOrders())
+                {
+                    Seller storeOwner = closedStoreOrder.getStoreOwner();
+                    String dateOfOrder = closedStoreOrder.getDateStr();
+                    Double totalPriceOfOrder = closedStoreOrder.calcTotalPriceOfOrder();
+                    Account customerAccount = customer.getAccount();
+                    customerAccount.transferMoney(dateOfOrder,storeOwner,totalPriceOfOrder);
+                    AlertOnOrder alertOnOrder = new AlertOnOrder(closedStoreOrder);
+                    storeOwner.addAlertToList(alertOnOrder);
+                }
                 GeneralMethods.getOrderManagerByServletContext(servletContext).addClosedCustomerOrderToHistory(closedCustomerOrder);
             }
 

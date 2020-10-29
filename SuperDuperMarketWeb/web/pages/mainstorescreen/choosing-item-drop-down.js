@@ -39,6 +39,8 @@ export function initiateTheChoosingItemDropDownInOrder(orderType, idOfMakeAnOrde
     appendHTMLToElement(createEmptyHTMLContainer(ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT),idOfMakeAnOrderContainer);
     appendHTMLToElement(createChooseItemsDropDownListHTML(),ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT);
     appendHTMLToElement(createEmptyHTMLContainer(ID_OF_ITEM_ELEMENT), ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT);
+    appendHTMLToElement(createEmptyHTMLContainer(ID_OF_ITEM_ELEMENT), ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST_ELEMENT);
+    appendHTMLToElement('<br><br>',idOfMakeAnOrderContainer);
     appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
 
     disableElement(ID_OF_NEXT_BUTTON)
@@ -58,15 +60,15 @@ export function setChoosingItemFromDropDownListEvent(orderType)
 export function setNextButtonEvent(orderType, idOfMakeAnOrderContainer)
 {
     $('#' + ID_OF_NEXT_BUTTON).click(function () {
-        alert('Clicked On next button!');
+      //  alert('Clicked On next button!');
         if(orderType === STATIC)
         {
-            alert('order is static!');
+           // alert('order is static!');
             prepareAndInitiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
         }
         else if(orderType === DYNAMIC)
         {
-            alert('order is dynamic!');
+            //alert('order is dynamic!');
             activateDynamicAlgorithm();
             initiateShowStoresStatusTable(idOfMakeAnOrderContainer);
         }
@@ -153,7 +155,7 @@ export function getHTMLOfItemToChooseInOrder(itemStr, orderType)
     var nameOfItem = itemJSON["name"];
    // alert('chose item with name ' + nameOfItem);
 
-    var table='<table class ="tableOfItemForm">';
+    var table='<table class ="itemTable">';
     var serialIdRow='<tr><th>serial id:</th><th>' + serialIDOfItem + '</th></tr>';
     var namRow='<tr><th>name:</th><th>' + nameOfItem + '</th></tr>';
 
@@ -205,7 +207,7 @@ export function getHTMLOfTableOfEnteringAmountOfItem(typeToMeasureBy)
    // alert("in getHTMLOfTableOfEnteringAmountOfItem and amount is:" + amount );
 
 
-    return '<table class ="tableOfEnteringAmountOfItem">' +
+    return '<table class ="plusAndMinus">' +
         '<tr>' +
         '<th id="minus"><button type="button" id=' + ID_OF_MINUS_BUTTON + '>-</button></th>' +
         '<th><p id=' + ID_OF_VALUE_OF_AMOUNT_OF_ITEM_CHOSEN + '>' + amount + '</p></th>' +
@@ -362,7 +364,7 @@ export function activateDynamicAlgorithm()
             alert('error in  getItemsListFromServerAndSetTheItemsList\n' + e);
         },
         success: function (r) {
-            alert('succeed to activate dynamic algorithm.This is the json of the items added to order:\n' + r);
+          //  alert('succeed to activate dynamic algorithm.This is the json of the items added to order:\n' + r);
         }
     })
 }

@@ -8,7 +8,7 @@ import {
     createEmptyDropDownListHTML,
     createButton,
     emptyElementByID,
-    createEmptyTable,
+    createEmptyTableWithBorder,
     appendHTMLToElement, disableElement
 } from "./general-functions.js";
 
@@ -42,7 +42,7 @@ export function prepareAndInitiateChoosingDiscountsToApply(idOfMakeAnOrderContai
             alert('error in  postToServerTheChosenOneOfDiscount\n' + e);
         },
         success: function (r) {
-            alert('initial successfully');
+           // alert('initial successfully');
             initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
         }
     })
@@ -63,18 +63,20 @@ export function initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer)
             return("error");
         },
         success: function (r) {
-            alert('in initiateChoosingDiscountsToApply');
+           // alert('in initiateChoosingDiscountsToApply');
             //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
             emptyElementByID(idOfMakeAnOrderContainer);
-            appendHTMLToElement(createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY), idOfMakeAnOrderContainer);
+            appendHTMLToElement(createEmptyTableWithBorder(ID_OF_TABLE, ID_OF_TABLE_BODY), idOfMakeAnOrderContainer);
             appendHTMLToElement(createEmptyDropDownListHTML(ID_OF_DISCOUNTS_DROP_DOWN, 'Choose a discount', ID_OF_DISCOUNTS_DROP_DOWN), idOfMakeAnOrderContainer);
             appendHTMLToElement(createEmptyHTMLContainer(ID_OF_ITEM_FROM_DISCOUNT_DROP_DOWN_CONTAINER), idOfMakeAnOrderContainer);
             appendHTMLToElement(createButton(ID_OF_ADD_DISCOUNT_BUTTON, "Apply discount"), idOfMakeAnOrderContainer);
+            appendHTMLToElement('<br><br>',idOfMakeAnOrderContainer);
             appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
 
             setDiscountTable(r);
             setDiscountDropDownList(r);
             setChoosingDiscountFromDropDownListEvent();
+
             if(r.length === 0)
             {
                 disableElement(ID_OF_ADD_DISCOUNT_BUTTON);
@@ -312,7 +314,7 @@ export function getDiscountMessage(discountJSON)
     var itemName = discountJSON["ifYouBuy"]["itemName"];
     var operator = discountJSON["thenYouGet"]["operator"];
 
-    var message = "<table>" +
+    var message = '<table class="tableWithBorder"' +
         "<tr><th>Name of sale: " + discountName + "</th></tr>" +
         "<tr><th>Buy: " + quantity + " of " + itemName + "</th></th>" +
         "<tr><th> Get:"

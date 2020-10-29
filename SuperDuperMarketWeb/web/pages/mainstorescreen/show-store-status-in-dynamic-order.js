@@ -3,7 +3,7 @@
  */
 
 import {
-    createEmptyTable,
+    createEmptyTableWithBorder,
     appendHTMLToElement,
     emptyElementByID,
     createButton
@@ -20,25 +20,26 @@ const ID_OF_TABLE_BODY = "storesStatusTableBody";
 
 export function initiateShowStoresStatusTable(idOfMakeAnOrderContainer)
 {
-    alert('inside initiateShowStoresStatusTable')
+   // alert('inside initiateShowStoresStatusTable')
     emptyElementByID(idOfMakeAnOrderContainer);
-    appendHTMLToElement(createEmptyTable(ID_OF_TABLE, ID_OF_TABLE_BODY), idOfMakeAnOrderContainer);
+    appendHTMLToElement(createEmptyTableWithBorder(ID_OF_TABLE, ID_OF_TABLE_BODY), idOfMakeAnOrderContainer);
     setStoresTable();
     appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
+    appendHTMLToElement('<br><br>',idOfMakeAnOrderContainer);
     setNextButtonEvent(idOfMakeAnOrderContainer);
 }
 
 export function setNextButtonEvent(idOfMakeAnOrderContainer)
 {
     $('#' + ID_OF_NEXT_BUTTON).click(function () {
-        alert("Clicked on next!");
+     //   alert("Clicked on next!");
         prepareAndInitiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
     });
 }
 
 export function setStoresTable()
 {
-    alert('In setStoresTable');
+  //  alert('In setStoresTable');
     $.ajax({
         method: 'GET',
         data: {},
@@ -50,7 +51,7 @@ export function setStoresTable()
             alert('error in  setStoresTable\n' + e);
         },
         success: function (r) {
-            alert("Succeed\n" + r);
+        //    alert("Succeed\n" + r);
             appendHTMLToElement(generateFirstRowInStoresHTMLTable(),ID_OF_TABLE_BODY);
             // rebuild the list of users: scan all users and add them to the list of users
             $.each(r || [], function(index, store) {
@@ -63,15 +64,15 @@ export function setStoresTable()
 
 export function generateFirstRowInStoresHTMLTable()
 {
-    return "<tr><th>storeID</th>" +
-        "<th>store Name</th>" +
-        "<th>store Owner</th>" +
-        "<th>location</th>" +
-        "<th>distance From Customer</th>" +
-        "<th>PPK</th>" +
-        "<th>deliveryCost</th>" +
-        "<th>amountOfItemsPurchased</th>" +
-        "<th>totalPriceOfItems</th></tr>";
+    return "<tr class='withBorder'><th class='withBorder'>storeID</th>" +
+        "<th class='withBorder'>store Name</th>" +
+        "<th class='withBorder'>store Owner</th>" +
+        "<th class='withBorder'>location</th>" +
+        "<th class='withBorder'>distance From Customer</th>" +
+        "<th class='withBorder'>PPK</th>" +
+        "<th class='withBorder'>deliveryCost</th>" +
+        "<th class='withBorder'>amountOfItemsPurchased</th>" +
+        "<th class='withBorder'>totalPriceOfItems</th></tr>";
 }
 
 
@@ -87,13 +88,13 @@ export function generateRowInStoresHTMLTable(store)
     var amountOfItemsPurchased = store["amountOfItemsPurchased"];
     var totalPriceOfItems = store["totalPriceOfItems"];
 
-    return "<tr><th>" + storeID + "</th>" +
-        "<th>" + storeName + "</th>" +
-        "<th>" + storeOwner + "</th>" +
-        "<th>" + location + "</th>" +
-        "<th>" + distanceFromCustomer + "</th>" +
-        "<th>" + PPK + "</th>" +
-        "<th>" + deliveryCost + "</th>" +
-        "<th>" + amountOfItemsPurchased + "</th>" +
-        "<th>" + totalPriceOfItems + "</th></tr>"
+    return "<tr class='withBorder'><th class='withBorder'>" + storeID + "</th>" +
+        "<th class='withBorder'>" + storeName + "</th>" +
+        "<th class='withBorder'>" + storeOwner + "</th>" +
+        "<th class='withBorder'>" + location + "</th>" +
+        "<th class='withBorder'>" + distanceFromCustomer + "</th>" +
+        "<th class='withBorder'>" + PPK + "</th>" +
+        "<th class='withBorder'>" + deliveryCost + "</th>" +
+        "<th class='withBorder'>" + amountOfItemsPurchased + "</th>" +
+        "<th class='withBorder'>" + totalPriceOfItems + "</th></tr>"
 }

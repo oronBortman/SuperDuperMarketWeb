@@ -740,6 +740,7 @@ public class Zone {
 
     public void addStore(Store newStoreToAdd) {
         storesSerialIDMap.put(newStoreToAdd.getSerialNumber(), newStoreToAdd);
+        storesLocationMap.put(newStoreToAdd.getLocation(), newStoreToAdd);
     }
 
     public Integer getMaximumSerialIDOfStoreIntStoresMap()

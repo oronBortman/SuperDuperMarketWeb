@@ -56,7 +56,7 @@ export function generateFinishOrderMessageHTML()
 export function setFinishButtonEvent(idOfMakeAnOrderContainer)
 {
     $("#" + ID_OF_FINISH_ORDER_BUTTON).click(function() {
-        alert('clicked on FinishButton');
+       // alert('clicked on FinishButton');
         // console.log("Coordinate value before checking the value: " + coordinateValueNum);
         closeOrderAndAddToHistory();
         emptyElementByID(idOfMakeAnOrderContainer);
@@ -77,6 +77,8 @@ export function closeOrderAndAddToHistory()
         },
         success: function(r) {
             console.log("Succesfully!!!");
+            emptyElementByID("makeOrderBody");
+            appendHTMLToElement('<br><br><p style="color:green;">Order finished successfully! </p>')
             console.log(r);
         }
     });
@@ -117,7 +119,7 @@ export function setAddFeedbackButtonEvent()
         //Get infromation from feedback and send them to servlet
         var feedbackText = $("#" + ID_OF_FEEDBACK_TEXT_FIELD).val();
         var grade = getValueOfGrade();
-        alert("in setAddFeedbackButtonEvent and storeID: " + storeID + " feedbackText: " +feedbackText + " grade: " + grade);
+     //   alert("in setAddFeedbackButtonEvent and storeID: " + storeID + " feedbackText: " +feedbackText + " grade: " + grade);
 
         //Active servlet that add feedback to store
         $.ajax({
@@ -157,8 +159,8 @@ export function getHTMLOfTableOfEnteringGrade()
     var amount=GRADE_DIFFERENCE;
     // alert("in getHTMLOfTableOfEnteringAmountOfItem and amount is:" + amount );
 
-    return '<table class ="tableOfEnteringGrade">' +
-        '<tr>' +
+    return '<table class ="plusAndMinus">' +
+        '<tr class="noBorder">' +
         '<th><input type="button" value="-" id=' + ID_OF_MINUS_BUTTON + '></input></th>' +
         '<th><p id=' + ID_OF_VALUE_OF_AMOUNT_OF_GRADE_CHOSEN + '>' + amount + '</p></th>' +
         '<th><input type="button" value="+" id=' + ID_OF_PLUS_BUTTON + ' ></input></th>' +

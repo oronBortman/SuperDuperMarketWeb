@@ -1,9 +1,12 @@
+import {setChargingMoneyButtonEvent} from "./charging-money.js";
+import {getAlertsFromServerAndUpdateOwner} from "../show-alerts.js";
+
 var chatVersion = 0;
 var refreshRate = 5000; //milli seconds
 var USER_LIST_URL = buildUrlWithContextPath("users-list");
 var ZONE_LIST_URL = buildUrlWithContextPath("zones-list");
 var ACCOUNT_LIST_URL = buildUrlWithContextPath("accounts-list");
-var CHARGING_MONEY_URL = buildUrlWithContextPath("charging-money");
+//var CHARGING_MONEY_URL = buildUrlWithContextPath("charging-money");
 var MOVE_TO_ZONE_URL = buildUrlWithContextPath("move-to-zone");
 var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
 var UPLOAD_XML_FILE = buildUrlWithContextPath("load-xml-file");
@@ -25,29 +28,31 @@ function refreshUsersList(users) {
        // console.log("Adding user #" + index + ": " + userName);
         //create a new <option> tag with a value in it and
         //appeand it to the #userslist (div with id=userslist) element
-        $("<tr><th>" + userName + "</th>" + "<th>" + userType + "</th>" + "</tr>").appendTo(tbodySelector);
+        $("<tr class='withBorder'>" +
+            "<th class='withBorder'>" + userName + "</th>" +
+            "<th class='withBorder'>" + userType + "</th>" +
+            "</tr>").appendTo(tbodySelector);
     });
 }
 
 function refreshAccountsList(historyOfAccountsActions) {
     var tbodySelector = $("#tbodyOfManageAccountTable");
     document.getElementById('tbodyOfManageAccountTable').innerHTML = '';
-    $.each(historyOfAccountsActions || [], function(index, acountAction) {
-        var typeOfActionInAccount = acountAction["typeOfActionInAccount"];
-        var date = acountAction["date"];
-        var amountOfMoneyInAction = acountAction["amountOfMoneyInAction"];
-        var amountOfMoneyBeforeAction = acountAction["amountOfMoneyBeforeAction"];
-        var amountOfMoneyAfterAction = acountAction["amountOfMoneyAfterAction"];
+    $.each(historyOfAccountsActions || [], function(index, accountAction) {
+        var typeOfActionInAccount = accountAction["typeOfActionInAccount"];
+        var date = accountAction["date"];
+        var amountOfMoneyInAction = accountAction["amountOfMoneyInAction"];
+        var amountOfMoneyBeforeAction = accountAction["amountOfMoneyBeforeAction"];
+        var amountOfMoneyAfterAction = accountAction["amountOfMoneyAfterAction"];
 
-       // console.log("Adding action #" + index);
-        //create a new <option> tag with a value in it and
-        //appeand it to the #userslist (div with id=userslist) element
-        $("<tr><th>" + typeOfActionInAccount + "</th>" +
-            "<th>" + date + "</th>" +
-            "<th>" + amountOfMoneyInAction + "</th>" +
-            "<th>" + amountOfMoneyBeforeAction + "</th>" +
-            "<th>" + amountOfMoneyAfterAction + "</th>" +
-            "</tr>").appendTo(tbodySelector);    });
+        $("<tr class='withBorder'>" +
+            "<th class='withBorder'>" + typeOfActionInAccount + "</th>" +
+            "<th class='withBorder'>" + date + "</th>" +
+            "<th class='withBorder'>" + amountOfMoneyInAction.toFixed(2) + "</th>" +
+            "<th class='withBorder'>" + amountOfMoneyBeforeAction.toFixed(2) + "</th>" +
+            "<th class='withBorder'>" + amountOfMoneyAfterAction.toFixed(2) + "</th>" +
+            "</tr>").appendTo(tbodySelector);
+    });
 }
 
 //TODO
@@ -68,13 +73,13 @@ function refreshZonesList(zones) {
      //   console.log("idOfMoveToZoneForm " + idOfMoveToZoneForm);
         //create a new <option> tag with a value in it and
         //appeand it to the #userslist (div with id=userslist) element
-        $("<tr><th>" + zoneOwner + "</th>" +
-            "<th>" + zoneName + "</th>" +
-            "<th>" + totalItemsTypesInZone + "</th>" +
-            "<th>" + totalStoresInZone + "</th>" +
-            "<th>" + totalOrdersInZone + "</th>" +
-            "<th>" + avgOfOrdersNotIncludingDeliveries + "</th>" +
-            "<th>" +
+        $("<tr class='withBorder'><th class='withBorder'>" + zoneOwner + "</th>" +
+            "<th class='withBorder'>" + zoneName + "</th>" +
+            "<th class='withBorder'>" + totalItemsTypesInZone + "</th>" +
+            "<th class='withBorder'>" + totalStoresInZone + "</th>" +
+            "<th class='withBorder'>" + totalOrdersInZone + "</th>" +
+            "<th class='withBorder'>" + avgOfOrdersNotIncludingDeliveries + "</th>" +
+            "<th class='withBorder'>" +
                 "<form id = \"moveToZone" + index + "\"" +
                         "name  = \"moveToZone" + index + "\"" +
                         "action = \"/SuperDuperMarketWeb_Web_exploded/move-to-zone\" method = \"GET\" class = \"move-to-zone\">" +
@@ -145,7 +150,6 @@ function setUploadFileElement() { // onload...do
         return false;
     })
 }
-
 /*function setChargingMoneyElement() { // onload...do
     $("#uploadXmlFile").submit(function() {
 
@@ -191,8 +195,8 @@ function ajaxUsersList() {
 function ajaxAccountsList() {
     $.ajax({
         url: ACCOUNT_LIST_URL,
-        success: function(acounts) {
-            refreshAccountsList(acounts);
+        success: function(accounts) {
+            refreshAccountsList(accounts);
         }
     });
 }
@@ -210,7 +214,7 @@ function addGreetingToUser(user)
 {
     var userName = user["userName"];
     var userType = user["userType"];
-    $("<h3>Welcome, " + userType + " " + userName + "</h3>").appendTo($("#greeting"));
+    $("#greeting").text("Welcome, " + userType + " " + userName);
 
 }
 function setActionBasedOnRole(user)
@@ -219,10 +223,11 @@ function setActionBasedOnRole(user)
     if(userType === "seller")
     {
         setUploadFileElement();
-
+        setInterval(getAlertsFromServerAndUpdateOwner, refreshRate);
     }
     else if(userType === "customer")
     {
+        setChargingMoneyButtonEvent();
         //setChargingMoneyElement();
     }
 }
@@ -231,7 +236,7 @@ function hideHTMLElementsByRole(user){
     var userType = user["userType"];
     if(userType === "seller")
     {
-        $("#manageAccount").hide();
+        $("#chargingMoneyContainer").hide();
     }
     else if(userType === "customer")
     {

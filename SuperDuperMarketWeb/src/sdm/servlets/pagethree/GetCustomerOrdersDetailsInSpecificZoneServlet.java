@@ -69,8 +69,8 @@ public class GetCustomerOrdersDetailsInSpecificZoneServlet extends HttpServlet {
                 JSONArray jsonArray = readListOfClosedCustomersOrderToJSONObject(closedCustomerOrdersList);
                 String json = gson.toJson(jsonArray);
                 out.println(json);
-           //     System.out.println("This is the details on the openedCustomerOrder!!\n\n\n\n\n\n");
-          //      System.out.println(json);
+              //  System.out.println("This is the details on the ClosedCustomerOrder!!\n\n\n\n\n\n");
+              // System.out.println(json);
                 out.flush();
             }
             else
@@ -121,12 +121,12 @@ public class GetCustomerOrdersDetailsInSpecificZoneServlet extends HttpServlet {
         List<ClosedStoreOrder> closedStoreOrderList = closedCustomerOrder.getListOfClosedStoreOrders();
         for(ClosedStoreOrder closedStoreOrder : closedStoreOrderList)
         {
-            JSONObject jsonObject = new JSONObject();
             int i=0;
             List<OrderedItem> orderedItemList = closedStoreOrder.generateListOfGeneralOrderedItems();
             Store store = closedStoreOrder.getStoreUsed();
             for(OrderedItem orderedItem : orderedItemList)
             {
+                JSONObject jsonObject = new JSONObject();
                 jsonObject.put("storeID", store.getSerialNumber());
                 jsonObject.put("storeName", store.getName());
                 jsonObject.put("typeToMeasureBy", orderedItem.getTypeOfMeasureStr());
@@ -137,8 +137,8 @@ public class GetCustomerOrdersDetailsInSpecificZoneServlet extends HttpServlet {
                 jsonObject.put("totalPriceOfItem", decimalFormat.format(orderedItem.getTotalPriceOfItemOrderedByTypeOfMeasure()));
                 jsonObject.put("FromDiscount", orderedItem instanceof OrderedItemFromSale);
                 jsonArray.add(i,jsonObject);
-                System.out.println("!!!!!!!");
-                System.out.println(jsonObject);
+               // System.out.println("!!!!!!!");
+               // System.out.println(jsonObject);
                 i++;
             }
         }

@@ -7,6 +7,7 @@ h3{font-size:24px}h4{font-size:20px}
 h5{font-size:18px}h6{font-size:16px}
 h1,h2,h3,h4,h5,h6{font-family:"Segoe UI",Arial,sans-serif;font-weight:400;margin:10px 0}
 hr{border:0;border-top:1px solid #eee;margin:20px 0}
+p {text-align: left;}
 
 
 /*.userstable th, td {
@@ -31,8 +32,6 @@ table {
 }
 
 
-tr:nth-child(odd){background-color:#fff}
-tr:nth-child(even){background-color:#f1f1f1}
 table th{padding:8px 8px;display:table-cell;text-align:left;vertical-align:top}
 th:first-child, td:first-child{padding-left:16px}
 table, th, td {

@@ -1,9 +1,12 @@
 package sdm.servlets.pagethree;
 
 import com.google.gson.Gson;
+import logic.AlertOnFeedback;
 import logic.Customer;
+import logic.Seller;
 import logic.Store;
 import logic.order.CustomerOrder.ClosedCustomerOrder;
+import logic.order.CustomerOrder.Feedback;
 import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.users.User;
 import logic.users.UserManager;
@@ -65,8 +68,14 @@ public class AddFeedbackServlet extends HttpServlet {
             else
             {
                 System.out.println(user.getUserName() + " " + openedCustomerOrder.getDateStr() + " " + gradeInt + " " + feedbackText);
-                store.addFeedback(user.getUserName(),openedCustomerOrder.getDateStr(), gradeInt, feedbackText);
+                Feedback feedback = new Feedback(user.getUserName(),openedCustomerOrder.getDateStr(), gradeInt, feedbackText);
+                store.addFeedback(feedback);
+                //Add feedback alert to seller
+                Seller storeOwner = store.getStoreOwner();
+                storeOwner.addAlertToList(new AlertOnFeedback(feedback, store));
             }
+
+
 
             String json = gson.toJson(zone);
             out.println(json);

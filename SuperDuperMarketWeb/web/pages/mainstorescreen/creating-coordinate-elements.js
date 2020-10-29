@@ -46,8 +46,8 @@ export function getSelectedCoordinateHTML(typeOfCoordinate, idOfValueOfCoordinat
     }
 
     return '<p>Please Enter Cooridnate ' + typeOfCoordinate +'</p> ' +
-        '<table class =' + idOfTableOfEnteringCoordinate + '>' +
-        '<tr>' +
+        '<table id =' + idOfTableOfEnteringCoordinate + ' class="plusAndMinus">' +
+        '<tr class="noBorder">' +
         '<th><button type="button" id=' + idOfMinusButtonOfCoordinate + '>-</button></th>' +
         '<th><p id=' + idOfValueCoordinateChosen + '>' + INITIAL_VALUE_OF_COORDINATE + '</p></th>' +
         '<th><button type="button" id=' + idOfPlusOfCoordinate + '>+</button></th>' +
