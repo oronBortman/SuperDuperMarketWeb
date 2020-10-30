@@ -22,24 +22,15 @@ public class ChargeMoneyToCustomerServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In charge-money-servlet :)))))");
         try (PrintWriter out = response.getWriter()) {
-            System.out.println("A1");
             ServletContext servletContext = getServletContext();
-            System.out.println("A2");
             String date = request.getParameter("date");
-            System.out.println("A3");
             String amountOfMoneyToCharge = request.getParameter("amountOfMoneyToCharge");
             System.out.println(date + amountOfMoneyToCharge);
-            System.out.println("A4");
             Double amountOfMoneyToChargeDouble = Double.parseDouble(amountOfMoneyToCharge);
-            System.out.println("A5");
             User user = getUserByRequestAndServletContext(servletContext, request);
-            System.out.println("A6");
             Account account = user.getAccount();
-            System.out.println("A7");
             account.chargingMoney(date, amountOfMoneyToChargeDouble);
-            System.out.println("A8");
 
             Gson gson = new Gson();
             String json = gson.toJson(account);

@@ -43,7 +43,6 @@ public class Item {
 
     public Item(Integer serialNumber, String name, TypeOfMeasure itemPurchaseCategory)
     {
-        //this.serialNumber = new SimpleIntegerProperty(serialNumber);
         this.serialNumber = serialNumber;
         this.name = new SimpleStringProperty(name);
         this.typeToMeasureBy = itemPurchaseCategory;
@@ -51,7 +50,6 @@ public class Item {
 
     public Item(jaxb.schema.generated.SDMItem item)
     {
-        //this.serialNumber = new SimpleIntegerProperty(item.getId());
         this.serialNumber = item.getId();
 
         this.name = new SimpleStringProperty(item.getName());
@@ -62,7 +60,6 @@ public class Item {
 
     public Item(Item item)
     {
-        //this.serialNumber = new SimpleIntegerProperty(item.getSerialNumber());
         this.serialNumber = item.getSerialNumber();
 
         this.name =  new SimpleStringProperty(item.getName());
@@ -75,7 +72,6 @@ public class Item {
 
     public Integer getSerialNumber()
     {
-        //return serialNumber.get();
         return serialNumber;
     }
 

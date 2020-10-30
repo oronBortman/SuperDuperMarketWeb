@@ -20,7 +20,6 @@ const ID_OF_TABLE_BODY = "storesStatusTableBody";
 
 export function initiateShowStoresStatusTable(idOfMakeAnOrderContainer)
 {
-   // alert('inside initiateShowStoresStatusTable')
     emptyElementByID(idOfMakeAnOrderContainer);
     appendHTMLToElement(createEmptyTableWithBorder(ID_OF_TABLE, ID_OF_TABLE_BODY), idOfMakeAnOrderContainer);
     setStoresTable();
@@ -32,14 +31,12 @@ export function initiateShowStoresStatusTable(idOfMakeAnOrderContainer)
 export function setNextButtonEvent(idOfMakeAnOrderContainer)
 {
     $('#' + ID_OF_NEXT_BUTTON).click(function () {
-     //   alert("Clicked on next!");
         prepareAndInitiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
     });
 }
 
 export function setStoresTable()
 {
-  //  alert('In setStoresTable');
     $.ajax({
         method: 'GET',
         data: {},
@@ -51,11 +48,8 @@ export function setStoresTable()
             alert('error in  setStoresTable\n' + e);
         },
         success: function (r) {
-        //    alert("Succeed\n" + r);
             appendHTMLToElement(generateFirstRowInStoresHTMLTable(),ID_OF_TABLE_BODY);
-            // rebuild the list of users: scan all users and add them to the list of users
             $.each(r || [], function(index, store) {
-               // alert("Adding store for #" + index + ": " +  store["storeID"] +  " " + store["storeName"]);
                 appendHTMLToElement(generateRowInStoresHTMLTable(store),ID_OF_TABLE_BODY);
             });
         }

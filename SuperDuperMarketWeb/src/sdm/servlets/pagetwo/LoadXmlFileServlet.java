@@ -38,26 +38,20 @@ public class LoadXmlFileServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try{
-            final String SDM_MAIN_PAGE_URL = request.getContextPath() + "/pages/sdmmainpage/sdm-main-stores-page.html";
 
             response.setContentType("text/html;charset=UTF-8");
             Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
-           // String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
             InputStream fileContent = filePart.getInputStream();
             String username = SessionUtils.getUsername(request);
-            // System.out.println("In load xml file servlet");
             ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
             UserManager userManager = ServletUtils.getUserManager(getServletContext());
             User user = userManager.getUserByName(username);
-            //  System.out.println("The name from userManager: " + user.getUserName() + " user type: " + user.getUserType());
             String message="";
             if(user instanceof Seller)
             {
                 try {
-                    //System.out.println("In LoadXmlFileServlet");
                     zoneManager.addNewZoneFromXml(fileContent, (Seller)user);
                     message="Loaded file successfully";
-                    // System.out.println("Loaded xml successfully");
                 }
                 catch (DuplicateZoneName e)
                 {
@@ -70,8 +64,6 @@ public class LoadXmlFileServlet extends HttpServlet {
                 } catch (InvalidCoordinateYOfStoreException e) {
                     message = "The value " + e.getCoord() + " of coordinate y of store with name " + e.getName() + " and serial id " + e.getSerialID() + " is invalid";
                 } catch (StoreLocationIsIdenticalToStoreException e) {
-                    //TODO
-                    //message = "The location (" + " of coordinate x of store with name " + e.getName() + " and serial id " + e.getSerialID() + " is invalid";
 
                 } catch (InvalidCoordinateXOfStoreException e) {
                     message = "The value " + e.getCoord() + " of coordinate x of store with name " + e.getName() + " and serial id " + e.getSerialID() + " is invalid";
@@ -118,7 +110,6 @@ public class LoadXmlFileServlet extends HttpServlet {
            }
             else
             {
-                // System.out.println("G");
                 message="User doesn't have a permission to upload an xml file to Super Duper Market";
            }
 
@@ -128,10 +119,6 @@ public class LoadXmlFileServlet extends HttpServlet {
                 e.getMessage();
                 response.getOutputStream().println(e.getMessage());
             }
-            //response.sendRedirect(SDM_MAIN_PAGE_URL);
-
-
-            //response.getWriter().write(message);
         }
         catch(Exception e)
         {

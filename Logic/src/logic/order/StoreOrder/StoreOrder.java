@@ -21,24 +21,6 @@ public class StoreOrder extends Order {
     private Map<Integer, OrderedItemFromStore> orderedItemsNotFromSale;
     private Map<String, Map<Integer, OrderedItemFromStore>> orderedItemsFromSale;
 
-   /* public StoreOrder(Store store, String date, boolean isOrderStatic, SDMLocation customerLocation, String customerName){
-        super(date, isOrderStatic);
-        this.customerLocation = customerLocation;
-        this.customerName = customerName;
-      //  this.storeUsed = store;
-        orderedItemsNotFromSale = new HashMap<Integer, OrderedItemFromStore>();
-        orderedItemsFromSale = new HashMap<String,Map<Integer, OrderedItemFromStore>>();
-    }*/
-
-    /*public StoreOrder(String date, boolean isOrderStatic, SDMLocation customerLocation, String customerName, Store store){
-        super(date, isOrderStatic);
-        this.customerLocation = customerLocation;
-        this.customerName = customerName;
-        this.storeUsed = store;
-        orderedItemsNotFromSale = new HashMap<Integer, OrderedItemFromStore>();
-        orderedItemsFromSale = new HashMap<String,Map<Integer, OrderedItemFromStore>>();
-    }*/
-
     public StoreOrder(String date, boolean isOrderStatic, SDMLocation customerLocation, String customerName, Store store){
         super(date, isOrderStatic);
         this.customerLocation = customerLocation;
@@ -57,17 +39,6 @@ public class StoreOrder extends Order {
         return customerLocation;
     }
 
-    /*public StoreOrder(String date, boolean isOrderStatic, SDMLocation customerLocation)
-    {
-        super(date, isOrderStatic);
-        this.customerLocation=customerLocation;
-        orderedItemsNotFromSale = new HashMap<Integer, OrderedItemFromStore>();
-        orderedItemsFromSale = new HashMap<String,Map<Integer, OrderedItemFromStore>>();
-    }*/
-
-    /*public StoreOrder(String date, boolean isOrderStatic) {
-        super(date, isOrderStatic);
-    }*/
     public StoreOrder(StoreOrder storeOrder)
     {
         super(storeOrder.getDateStr(), storeOrder.isOrderStatic());
@@ -150,14 +121,11 @@ public class StoreOrder extends Order {
         return orderedItemFromSaleListWithDiscountNames;
     }
 
-    //public Double calcDistanceToCustomer()
-
-
-
     public Double calcTotalPriceOfItems()
     {
        return calcTotalPriceOfItemsNotFromSale() + calcTotalPriceOfItemsFromSale();
     }
+
     public Double calcTotalPriceOfItemsNotFromSale()
     {
         return getOrderedItemsNotFromSale().values().stream().mapToDouble(OrderedItemFromStore::getTotalPriceOfItemOrderedByTypeOfMeasure).sum();

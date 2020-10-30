@@ -1,24 +1,21 @@
 package logic.users;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Account {
     Double amountOfMoneyInAccount;
-    Set<ActionOnAccount> historyOfActionsOnAccountSet;
+    List<ActionOnAccount> historyOfActionsOnAccountSet;
     Account()
     {
         amountOfMoneyInAccount=0.0;
-        this.historyOfActionsOnAccountSet = new HashSet();
+        this.historyOfActionsOnAccountSet = new ArrayList<>();
     }
 
-    public void transferMoney(String date, User userToTransferMoneyTo, Double amountOfMoneyToTransfer)
+    public void transferMoney(String date, Double amountOfMoneyToTransfer)
     {
         Double amountOfMoneyBeforeTransfer = amountOfMoneyInAccount;
         Double amountOfMoneyAfterTransfer = amountOfMoneyInAccount - amountOfMoneyToTransfer;
         amountOfMoneyInAccount=amountOfMoneyAfterTransfer;
-        userToTransferMoneyTo.getAccount().gettingMoney(date, amountOfMoneyToTransfer);
         createActionAndAddItToHistoryMap(date, amountOfMoneyToTransfer,amountOfMoneyBeforeTransfer, amountOfMoneyAfterTransfer, ActionOnAccount.TypeOfActionInAccount.TransferMoney);
     }
 
@@ -43,7 +40,7 @@ public class Account {
         historyOfActionsOnAccountSet.add(new ActionOnAccount(date, amountOfMoneyInAction, amountOfMoneyBeforeAction, amountOfMoneyAfterAction, typeOfActionInAccount));
     }
 
-    public Set<ActionOnAccount> getHistoryOfActionsOnAccountSet() {
+    public List<ActionOnAccount> getHistoryOfActionsOnAccountList() {
         return historyOfActionsOnAccountSet;
     }
 

@@ -22,7 +22,6 @@ public class InitializeDiscountsInOrderServlet extends HttpServlet {
         //returning JSON objects, not HTML
         //{"discountName":discountName};
         response.setContentType("application/json");
-       // System.out.println("In ApplyAllOrNothingDiscountServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
@@ -31,7 +30,6 @@ public class InitializeDiscountsInOrderServlet extends HttpServlet {
             openedCustomerOrder.initializeItemsAmountLeftToUseInSalesMapInOpenedStoreOrders();
             String json = gson.toJson(openedCustomerOrder);
             out.println(json);
-            //System.out.println(json);
             out.flush();
         }
         catch (Exception e)

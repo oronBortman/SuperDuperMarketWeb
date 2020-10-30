@@ -23,7 +23,6 @@ public class CreateDynamicOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In create-dynamic-order servlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             UserManager userManager = ServletUtils.getUserManager(getServletContext());
@@ -31,12 +30,6 @@ public class CreateDynamicOrderServlet extends HttpServlet {
             String date = request.getParameter("date");
             String coordinateX = request.getParameter("coordinateX");
             String coordinateY = request.getParameter("coordinateY");
-
-            System.out.println("There are the parameters of the order:");
-            System.out.println(date);
-            System.out.println(coordinateX);
-            System.out.println(coordinateY);
-            System.out.println("\n\n\n\n\n\n\n");
 
             if(date != null && coordinateX != null && coordinateY != null)
             {
@@ -48,10 +41,7 @@ public class CreateDynamicOrderServlet extends HttpServlet {
                 //Need to check if there is no store in this coordinates
                 OpenedCustomerOrder openedCustomerOrder = new OpenedCustomerOrder(date, user.getUserName(), false, new SDMLocation(coordinateXInt, coordinateYInt));
                 user.setCurrentOpenedOrder(openedCustomerOrder);
-                System.out.println("About to print json of the dynamic order!!!");
                 String json = gson.toJson(openedCustomerOrder);
-                System.out.println("About to print json of the dynamic order!!!");
-                System.out.println(json);
                 out.println(json);
                 out.flush();
             }

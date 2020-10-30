@@ -8,22 +8,15 @@ import {getAlertsFromServerAndUpdateOwner} from "../show-alerts.js";
 var refreshRate = 5000; //milli seconds
 var STORES_LIST_URL = buildUrlWithContextPath("stores-in-zone-list");
 var ITEMS_LIST_URL = buildUrlWithContextPath("items-in-zone-list");
-var CHOOSE_ITEMS_IN_ORDER_UTL = buildUrlWithContextPath("choose-item-in-order");
 var detailsOnZoneJSONFormat = JSON.parse(localStorage.getItem('detailsOnZone'));
 var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
 var zoneName = detailsOnZoneJSONFormat.zoneName;
 var ID_OF_TBODY_OF_ZONE_ITEMS_TABLE = 'tbodyOfZoneItemsTable';
 var ID_OF_TBODY_OF_STORE_TABLE = 'tbodyOfDetailsOnStoresInZone';
 
-const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON = "showPrivateOrdersOfCustomerButton";
-const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER = "showPrivateOrdersOfCustomerContainer";
-const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON = "showPrivateOrdersInSellerStoresButton";
-const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER = "showOrdersInSellerStoresContainer";
-const ID_OF_SHOW_FEEDBACKS_BUTTON = 'showFeedbacksButton';
 const ID_OF_SHOW_FEEDBACKS_CONTAINER = 'showFeedbacksContainer';
 const ID_OF_ADD_NEW_STORE_TO_ZONE_BUTTON = 'addANewStoreToZoneButton';
 const ID_OF_ADD_NEW_STORE_CONTAINER = 'addANewStoreContainer';
-const ID_OF_SHOW_FEEDBACKS = 'showFeedbacksContainer';
 const ID_OF_MAKE_A_NEW_ORDER_CONTAINER = 'makeANewOrderContainer';
 const ID_OF_SHOW_PRIVATE_ORDER_OF_SELLER_CONTAINER = 'showPrivateOrdersOfSellerContainer';
 const ID_OF_SHOW_PRIVATE_ORDER_OF_CUSTOMER_CONTAINER  = 'showPrivateOrdersOfCustomerContainer';
@@ -37,7 +30,6 @@ function refreshStoresInZoneList(detailsOnStoresInZone) {
     console.log("in refreshStoresInZoneList");
     emptyStoresInZoneTable();
     var showAllStoresInZoneSelector = $('#' + ID_OF_TBODY_OF_STORE_TABLE);
-    // rebuild the list of users: scan all users and add them to the list of users
     $.each(detailsOnStoresInZone || [], function(index, storeInZone) {
         console.log("Adding store #" + index + ": " + name);
         $(generateRowInStoresInZoneHTMLTable(storeInZone)).appendTo(showAllStoresInZoneSelector);
@@ -106,7 +98,6 @@ function generateRowInItemsInStoreHTMLTable(item)
 
 function refreshItemsInZoneList(itemsInZone) {
     document.getElementById(ID_OF_TBODY_OF_ZONE_ITEMS_TABLE).innerHTML = '';
-    // rebuild the list of items: scan all items and add them to the list of items
     $.each(itemsInZone || [], function(index, item) {
         console.log("Adding item #" + index + ": " + name);
         $(generateRowInItemsInZoneHTMLTable(item)).appendTo($('#' + ID_OF_TBODY_OF_ZONE_ITEMS_TABLE));
@@ -180,9 +171,6 @@ function setActionBasedOnRole(user)
     var userType = user["userType"];
     if(userType === "seller")
     {
-        //TODO
-        //setShowOrdersInSellerStoresButtonEvent()
-       // setShowFeedbacksButtonEvent();
         setAddANewStoreButtonEvent();
         setInterval(initiateShowFeedbacksInCertainZone, refreshRate);
         setInterval(initiateShowOrdersOfSellerStoresInCertainZone, refreshRate);
@@ -192,7 +180,6 @@ function setActionBasedOnRole(user)
     else if(userType === "customer")
     {
         setMakeANewOrderButton();
-       // setShowCustomerOrdersButtonEvent();
         setInterval(initiateShowPrivateOrdersOfCustomer, refreshRate);
     }
 }
@@ -204,35 +191,6 @@ function setAddANewStoreButtonEvent()
     });
 }
 
-/*function setShowFeedbacksButtonEvent()
-{
-    $("#" + ID_OF_SHOW_FEEDBACKS_BUTTON).click(function() {
-        initiateShowFeedbacksInCertainZone();
-    });
-}*/
-/*
-function setShowOrdersInSellerStoresButtonEvent()
-{
-    $("#" + ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON).click(function() {
-        initiateShowOrdersOfSellerStoresInCertainZone();
-    })
-}
-
-function setShowCustomerOrdersButtonEvent()
-{
-    $("#" + ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON).click(function() {
-        initiateShowPrivateOrdersOfCustomer();
-    })
-}*/
-
-/*
-const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_BUTTON = "showPrivateOrdersOfCustomerButton";
-const ID_OF_SHOW_PRIVATE_ORDERS_OF_CUSTOMER_CONTAINER = "showPrivateOrdersOfSellerContainer";
-const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_BUTTON = "showPrivateOrdersInSellerStoresButton";
-const ID_OF_SHOW_ORDERS_IN_SELLER_STORES_CONTAINER = "showOrdersInSellerStoresContainer";
-const ID_OF_SHOW_FEEDBACKS_BUTTON = 'showFeedbacksButton';
-const ID_OF_SHOW_FEEDBACKS_CONTAINER = 'showFeedbacksContainer';
- */
 function hideHTMLElementsByRole(user){
     var userType = user["userType"];
     if(userType === "seller")
@@ -246,6 +204,7 @@ function hideHTMLElementsByRole(user){
         $("#" + ID_OF_SHOW_PRIVATE_ORDER_OF_SELLER_CONTAINER).hide();
         $("#" + ID_OF_SHOW_FEEDBACKS_CONTAINER).hide();
         $("#" + ID_OF_ADD_NEW_STORE_CONTAINER).hide();
+        $("#alerts").hide();
     }
 }
 
@@ -258,12 +217,6 @@ $(function() {
         }
     });
     setMoveToTheMainPageButton();
-    //The users list is refreshed automatically every second
     setInterval(ajaxStoresList, refreshRate);
     setInterval(ajaxItemsInZoneList, refreshRate);
 });
-
-/*
-                    <form id = "chargingMoney" name = "chargingMoney" action = "/SuperDuperMarketWeb_Web_exploded/charging-money" method = "POST" class = "charging-money">
-
- */

@@ -1,24 +1,21 @@
 import {setChargingMoneyButtonEvent} from "./charging-money.js";
 import {getAlertsFromServerAndUpdateOwner} from "../show-alerts.js";
+import {appendHTMLToElement, emptyElementByID} from "../mainstorescreen/general-functions.js";
+import {triggerAjaxChatContent} from "../chatroom/chatroom.js";
 
-var chatVersion = 0;
 var refreshRate = 5000; //milli seconds
 var USER_LIST_URL = buildUrlWithContextPath("users-list");
 var ZONE_LIST_URL = buildUrlWithContextPath("zones-list");
 var ACCOUNT_LIST_URL = buildUrlWithContextPath("accounts-list");
-//var CHARGING_MONEY_URL = buildUrlWithContextPath("charging-money");
 var MOVE_TO_ZONE_URL = buildUrlWithContextPath("move-to-zone");
 var USERS_TYPE_AND_NAME_URL = buildUrlWithContextPath("user-type-and-name");
 var UPLOAD_XML_FILE = buildUrlWithContextPath("load-xml-file");
-
-var CHAT_LIST_URL = buildUrlWithContextPath("chat");
 
 
 //users = a list of usernames, essentially an array of javascript strings:
 // ["moshe","nachum","nachche"...]
 function refreshUsersList(users) {
     //clear all current users
-    //$("#userstable").empty();
     var tbodySelector = $("#tbody");
     document.getElementById('tbody').innerHTML = '';
     // rebuild the list of users: scan all users and add them to the list of users
@@ -55,12 +52,9 @@ function refreshAccountsList(historyOfAccountsActions) {
     });
 }
 
-//TODO
 function refreshZonesList(zones) {
     var tbodySelector = $("#tbodyOfZonesTable");
-   // var showAllItemsInZone = $("#showAllItemsInZone")
     document.getElementById('tbodyOfZonesTable').innerHTML = '';
-    // rebuild the list of users: scan all users and add them to the list of users
     $.each(zones || [], function(index, zone) {
         var zoneOwner = zone["zoneOwner"];
         var zoneName = zone["zoneName"];
@@ -68,11 +62,7 @@ function refreshZonesList(zones) {
         var totalStoresInZone = zone["totalStoresInZone"];
         var totalOrdersInZone = zone["totalOrdersInZone"];
         var avgOfOrdersNotIncludingDeliveries = zone["avgOfOrdersNotIncludingDeliveries"];
-      //  console.log("Adding zone #" + index + ": " + zoneName);
         var idOfMoveToZoneForm = "moveToZone" + index;
-     //   console.log("idOfMoveToZoneForm " + idOfMoveToZoneForm);
-        //create a new <option> tag with a value in it and
-        //appeand it to the #userslist (div with id=userslist) element
         $("<tr class='withBorder'><th class='withBorder'>" + zoneOwner + "</th>" +
             "<th class='withBorder'>" + zoneName + "</th>" +
             "<th class='withBorder'>" + totalItemsTypesInZone + "</th>" +
@@ -94,8 +84,6 @@ function refreshZonesList(zones) {
 function setMoveToZoneButton(zoneNameInput, idOfMoveToZoneForm) { // onload...do
     var idOfMoveToZoneFormWithSharp = "#" + idOfMoveToZoneForm
     console.log(zoneNameInput + " in setMoveToZoneButton");
-    //var dataString = "zoneName="+zoneNameInput;
-    // console.log(idOfMoveToZoneFormWithSharp)
     $(idOfMoveToZoneFormWithSharp).click(function() {
         $.ajax({
             method:'GET',
@@ -105,14 +93,12 @@ function setMoveToZoneButton(zoneNameInput, idOfMoveToZoneForm) { // onload...do
             timeout: 4000,
             error: function(e) {
                 console.error(e);
-                //$("#result").text("Failed to get result from server " + e);
             },
             success: function(r) {
                 console.log("Succesfully!!!");
                 console.log(r);
                 localStorage.setItem('detailsOnZone',JSON.stringify(r));
                 window.location.replace("../mainstorescreen/sdm-main-stores-page.html");
-                // $("#result").text(r);
             }
         });
         // return value of the submit operation
@@ -127,7 +113,6 @@ function setUploadFileElement() { // onload...do
         var formData = new FormData();
 
         formData.append("file", file1);
-        //formData.append("mapName", this[1].value);
         $.ajax({
             method:'POST',
             data: formData,
@@ -137,11 +122,9 @@ function setUploadFileElement() { // onload...do
             timeout: 4000,
             error: function(e) {
                 console.error("Failed to submit");
-               // alert('failedToSumbit');
                 $("#result").text("Failed to get result from server " + e);
             },
             success: function(r) {
-                //alert('succeedToSumbit');
                 $("#result").text(r);
             }
         });
@@ -150,31 +133,6 @@ function setUploadFileElement() { // onload...do
         return false;
     })
 }
-/*function setChargingMoneyElement() { // onload...do
-    $("#uploadXmlFile").submit(function() {
-
-        formData.append("file", file1);
-        //formData.append("mapName", this[1].value);
-        $.ajax({
-            method:'POST',
-            data: formData,
-            url: CHARGING_MONEY_URL,
-            processData: false, // Don't process the files
-            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-            timeout: 4000,
-            error: function(e) {
-                console.error("Failed to submit");
-                $("#resultOfChargingMoney").text("Failed to get result from server " + e);
-            },
-            success: function(r) {
-                $("#resultOfChargingMoney").text(r);
-            }
-        });
-        // return value of the submit operation
-        // by default - we'll always return false so it doesn't redirect the user.
-        return false;
-    })
-}*/
 
 function ajaxUsersList() {
     $.ajax({
@@ -210,6 +168,17 @@ function ajaxZonesList() {
     });
 }
 
+export function getChargingAccount()
+{
+    return '<p class ="alignToCenter" >Please add amount of money to charge</p>'+
+    '<input type="text" id="chargingMoneyTextField" name = "chargingMoneyTextField" class ="alignToCenter" >'+
+       ' <p style="color:red;" id="dateError" class ="alignToCenter" ></p>' +
+        '<p class ="alignToCenter" >Enter the date</p>' +
+        '<input type="date" id="dateOfChargingMoney" name="dateOfChargingMoney" class ="alignToCenter" >' +
+            '<p style="color:red;" id="moneyError" class ="alignToCenter" ></p>' +
+            '<button name="Charge money" type="button" id="chargingMoneyButton" value="Charge money" class ="alignToCenter" >Charge money</button>' +
+            '<p id="resultOfChargingMoney" class ="alignToCenter" ></p>';
+}
 function addGreetingToUser(user)
 {
     var userName = user["userName"];
@@ -227,8 +196,9 @@ function setActionBasedOnRole(user)
     }
     else if(userType === "customer")
     {
+        emptyElementByID("chargingMoneyPre");
+        appendHTMLToElement(getChargingAccount(),"chargingMoneyPre");
         setChargingMoneyButtonEvent();
-        //setChargingMoneyElement();
     }
 }
 
@@ -241,6 +211,7 @@ function hideHTMLElementsByRole(user){
     else if(userType === "customer")
     {
         $("#loadFromXml").hide();
+        $("#alerts").hide();
     }
 }
 
@@ -261,5 +232,6 @@ $(function() {
     setInterval(ajaxUsersList, refreshRate);
     setInterval(ajaxZonesList, refreshRate);
     setInterval(ajaxAccountsList, refreshRate);
+    triggerAjaxChatContent();
 });
 

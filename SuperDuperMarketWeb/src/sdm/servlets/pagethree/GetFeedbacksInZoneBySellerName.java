@@ -31,7 +31,6 @@ public class GetFeedbacksInZoneBySellerName extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In GetFeedbacksInZoneBySellerName");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
@@ -45,8 +44,6 @@ public class GetFeedbacksInZoneBySellerName extends HttpServlet {
                 JSONArray jsonArray = readingFromFeedbacksListToJsonObject(feedbackList);
                 String json = gson.toJson(jsonArray);
                 out.println(json);
-                System.out.println("This is the list of feedbacks!!");
-                System.out.println(json);
                 out.flush();
             }
             else
@@ -66,12 +63,6 @@ public class GetFeedbacksInZoneBySellerName extends HttpServlet {
         int i=0;
         for(Feedback feedback : feedbackList)
         {
-            /*
-                this.customerName = customerName;
-                this.orderDate = orderDate;
-                this.rating = rating;
-                this.feedbackText = feedbackText;
-             */
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("customerName", feedback.getCustomerName());
             jsonObject.put("orderDate", feedback.getOrderDate());

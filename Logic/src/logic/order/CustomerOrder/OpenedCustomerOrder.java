@@ -24,8 +24,6 @@ public class OpenedCustomerOrder extends Order {
     SDMLocation locationOfCustomer;
     String customerName;
     Map<Integer, Double> itemsChosenForDynamicOrder;
-    //Map<Integer, Integer> itemsAmountLeftToUseInSalesMap;
-    //Map<String, Discount> availableDiscountsMap;
 
     public OpenedCustomerOrder(String date, String customerName, boolean isOrderStatic, SDMLocation locationOfCustomer) {
         super(date, isOrderStatic);
@@ -34,8 +32,6 @@ public class OpenedCustomerOrder extends Order {
         this.locationOfCustomer = locationOfCustomer;
         openedStoresOrderMap = new HashMap<>();
         itemsChosenForDynamicOrder = new HashMap<>();
-        //itemsAmountLeftToUseInSalesMap = new HashMap<Integer, Integer>() ;
-        //availableDiscountsMap = new HashMap<String, Discount>();
     }
 
     public SDMLocation getLocationOfCustomer() {
@@ -131,20 +127,17 @@ public class OpenedCustomerOrder extends Order {
         for(OpenedStoreOrder openedStoreOrder : openedStoresOrderMap.values())
         {
             Store store = openedStoreOrder.getStoreUsed();
-            //if(store.getSerialNumber() == serialIDOfStore)
-           // {
-                Map<Integer, AvailableItemInStore> availableItemInStoreMap = new HashMap<>(store.getItemsSerialIDMap());
-                List<OrderedItemFromStore> orderedItemFromStoreList = generateListsOfItemNotFromSale();
-                for(OrderedItemFromStore orderedItemFromStore : orderedItemFromStoreList)
+            Map<Integer, AvailableItemInStore> availableItemInStoreMap = new HashMap<>(store.getItemsSerialIDMap());
+            List<OrderedItemFromStore> orderedItemFromStoreList = generateListsOfItemNotFromSale();
+            for(OrderedItemFromStore orderedItemFromStore : orderedItemFromStoreList)
+            {
+                Integer serialIDOfOrderedItemFromStore = orderedItemFromStore.getSerialNumber();
+                if(availableItemInStoreMap.containsKey(serialIDOfOrderedItemFromStore))
                 {
-                    Integer serialIDOfOrderedItemFromStore = orderedItemFromStore.getSerialNumber();
-                    if(availableItemInStoreMap.containsKey(serialIDOfOrderedItemFromStore))
-                    {
-                        availableItemInStoreMap.remove(serialIDOfOrderedItemFromStore);
-                    }
+                    availableItemInStoreMap.remove(serialIDOfOrderedItemFromStore);
                 }
-                availableItemInStoreList = new ArrayList<>(availableItemInStoreMap.values());
-            //}
+            }
+            availableItemInStoreList = new ArrayList<>(availableItemInStoreMap.values());
         }
         return availableItemInStoreList;
     }
@@ -154,23 +147,6 @@ public class OpenedCustomerOrder extends Order {
                 return itemsInZone.values().stream()
                         .filter(e -> !itemsChosenForDynamicOrder.containsKey(e.getSerialNumber()))
                         .collect(Collectors.toList());
-
-       /* for(Map.Entry<Integer, Item> itemInZone  : itemsInZone.entrySet())
-        {
-            Map<Integer, AvailableItemInStore> availableItemInStoreMap = new HashMap<>(store.getItemsSerialIDMap());
-            List<OrderedItemFromStore> orderedItemFromStoreList = generateListsOfItemNotFromSale();
-            for(Map.Entry<Integer, Item> itemInOrder : itemsChosenForDynamicOrder.entrySet())
-            {
-                Integer serialIDOfOrderedItem = itemInOrder.getKey();
-                if(availableItemInStoreMap.containsKey(serialIDOfOrderedItemFromStore))
-                {
-                    availableItemInStoreMap.remove(serialIDOfOrderedItemFromStore);
-                }
-            }
-            availableItemInStoreList = new ArrayList<>(availableItemInStoreMap.values());
-            //}
-        }*/
-        //return availableItemInStoreList;
     }
 
     public void initializeAvailableDiscountMapInOpenedStoreOrders()
@@ -251,18 +227,10 @@ public class OpenedCustomerOrder extends Order {
     {
         return customerName;
     }
-    /*public Double calcTotalPriceOfItemsNotFromSale() {
-        return 0.0;
-    }*/
-    /*public Double calcTotalAmountOfItemsNotFromSaleByUnit() {
-        return 0.0;
-    }*/
+
     public boolean checkIfItemAlreadyExistsInOrder(int serialIDOfItem) {
         return false;
     }
-    /*public Integer calcTotalAmountOfItemsTypeNotFromSale() {
-        return 0;
-    }*/
 
     public ClosedCustomerOrder closeCustomerOrder()
     {

@@ -3,9 +3,10 @@ import {creatingCoordinatesHTMLAndSetEvents} from './creating-coordinate-element
 import {
     createButton,
     appendHTMLToElement, emptyElementByID,
-    createEmptyPreContainer
+    createEmptyPreContainer, disableElement
 } from "./general-functions.js";
 
+var CHECK_IF_LOCATION_USED = buildUrlWithContextPath("check-if-location-used");
 var CREATE_DYNAMIC_ORDER_URL = buildUrlWithContextPath("create-dynamic-order");
 var CREATE_STATIC_ORDER_URL = buildUrlWithContextPath("create-static-order");
 var STORES_LIST_URL = buildUrlWithContextPath("stores-in-zone-list");
@@ -22,9 +23,8 @@ var ID_OF_NEXT_BUTTON = 'nextButtonInMakeAnOrderFirstScreen';
 var ID_OF_VALUE_OF_COORDINATE_X_CHOSEN = "valueOfSelectedCoordinateX";
 var ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN = "valueOfSelectedCoordinateY"
 var ID_OF_MAKE_AN_ORDER_BODY = 'makeOrderBody';
+const ID_OF_CUSTOMER_LOCATION_STATUS = 'customerLocationStatus';
 const ID_OF_DATE_ERROR = 'dateError';
-const ID_OF_FIRST_ROW_OF_ORDER = 'firstRowOfOrder';
-const ID_OF_SECOND_ROW_OF_ORDER = 'secondRowOfOrder';
 const ID_OF_MAKE_AN_ORDER_PRE = 'makeAnOrderPre';
 var STATIC="static";
 var DYNAMIC="dynamic";
@@ -35,7 +35,6 @@ function emptyChooseStoresDropDownListElement()
     document.getElementById(ID_OF_CHOOSE_STORES_DROP_DOWN_LIST_ELEMENT).innerHTML = '';
 }
 
-//                <pre id="makeAnOrderPre"></pre>
 export function setMakeANewOrderButton() { // onload...do
     console.log("In setMakeANewOrderButtonInJS");
     $("#makeANewOrderButton").click(function() {
@@ -44,7 +43,6 @@ export function setMakeANewOrderButton() { // onload...do
         appendHTMLToElement(createEmptyPreContainer(ID_OF_MAKE_AN_ORDER_PRE), ID_OF_MAKE_AN_ORDER_BODY);
 
         var selectOrderTypeHTML = getSelectOrderTypeMessageHTML();
-       // appendHTMLToElement(getOrderTypeErrorHTML(), ID_OF_MAKE_AN_ORDER_CONTAINER);
         var selectDateHTML = getSelectDateHTML();
         var nextButtonHTML = createButton(ID_OF_NEXT_BUTTON, 'Next')// getNextButtonHTML();
         var chooseStoresDropDownList = '<div id=' + ID_OF_CHOOSE_STORES_DROP_DOWN_LIST_ELEMENT + '></div>';
@@ -54,6 +52,8 @@ export function setMakeANewOrderButton() { // onload...do
         appendHTMLToElement(getDateErrorHTML(), ID_OF_MAKE_AN_ORDER_PRE);
         $("#" + ID_OF_DATE_ERROR).hide();
         creatingCoordinatesHTMLAndSetEvents(ID_OF_VALUE_OF_COORDINATE_X_CHOSEN, ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN, ID_OF_MAKE_AN_ORDER_PRE);
+        appendHTMLToElement(ID_OF_MAKE_AN_ORDER_PRE);
+        appendHTMLToElement('<p id="' + ID_OF_CUSTOMER_LOCATION_STATUS + '"></p>',ID_OF_MAKE_AN_ORDER_PRE);
         appendHTMLToElement(chooseStoresDropDownList, ID_OF_MAKE_AN_ORDER_PRE);
         appendHTMLToElement(nextButtonHTML, ID_OF_MAKE_AN_ORDER_PRE);
         $("#" + ID_OF_DYNAMIC_RADIO_BUTTON).prop("checked", true);
@@ -61,12 +61,12 @@ export function setMakeANewOrderButton() { // onload...do
         return false;
     })
 }
-//                <pre id="makeAnOrderContainer"></pre>
 
 export function getDateErrorHTML()
 {
     return '<p id=' + ID_OF_DATE_ERROR + ' style="color:red;">Need to choose date</p>';
 }
+
 function setTypeOfOrderRadioButtonEvent()
 {
     $("#" + ID_OF_STATIC_RADIO_BUTTON).click(function() {
@@ -146,29 +146,46 @@ function getChooseStoresDropDownListHTML()
         '</form>';
 }
 
-//TODO
-//Need to pass if static or dynamic
 function setNextButtonInMakeAnOrderElement(idOfMakeAnOrderContainer) { // onload...do
 
     $("#nextButtonInMakeAnOrderFirstScreen").click(function() {
-        //Getting selected ordertype,date and store if it's static
-      //  alert("clicked on nextButtonInMakeAnOrderFirstScreen");
-      //  alert($("#" + ID_OF_DATE_OF_ORDER).val());
-        if($("#" + ID_OF_DATE_OF_ORDER).val() === "")
-        {
-            //alert("date is not selected!");
-            $("#" + ID_OF_DATE_ERROR).show();
-        }
-        else
-        {
-            if (document.getElementById(ID_OF_STATIC_RADIO_BUTTON).checked) {
-                OpeningANewOrderFromHTMLElements(STATIC, idOfMakeAnOrderContainer);
-            }
-            else if (document.getElementById(ID_OF_DYNAMIC_RADIO_BUTTON).checked) {
-                OpeningANewOrderFromHTMLElements(DYNAMIC, idOfMakeAnOrderContainer);
-            }
-        }
+        var coordinateX = $("#" + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
+        var coordinateY = $("#" + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
+        var customerLocationStatusSelector =  $("#" + ID_OF_CUSTOMER_LOCATION_STATUS);
+        customerLocationStatusSelector.text('');
+        $("#" + ID_OF_DATE_ERROR).hide();
 
+        $.ajax({
+            method: 'GET',
+            data: {"coordinateX":coordinateX, "coordinateY":coordinateY},
+            url: CHECK_IF_LOCATION_USED,
+            dataType: "json",
+            timeout: 4000,
+            error: function (e) {
+                console.error(e);
+                alert('error in checkIfLocationUSED\n' + e);
+            },
+            success: function (r) {
+                if(r["thereIsAlreadyStoreInLocation"] === "true")
+                {
+                    customerLocationStatusSelector.css('color', 'red');
+                    customerLocationStatusSelector.text("Error: Can't create order from this location because there is a store in this location!");
+                }
+                else if($("#" + ID_OF_DATE_OF_ORDER).val() === "")
+                {
+                    $("#" + ID_OF_DATE_ERROR).show();
+                }
+                else
+                {
+                    if (document.getElementById(ID_OF_STATIC_RADIO_BUTTON).checked) {
+                        OpeningANewOrderFromHTMLElements(STATIC, idOfMakeAnOrderContainer);
+                    }
+                    else if (document.getElementById(ID_OF_DYNAMIC_RADIO_BUTTON).checked) {
+                        OpeningANewOrderFromHTMLElements(DYNAMIC, idOfMakeAnOrderContainer);
+                    }
+                }
+            }
+        });
         // !!!!return value of the submit operation
         // by default - we'll always return false so it doesn't redirect the user.
         return false;
@@ -180,7 +197,6 @@ function OpeningANewOrderFromHTMLElements(orderType, idOfMakeAnOrderContainer)
     var date = document.getElementById(ID_OF_DATE_OF_ORDER).value;
     var coordinateX=$("#" + ID_OF_VALUE_OF_COORDINATE_X_CHOSEN).text();
     var coordinateY=$("#" + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
- //   alert("date:" + date + " coordinateX: " + coordinateX + " coordinateY:" + coordinateY);
     if(orderType===STATIC)
     {
         var chooseStoresDropDownListElement = document.getElementById(ID_OF_CHOOSE_STORES_DROP_DOWN_LIST);
@@ -210,7 +226,6 @@ function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coor
         success: function(r) {
             console.log("Succesfully!!!");
             console.log(r);
-
         }
     });
 }

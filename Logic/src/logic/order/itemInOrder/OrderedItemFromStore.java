@@ -8,10 +8,6 @@ import java.util.Objects;
 public abstract class OrderedItemFromStore extends AvailableItemInStore implements OrderedItem {
     private Double amountOfItemOrderedByUnits;
 
-    /*logic.Orders.orderItems.OrderedItem(Integer serialNumber, String name, TypeOfMeasure purchaseCategory, int price) {
-        super(serialNumber, name, purchaseCategory, price);
-    }*/
-
     public OrderedItemFromStore(Integer serialNumber, String name, TypeOfMeasure purchaseCategory, int price, Double amountOfItemOrderedByUnits) {
         super(serialNumber, name, purchaseCategory, price);
         this.amountOfItemOrderedByUnits = amountOfItemOrderedByUnits;

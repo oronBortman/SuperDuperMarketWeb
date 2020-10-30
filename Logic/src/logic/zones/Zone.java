@@ -170,16 +170,7 @@ public class Zone {
 
     public void addClosedOrderToHistory(ClosedCustomerOrder order)
     {
-       /* for(ClosedStoreOrder closedStoreOrder : order.getClosedStoresOrderMapByStoreSerialID().values())
-        {
-            closedStoreOrder.setSerialNumber(currentOrderSerialIDInSDK);
-        }
-        order.setSerialNumber(currentOrderSerialIDInSDK);*/
-        //TODO
-        //Need to add closed order to customer
-        //order.getCustomerName().addClosedCustomerOrderToMap(order);
         ordersSerialIDMap.put(order.getSerialNumber(), order);
-      //  currentOrderSerialIDInSDK++;
     }
 
     public Integer getHowManyShopsSellesAnItem(Integer itemID)
@@ -700,12 +691,9 @@ public class Zone {
     public List<ClosedStoreOrder> getListOfClosedStoreOrderByStoreOwnerName(String storeOwnerName)
     {
         List<ClosedStoreOrder> closedStoreOrderList = new ArrayList<>();
-        System.out.println("C1");
         if(ordersSerialIDMap != null)
         {
-            System.out.println("C2");
             for(ClosedCustomerOrder closedCustomerOrder : ordersSerialIDMap.values()) {
-                System.out.println("C3");
                 List<ClosedStoreOrder> closedStoreOrderListFilteredByOwnerName = closedCustomerOrder.getListOfClosedStoreOrders();
                 if(closedStoreOrderListFilteredByOwnerName != null)
                 {
@@ -713,9 +701,7 @@ public class Zone {
                                                     .filter(x -> x.getStoreOwner().getUserName().equals(storeOwnerName))
                                                     .collect(Collectors.toList());
                     closedStoreOrderList = Stream.concat(closedStoreOrderList.stream(), closedStoreOrderListFilteredByOwnerName.stream()).collect(Collectors.toList());
-                    System.out.println("C5");
                 }
-                System.out.println("C4");
 
             }
         }

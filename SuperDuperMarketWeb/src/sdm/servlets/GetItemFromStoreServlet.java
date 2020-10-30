@@ -46,7 +46,6 @@ public class GetItemFromStoreServlet extends HttpServlet {
             throws ServletException, IOException {
 
         response.setContentType("application/json");
-      //  System.out.println("In GetItemFromStore");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
@@ -59,8 +58,6 @@ public class GetItemFromStoreServlet extends HttpServlet {
                 AvailableItemInStore availableItemInStore = zone.getStoreBySerialID(storeIDInt).getItemBySerialID(itemSerialIDInt);
                 String json = gson.toJson(availableItemInStore);
                 out.println(json);
-             //   System.out.println("This is the item!!");
-                System.out.println(json);
                 out.flush();
             } else {
                 System.out.println("zoneName is null!!");

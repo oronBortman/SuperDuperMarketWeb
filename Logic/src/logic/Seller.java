@@ -16,12 +16,23 @@ public class Seller extends User {
         listOfAlerts = new ArrayList<>();
     }
 
-    public void addAlertToList(Alert alert)
+    public synchronized void addAlertToList(Alert alert)
     {
         listOfAlerts.add(alert);
     }
 
-    public List<Alert> getAlertsList() {
+    public synchronized List<Alert> getAlertsList() {
         return listOfAlerts;
+    }
+
+    public synchronized List<Alert> getAlertsList(int fromIndex){
+        if (fromIndex < 0 || fromIndex > listOfAlerts.size()) {
+            fromIndex = 0;
+        }
+        return listOfAlerts.subList(fromIndex, listOfAlerts.size());
+    }
+
+    public synchronized int getVersion() {
+        return listOfAlerts.size();
     }
 }

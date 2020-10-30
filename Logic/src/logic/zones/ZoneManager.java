@@ -30,7 +30,6 @@ public class ZoneManager {
 
     public synchronized void addNewZoneFromXml(InputStream inputStream, Seller zoneOwner) throws DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, StoreLocationIsIdenticalToStoreException, InvalidCoordinateXOfStoreException, DuplicateItemSerialIDException, DuplicateItemSerialIDInStoreException, FileNotFoundException, StoreNotExistException, ItemWithSerialIDNotExistInSDMException, JAXBException, ItemIDInDiscountNotExistInAStoreException, ItemIDInDiscountNotExistInSDMException, DuplicateDiscountNameException, ItemIDNotExistInAStoreException, DuplicateZoneName {
         try {
-            //InputStream inputStream = new FileInputStream(new File(xmlPath));
             SuperDuperMarketDescriptor superDuperMarketDescriptor = deserializeFrom(inputStream);
             String zoneName = superDuperMarketDescriptor.getSDMZone1().getName();
             if(checkIfZoneExists(zoneName))

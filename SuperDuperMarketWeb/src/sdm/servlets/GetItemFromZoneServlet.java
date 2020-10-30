@@ -62,7 +62,7 @@ public class GetItemFromZoneServlet extends HttpServlet {
                 String json = gson.toJson(item);
                 out.println(json);
            //     System.out.println("This is the item!!");
-                System.out.println(json);
+               // System.out.println(json);
                 out.flush();
             }
             else

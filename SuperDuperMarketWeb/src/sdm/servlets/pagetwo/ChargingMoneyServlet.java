@@ -22,14 +22,8 @@ public class ChargingMoneyServlet extends HttpServlet {
             throws ServletException, IOException {
         try{
             response.setContentType("text/html;charset=UTF-8");
-            //Date date=null;
             String chargingMoneyFromParameter = request.getParameter("chargingMoneyTextField");
             String dateStr = request.getParameter("dateOfChargingMoney");
-            /*try {
-                date =  new SimpleDateFormat("yyyy/MM/dd").parse(dateStr);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }*/
             Double amountToCharge = Double.parseDouble(chargingMoneyFromParameter);
             UserManager userManager = ServletUtils.getUserManager(request.getServletContext());
             User user = userManager.getUserByName(SessionUtils.getUsername(request));

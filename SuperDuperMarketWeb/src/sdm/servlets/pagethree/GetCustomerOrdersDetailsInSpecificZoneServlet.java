@@ -27,28 +27,6 @@ import java.util.List;
 import static sdm.general.GeneralMethods.getUserByRequestAndServletContext;
 import static sdm.general.GeneralMethods.getZoneByRequest;
 
-    /*
-    customerOrder["serialID"]
-    customerOrder["date"];
-    customerOrder["location"]
-    customerOrder["totalStores"]
-    customerOrder["totalItemsInOrder"]
-    customerOrder["totalItemsPriceInOrder"]
-    customerOrder["totalDeliveryPrice"]
-    customerOrder["totalOrderPrice"]
-    customerOrder["itemsListInOrder"]
-    */
-    /*
-    itemInOrder["serialID"]
-    itemInOrder["nameOfItem"]
-    itemInOrder["storeSerialID"]
-    itemInOrder["storeName"]
-    itemInOrder["AmountOfItemPurchased"]
-    itemInOrder["totalPriceOfItem"]
-    itemInOrder["FromDiscount"]
-
-     */
-
 
 @WebServlet("/get-customer-orders-details")
 public class GetCustomerOrdersDetailsInSpecificZoneServlet extends HttpServlet {
@@ -137,8 +115,6 @@ public class GetCustomerOrdersDetailsInSpecificZoneServlet extends HttpServlet {
                 jsonObject.put("totalPriceOfItem", decimalFormat.format(orderedItem.getTotalPriceOfItemOrderedByTypeOfMeasure()));
                 jsonObject.put("FromDiscount", orderedItem instanceof OrderedItemFromSale);
                 jsonArray.add(i,jsonObject);
-               // System.out.println("!!!!!!!");
-               // System.out.println(jsonObject);
                 i++;
             }
         }

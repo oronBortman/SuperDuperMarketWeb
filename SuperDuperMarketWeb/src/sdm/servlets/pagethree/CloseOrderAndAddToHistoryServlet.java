@@ -43,7 +43,7 @@ public class CloseOrderAndAddToHistoryServlet extends HttpServlet {
         //returning JSON objects, not HTML
 
         response.setContentType("application/json");
-        System.out.println("In CloseOrderAndAddToHistory");
+       // System.out.println("In CloseOrderAndAddToHistory");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
@@ -62,14 +62,17 @@ public class CloseOrderAndAddToHistoryServlet extends HttpServlet {
                 ClosedCustomerOrder closedCustomerOrder = openedCustomerOrder.closeCustomerOrder();
                 zone.addClosedOrderToHistory(closedCustomerOrder);
                 customer.addClosedCustomerOrderToMap(closedCustomerOrder);
+                Account customerAccount = customer.getAccount();
+                String dateOfOrder = closedCustomerOrder.getDateStr();
+                Double totalPriceOfOrder = closedCustomerOrder.getTotalOrderPrice();
+                customerAccount.transferMoney(dateOfOrder,totalPriceOfOrder);
 
                 for(ClosedStoreOrder closedStoreOrder : closedCustomerOrder.getListOfClosedStoreOrders())
                 {
                     Seller storeOwner = closedStoreOrder.getStoreOwner();
-                    String dateOfOrder = closedStoreOrder.getDateStr();
-                    Double totalPriceOfOrder = closedStoreOrder.calcTotalPriceOfOrder();
-                    Account customerAccount = customer.getAccount();
-                    customerAccount.transferMoney(dateOfOrder,storeOwner,totalPriceOfOrder);
+                    Double totalPriceOfStoreOrder = closedStoreOrder.calcTotalPriceOfOrder();
+                    Account sellerAccount = storeOwner.getAccount();
+                    sellerAccount.gettingMoney(dateOfOrder,totalPriceOfStoreOrder);
                     AlertOnOrder alertOnOrder = new AlertOnOrder(closedStoreOrder);
                     storeOwner.addAlertToList(alertOnOrder);
                 }

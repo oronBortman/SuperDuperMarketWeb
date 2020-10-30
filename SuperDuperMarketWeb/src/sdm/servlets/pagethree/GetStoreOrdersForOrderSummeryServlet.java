@@ -39,7 +39,6 @@ public class GetStoreOrdersForOrderSummeryServlet extends HttpServlet {
         //returning JSON objects, not HTML
 
         response.setContentType("application/json");
-       // System.out.println("In GetStoreOrdersForOrderSummeryServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
@@ -50,8 +49,6 @@ public class GetStoreOrdersForOrderSummeryServlet extends HttpServlet {
                 JSONArray jsonArray = readingFromStoresListToJsonObject(openedStoreOrderList, openedCustomerOrder);
                 String json = gson.toJson(jsonArray);
                 out.println(json);
-           //     System.out.println("This is the list of stores!!\n\n\n");
-           //     System.out.println(json);
                 out.flush();
             }
             else
@@ -61,26 +58,6 @@ public class GetStoreOrdersForOrderSummeryServlet extends HttpServlet {
         }
     }
 
-    /*
-0:
-    serialNumber:1
-    name: baba store
-    ownerName:
-    PPK:
-    distanceToCustomer:
-    deliveryCost
-    date:
-
-    itemsList{
-        var serialID = itemInOrder["serialID"];
-         var itemName = itemInOrder["itemName"];
-        var measureType = itemInOrder["measureType"];
-        var amount = itemInOrder["amount"];
-        var pricePerUnit = itemInOrder["pricePerUnit"];
-        var totalPrice = itemInOrder["totalPrice"];
-        var boughtOnSale = itemInOrder["boughtOnSale"];
-    }
- */
 
     public JSONArray readingFromStoresListToJsonObject(List<OpenedStoreOrder> openedStoreOrderList, OpenedCustomerOrder openedCustomerOrder)
     {
@@ -107,15 +84,6 @@ public class GetStoreOrdersForOrderSummeryServlet extends HttpServlet {
 
     public JSONArray readingItemsFromStoreToJsonObject(List<OrderedItem> orderedItemList)
     {
-       /* itemsList{
-        var serialID = itemInOrder["serialID"];
-        var itemName = itemInOrder["itemName"];
-        var measureType = itemInOrder["measureType"];
-        var amount = itemInOrder["amount"];
-        var pricePerUnit = itemInOrder["pricePerUnit"];
-        var totalPrice = itemInOrder["totalPrice"];
-        var boughtOnSale = itemInOrder["boughtOnSale"];
-    }*/
         JSONArray jsonArray = new JSONArray();
         int i=0;
         for(OrderedItem orderedItem : orderedItemList)

@@ -32,7 +32,6 @@ public class GetAllStoresInZoneServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-     //   System.out.println("In showAllStoresInZoneServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ZoneManager zoneManager = ServletUtils.getZoneManager(getServletContext());
@@ -41,14 +40,9 @@ public class GetAllStoresInZoneServlet extends HttpServlet {
             if(zoneName != null)
             {
                 List<Store> storeList = zone.getStoresList();
-                //System.out.println("A1");
                 JSONArray jsonArray = readingFromStoresListToJsonObject(storeList);
-             //   System.out.println("A2");
                 String json = gson.toJson(jsonArray);
-              //  System.out.println("A3");
                 out.println(json);
-              //  System.out.println("This is the list of stores!!");
-            //    System.out.println(json);
                 out.flush();
             }
             else
@@ -70,24 +64,17 @@ public class GetAllStoresInZoneServlet extends HttpServlet {
         int i=0;
         for(Store store : storeList)
         {
-          //  System.out.println("B1");
             List<ClosedStoreOrder> closedStoreOrderList = GeneralMethods.getClosedStoreOrderListByIDListOfOrders(servletContext,store.getListOrdersSerialID());
-           // System.out.println("B2");
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("serialNumber", store.getSerialNumber());
             jsonObject.put("name", store.getName());
             jsonObject.put("ownerName", store.getStoreOwner().getUserName());
-          //  System.out.println("B3");
             jsonObject.put("totalOrdersFromStore", store.calcTotalOrdersFromStore(closedStoreOrderList));
-         //   System.out.println("B4");
             jsonObject.put("totalProfitOfSoledItems", decimalFormat.format(store.calcTotalProfitOfSoledItems(closedStoreOrderList)));
-         //   System.out.println("B5");
             jsonObject.put("PPK", store.getPPK());
             jsonObject.put("totalProfitOfDeliveris",decimalFormat.format(store.calcProfitOfDelivers(closedStoreOrderList)));
-         //   System.out.println("B6");
             JSONArray itemsInStore = readingItemsFromStoreToJsonObject(store.getAvailableItemsList(), store, closedStoreOrderList);
-          //  System.out.println("B7");
             jsonObject.put("availableItemsList", itemsInStore);
             jsonArray.add(i,jsonObject);
             i++;
@@ -107,9 +94,7 @@ public class GetAllStoresInZoneServlet extends HttpServlet {
             jsonObject.put("name", availableItemInStore.getName());
             jsonObject.put("typeToMeasureBy", availableItemInStore.getTypeOfMeasureStr());
             jsonObject.put("pricePerUnit", availableItemInStore.getPricePerUnit());
-           // System.out.println("C1");
             jsonObject.put("totalSoledItemsFromStore", decimalFormat.format(store.getAmountOfItemSoledByTypeOfMeasure(closedStoreOrderList, itemSerialId)));
-         //   System.out.println("C2");
 
             jsonArray.add(i,jsonObject);
             i++;

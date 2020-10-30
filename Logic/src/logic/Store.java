@@ -11,6 +11,7 @@ import logic.order.CustomerOrder.Feedback;
 import logic.order.GeneralMethods;
 import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.order.StoreOrder.StoreOrder;
+import logic.order.itemInOrder.OrderedItemFromStore;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -75,16 +76,7 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     public void addFeedback(String customerName, String orderDate, Integer grade, String feedbackText)
     {
         //String customerName, String orderDate, Integer rating, String feedbackText
-        System.out.println("A1");
         feedbackList.add(new Feedback(customerName,orderDate,grade,feedbackText));
-        System.out.println("A2");
-        if (feedbackList != null) {
-
-            for(Feedback feedback : feedbackList)
-            {
-                System.out.println("Feedback added: " + customerName + " " + orderDate + " grade " + grade + feedbackText);
-            }
-        }
 
     }
 
@@ -118,9 +110,9 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         }
     }
 
-    public List<Discount> generateListOfDiscountsThatContainsItemsFromList(Collection<Integer> listOfItemsSerialID)
+    public List<Discount> generateListOfDiscountsThatContainsItemsFromList(Collection<OrderedItemFromStore> listOfItemsFromStore)
     {
-        return (discountNameDMap.values().stream().filter(x -> x.checkIfDiscountContainsItemFromListOfItems(listOfItemsSerialID)).collect(Collectors.toList()));
+        return (discountNameDMap.values().stream().filter(x -> x.checkIfDiscountContainsItemFromListOfItems(listOfItemsFromStore)).collect(Collectors.toList()));
     }
 
     public Discount getDiscountFromStoreByName(String discountName)
@@ -157,48 +149,9 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
 
     public List<Item> getItemsList()
     {
-       /* List<Item> list = new ArrayList<Item>();
-        for(AvailableItemInStore itemInStore : ItemsSerialIDMap.values())
-        {
-            list.add(itemInStore);
-        }
-        return list;*/
         return ItemsSerialIDMap.values().stream().collect(Collectors.toCollection(ArrayList::new));
-
     }
 
-
-    private void addItemToShop(AvailableItemInStore availableItemInStore)
-    {
-        ItemsSerialIDMap.put(availableItemInStore.getSerialNumber(), availableItemInStore);
-    }
-
-    public Set<Integer> getSetOfItemsSerialID()
-    {
-        return GeneralMethods.<Integer, AvailableItemInStore>getSetOfDictionary(ItemsSerialIDMap);
-
-    }
-
-   /* public Set<Integer> getSetOfOrdersSerialID()
-    {
-        return GeneralMethods.<Integer, ClosedStoreOrder>getSetOfDictionary(ordersSerialIDMap);
-
-    }*/
-
-    public boolean checkIfItemIdIsUnique(String serialNumber)
-    {
-        return ItemsSerialIDMap.containsKey(serialNumber) ;
-    }
-
-    /*public double calcProfitOfDelivers()
-    {
-        return ordersSerialIDMap.values().stream().mapToDouble(x->x.calcTotalDeliveryPrice()).sum();
-    }*/
-
-        /*public double calcProfitOfDelivers()
-    {
-        return ordersSerialIDMap.values().stream().mapToDouble(x->x.calcTotalDeliveryPrice()).sum();
-    }*/
 
     public double calcProfitOfDelivers(List<ClosedStoreOrder> closedStoreOrderList)
     {
@@ -210,11 +163,6 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     {
         return ItemsSerialIDMap.get(serialID);
     }
-
-   /* public ClosedStoreOrder getOrderBySerialID(Integer serialID)
-    {
-        return ordersSerialIDMap.get(serialID);
-    }*/
 
     public Integer getPPK() {
         return this.PPK;
@@ -229,16 +177,6 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     {
         ItemsSerialIDMap.put(item.getSerialNumber(), item);
     }
-
-    /*public Integer calcTotalOrdersFromStore()
-    {
-        return ordersSerialIDMap.size();
-    }
-
-    public Double calcTotalProfitOfSoledItems()
-    {
-        return ordersSerialIDMap.values().stream().mapToDouble(StoreOrder::calcTotalPriceOfItems).sum();
-    }*/
 
     public Integer calcTotalOrdersFromStore(List<ClosedStoreOrder> closedStoreOrderList)
     {
@@ -255,20 +193,10 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
         return totalProfit;
     }
 
-    /*public void addClosedOrderToHistory(ClosedStoreOrder order)
-    {
-        ordersSerialIDMap.put(order.getSerialNumber(), order);
-    }*/
-
     public void addClosedOrderToHistory(ClosedStoreOrder order)
     {
         listOrdersSerialID.add(order.getSerialNumber());
     }
-
-    /*public int getAmountOfOrder()
-    {
-        return ordersSerialIDMap.size();
-    }*/
 
     public int getAmountOfOrder()
     {
@@ -279,14 +207,6 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     {
         return ItemsSerialIDMap;
     }
-  /*  public double getAmountOfItemSoledByUnit(Integer itemID)
-    {
-        return ordersSerialIDMap.values().stream().mapToDouble(closedStoreOrder -> closedStoreOrder.calcAmountOfCertainItemByUnit(itemID)).sum();
-    }
-    public double getAmountOfItemSoledByTypeOfMeasure(Integer itemID)
-    {
-        return ordersSerialIDMap.values().stream().mapToDouble(closedStoreOrder -> closedStoreOrder.calcAmountOfCertainItemByTypeOfMeasure(itemID)).sum();
-    }*/
 
     public double getAmountOfItemSoledByUnit(List<ClosedStoreOrder> closedStoreOrderList, Integer itemID)
     {
@@ -322,18 +242,6 @@ public class Store extends SDMObjectWithUniqueLocationAndUniqueSerialID {
     {
         ItemsSerialIDMap.get(itemID).setPricePerUnit(priceOfItem);
     }
-
-   /* public List<ClosedStoreOrder> getOrdersList() {
-        /*List<ClosedStoreOrder> list = new ArrayList<ClosedStoreOrder>();
-        for( ClosedStoreOrder closedStoreOrder: ordersSerialIDMap.values())
-        {
-            list.add(closedStoreOrder);
-        }
-        return list;*/
-     //   return ordersSerialIDMap.values().stream().collect(Collectors.toCollection(ArrayList::new));
-
-        //srcCollection.stream().collect(toCollection(ArrayList::new));
- //   }
 
     public List<Integer> getOrdersList() {
        return listOrdersSerialID;

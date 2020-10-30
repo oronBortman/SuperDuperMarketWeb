@@ -23,8 +23,6 @@ public class AddItemToOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In AddItemToOrderServlet\n\n\n\n");
-
         try (PrintWriter out = response.getWriter()) {
             ServletContext servletContext = getServletContext();
             Gson gson = new Gson();
@@ -41,22 +39,10 @@ public class AddItemToOrderServlet extends HttpServlet {
                 if(orderType.equals("static"))
                 {
                     openedCustomerOrder.addItemForStoreOrderInStaticOrder(serialIdOfItemInt,amountOfItemDouble);
-                    for(OpenedStoreOrder openedStoreOrder : openedCustomerOrder.getListOfOpenedStoreOrder())
-                    {
-                        for(Integer key : openedStoreOrder.getOrderedItemsNotFromSale().keySet())
-                        {
-                            System.out.println("Added to the order static item: " + key);
-                        }
-                    }
-
                 }
                 else if(orderType.equals("dynamic"))
                 {
                     openedCustomerOrder.addItemToItemsChosenForDynamicOrderMap(serialIdOfItemInt, amountOfItemDouble);
-                    for(Integer key : openedCustomerOrder.getItemsChosenForDynamicOrder().keySet())
-                    {
-                        System.out.println("Added to the order dynamic item: " + key);
-                    }
                 }
                 RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher("/get-items-that-are-available-in-order");
                 requestDispatcher.forward(request, response);

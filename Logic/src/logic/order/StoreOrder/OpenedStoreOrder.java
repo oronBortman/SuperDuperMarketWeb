@@ -155,7 +155,7 @@ public class OpenedStoreOrder extends StoreOrder{
 
     public List<Discount> generateDiscountsFromStoreByOrderedItems()
     {
-        return storeUsed.generateListOfDiscountsThatContainsItemsFromList(getOrderedItemsNotFromSale().keySet());
+        return storeUsed.generateListOfDiscountsThatContainsItemsFromList(getOrderedItemsNotFromSale().values());
     }
 
 

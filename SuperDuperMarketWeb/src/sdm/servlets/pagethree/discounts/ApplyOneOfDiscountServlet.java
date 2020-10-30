@@ -26,14 +26,11 @@ import static sdm.general.GeneralMethods.getCurrentOrderByRequest;
 
 @WebServlet("/apply-one-of-discount")
 public class ApplyOneOfDiscountServlet extends HttpServlet {
-    //    var discountsStr= {"discountName":discountName, "itemSerialIDFromChosenOffer":itemSerialIDFromChosenOffer, "quantityFromChosenOffer":quantityFromChosenOffer, "forAdditional": forAdditionalFromChosenOffer};
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-       // System.out.println("In ApplyOneOfDiscountServlet");
-        //    var discountsStr= {"discountName":discountName, "itemSerialIDFromChosenOffer":itemSerialIDFromChosenOffer, "quantityFromChosenOffer":quantityFromChosenOffer, "forAdditional": forAdditionalFromChosenOffer};
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
@@ -49,7 +46,6 @@ public class ApplyOneOfDiscountServlet extends HttpServlet {
             openedCustomerOrder.applyDiscountOneOf(discountName, new Offer(itemIDInt, quantityInt, forAdditionalInt));
             String json = gson.toJson(openedCustomerOrder);
             out.println(json);
-            System.out.println(json);
             out.flush();
         }
         catch (Exception e)

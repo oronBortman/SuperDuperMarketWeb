@@ -1,13 +1,15 @@
 package sdm.servlets.pagethree;
 
 import com.google.gson.Gson;
+import jdk.nashorn.internal.parser.JSONParser;
 import logic.*;
 import logic.order.CustomerOrder.Feedback;
 import logic.order.StoreOrder.ClosedStoreOrder;
 import logic.users.User;
-import logic.zones.Zone;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import sdm.constants.Constants;
+import sdm.utils.ServletUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -21,7 +23,6 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import static sdm.general.GeneralMethods.getUserByRequestAndServletContext;
-import static sdm.general.GeneralMethods.getZoneByRequest;
 
 @WebServlet("/get-alerts")
 public class GetAlertsOfOwnerServlet extends HttpServlet {
@@ -35,19 +36,30 @@ public class GetAlertsOfOwnerServlet extends HttpServlet {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
             User user = getUserByRequestAndServletContext(servletContext, request);
-            Zone zone = getZoneByRequest(servletContext, request);
             if(user instanceof Seller)
             {
+                int alertManagerVersion = 0;
                 Seller seller = (Seller) user;
-                List<Alert> alertList = seller.getAlertsList();
+                int alertVersion = ServletUtils.getIntParameter(request, Constants.ALERT_VERSION_PARAMETER);
+                if (alertVersion == Constants.INT_PARAMETER_ERROR) {
+                    return;
+                }
+                List<Alert> alertList;
+                synchronized (getServletContext()) {
+                    alertManagerVersion = seller.getVersion();
+                    alertList = seller.getAlertsList(alertVersion);
+                }
                 JSONArray jsonArray = readAlertsJSONObject(alertList);
-                String json = gson.toJson(jsonArray);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("alertList", jsonArray);
+                jsonObject.put("alertVersion", alertManagerVersion);
+                String json = gson.toJson(jsonObject);
                 out.println(json);
                 out.flush();
             }
             else
             {
-                System.out.println("openedCustomerOrder is null!!");
+                System.out.println("user is customer!!");
             }
         }
         catch(Exception e)
@@ -120,10 +132,9 @@ public class GetAlertsOfOwnerServlet extends HttpServlet {
          */
         Feedback feedback = alertOnFeedback.getFeedback();
         Store store = alertOnFeedback.getStore();
-
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("alertType", "feedback");
-        jsonObject.put("customerName", store.getSerialNumber());
+        jsonObject.put("customerName", feedback.getCustomerName());
         jsonObject.put("orderDate", feedback.getOrderDate());
         jsonObject.put("rating", feedback.getRating());
         jsonObject.put("feedbackText", feedback.getFeedbackText());

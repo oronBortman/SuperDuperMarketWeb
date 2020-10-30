@@ -10,8 +10,10 @@ const CLOSE_ORDER_AND_ADD_TO_HISTORY_URL = buildUrlWithContextPath("close-order-
 const ADD_FEEDBACK_URL = buildUrlWithContextPath("add-feedback");
 
 //ID's of HTML Elements
+var ID_OF_MAKE_AN_ORDER_BODY = 'makeOrderBody';
 const ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST = "chooseStoreDropDownList";
 const ID_OF_FEEDBACK_FORM = "feedbackForm";
+const ID_OF_ADD_FEEDBACK_STATUS = 'addFeedbackStatus'
 const ID_OF_FINISH_ORDER_BUTTON = "finishOrderButton";
 const ID_OF_ADD_FEEDBACK_BUTTON = "addFeedbackButton";
 const GRADE_DIFFERENCE = 1;
@@ -44,6 +46,7 @@ export function initiateRateStore(idOfMakeAnOrderContainer)
             buildFormElementsByStoreChoice();
             appendHTMLToElement(generateFinishOrderMessageHTML(), idOfMakeAnOrderContainer);
             appendHTMLToElement(createButton(ID_OF_FINISH_ORDER_BUTTON, 'Finish Order'), idOfMakeAnOrderContainer);
+            appendHTMLToElement('<p id="' + ID_OF_ADD_FEEDBACK_STATUS + '"></p>', idOfMakeAnOrderContainer);
             setFinishButtonEvent(idOfMakeAnOrderContainer);
         }
     })
@@ -53,17 +56,23 @@ export function generateFinishOrderMessageHTML()
 {
     return '<p>For finishing the order, just click the button "Finish Order"</p>';
 }
+
+export function storeListEvent()
+{
+    $("#" + ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST).change(function()
+    {
+        var feedbackStatusSelector = $("#" + ID_OF_ADD_FEEDBACK_STATUS);
+        feedbackStatusSelector.text("");
+    });
+}
 export function setFinishButtonEvent(idOfMakeAnOrderContainer)
 {
     $("#" + ID_OF_FINISH_ORDER_BUTTON).click(function() {
-       // alert('clicked on FinishButton');
-        // console.log("Coordinate value before checking the value: " + coordinateValueNum);
-        closeOrderAndAddToHistory();
-        emptyElementByID(idOfMakeAnOrderContainer);
+        closeOrderAndAddToHistory(idOfMakeAnOrderContainer);
     });
 }
 
-export function closeOrderAndAddToHistory()
+export function closeOrderAndAddToHistory(idOfMakeAnOrderContainer)
 {
     $.ajax({
         method:'POST',
@@ -77,8 +86,8 @@ export function closeOrderAndAddToHistory()
         },
         success: function(r) {
             console.log("Succesfully!!!");
-            emptyElementByID("makeOrderBody");
-            appendHTMLToElement('<br><br><p style="color:green;">Order finished successfully! </p>')
+            emptyElementByID(ID_OF_MAKE_AN_ORDER_BODY);
+            appendHTMLToElement('<br><p style="color:green;">Order finished successfully! </p>',ID_OF_MAKE_AN_ORDER_BODY);
             console.log(r);
         }
     });
@@ -119,7 +128,6 @@ export function setAddFeedbackButtonEvent()
         //Get infromation from feedback and send them to servlet
         var feedbackText = $("#" + ID_OF_FEEDBACK_TEXT_FIELD).val();
         var grade = getValueOfGrade();
-     //   alert("in setAddFeedbackButtonEvent and storeID: " + storeID + " feedbackText: " +feedbackText + " grade: " + grade);
 
         //Active servlet that add feedback to store
         $.ajax({
@@ -134,6 +142,9 @@ export function setAddFeedbackButtonEvent()
             },
             success: function(r) {
                 console.log("Succesfully!!!");
+                var feedbackStatusSelector = $("#" + ID_OF_ADD_FEEDBACK_STATUS);
+                feedbackStatusSelector.css('color', 'green');
+                feedbackStatusSelector.text("Feedback added successfully");
                 console.log(r);
             }
         });
@@ -157,7 +168,6 @@ export function setEnteringGradesButtonsEvent()
 export function getHTMLOfTableOfEnteringGrade()
 {
     var amount=GRADE_DIFFERENCE;
-    // alert("in getHTMLOfTableOfEnteringAmountOfItem and amount is:" + amount );
 
     return '<table class ="plusAndMinus">' +
         '<tr class="noBorder">' +
@@ -189,9 +199,9 @@ export function addingAmount(amount, maxAmount, difference)
 export function setMinusButtonEvent()
 {
     console.log("inside setMinusButtonOnCoordinate function")
-
     $("#" + ID_OF_MINUS_BUTTON).click(function() {
-        // console.log("Coordinate value before checking the value: " + coordinateValueNum);
+        var feedbackStatusSelector = $("#" + ID_OF_ADD_FEEDBACK_STATUS);
+        feedbackStatusSelector.text("");
         subbingAmount(getValueOfGrade(),MIN_GRADE,GRADE_DIFFERENCE);
     });
 }
@@ -211,7 +221,8 @@ function setPlusButtonEvent()
 {
     console.log("inside setPlusButtonOnCoordinate");
     $("#" + ID_OF_PLUS_BUTTON).click(function() {
-        //console.log("Coordinate value before checking the value: " + coordinateValueNum);
+        var feedbackStatusSelector = $("#" + ID_OF_ADD_FEEDBACK_STATUS);
+        feedbackStatusSelector.text("");
         addingAmount(getValueOfGrade(),MAX_GRADE,GRADE_DIFFERENCE);
     });
 }
@@ -227,7 +238,6 @@ export function generateChooseGradeMessageHTML()
     return '<p>Choose your grade between 1 to 5:</p>'
 }
 
-//The values in here are good
 export function setStoreOrdersListInDropDownInOrder(storeOrdersList)
 {
     var storeOrdersListString = JSON.stringify(storeOrdersList);
@@ -235,9 +245,7 @@ export function setStoreOrdersListInDropDownInOrder(storeOrdersList)
     $.each(storeOrdersList || [], function(index, storeOrder) {
         var storeID = storeOrder["serialNumber"];
         var storeName = storeOrder["name"];
-        //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
         console.log("Adding storeOrder #" + storeID + ": " + storeName);
-        // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
         var optionHTML = "<option value=" + storeID + ">" + "storeID: " + storeID + ", Store Name: '" + storeName + "'</option>";
         appendHTMLToElement(optionHTML, ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST);
 

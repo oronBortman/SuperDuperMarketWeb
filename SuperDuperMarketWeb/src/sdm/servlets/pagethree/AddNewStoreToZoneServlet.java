@@ -53,15 +53,12 @@ public class AddNewStoreToZoneServlet extends HttpServlet {
             UserManager userManager = getUserManagerByServletContext(servletContext);
             User user = userManager.getUserByName(SessionUtils.getUsername(request));
 
-            System.out.println(itemsChosenForStoreArray);
             JSONParser parser = new JSONParser();
-            System.out.println("A1");
             if(parser == null)
             {
                 System.out.println("parser is null!!");
             }
             JSONArray itemsChosenForStoreArrayJSON = (JSONArray)  parser.parse(itemsChosenForStoreArray);
-            System.out.println("A2");
 
             Integer coordinateXInt = Integer.parseInt(coordinateX);
             Integer coordinateYInt = Integer.parseInt(coordinateY);
@@ -78,15 +75,6 @@ public class AddNewStoreToZoneServlet extends HttpServlet {
                     Store store = new Store(zone.getAvailableStoreID(), storeName, PPKInt, sdmLocation, (Seller)user);
                     zone.addStore(store);
                     addingItemsFromJSON(itemsChosenForStoreArrayJSON, zone, store.getSerialNumber());
-                    // store.addItemToStore();
-                   /* for(Store storeInLoop : zone.getStoresList())
-                    {
-                        System.out.println("Store name : " + storeInLoop.getName() +
-                                " storeOwner:" + storeInLoop.getStoreOwner() +
-                                " store serialNumber:" + storeInLoop.getSerialNumber() +
-                                " ppk:" + storeInLoop.getPPK() +
-                                " location: (" + storeInLoop.getLocation().getX() + "," + storeInLoop.getLocation().getY() + ")");
-                    }*/
 
                     Seller storeOwner = store.getStoreOwner();
                     Integer totalAvailableItemsInStore = store.getAvailableItemsList().size();
@@ -97,7 +85,6 @@ public class AddNewStoreToZoneServlet extends HttpServlet {
                         zoneOwner.addAlertToList(new AlertOnNewStoreInZone(store,totalAvailableItemsInStore , totalAvailableItemsInZone));
                     }
                 }
-                System.out.println("AAA");
                 out.println(jsonObject);
                 out.flush();
             }
@@ -118,12 +105,7 @@ public class AddNewStoreToZoneServlet extends HttpServlet {
             String priceStr = jsonObject.get("price").toString();
             Integer serialNumberInt = Integer.parseInt(serialNumberStr);
             Integer priceInt = Integer.parseInt(priceStr);
-            System.out.println("serialNumber:" + serialNumberInt + " price: " + priceInt);
             zone.addItemToStore(storeID, serialNumberInt, priceInt);
-        }
-        for(AvailableItemInStore availableItemInStore : zone.getStoreBySerialID(storeID).getAvailableItemsList())
-        {
-            System.out.println("Item serial id:" + availableItemInStore.getSerialNumber() + " price:" + availableItemInStore.getPricePerUnit());
         }
 
     }

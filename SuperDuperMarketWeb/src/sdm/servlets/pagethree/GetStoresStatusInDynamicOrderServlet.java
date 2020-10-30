@@ -28,7 +28,6 @@ public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
             throws ServletException, IOException {
         //returning JSON objects, not HTML
         response.setContentType("application/json");
-        System.out.println("In GetStoresStatusInDynamicOrderServlet :)))))");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             OpenedCustomerOrder openedCustomerOrder = getCurrentOrderByRequest(getServletContext(), request);
@@ -38,8 +37,8 @@ public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
                 JSONArray jsonArray = readingFromStoresListToJsonObject(listOfOpenedStoreOrder, openedCustomerOrder);
                 String json = gson.toJson(jsonArray);
                 out.println(json);
-                System.out.println("This is the list of stores!!\n\n\n\n\n\n");
-                System.out.println(json);
+              //  System.out.println("This is the list of stores!!\n\n\n\n\n\n");
+             //   System.out.println(json);
                 out.flush();
 
             }
@@ -57,7 +56,6 @@ public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
         int i=0;
         for(OpenedStoreOrder openedStoreOrder : openedStoreList)
         {
-            System.out.println(i +" !!!!!!");
             Store store = openedStoreOrder.getStoreUsed();
             SDMLocation locationOfStore = store.getLocation();
             Integer coordinateX=locationOfStore.getX();
@@ -74,8 +72,6 @@ public class GetStoresStatusInDynamicOrderServlet extends HttpServlet {
             jsonObject.put("deliveryCost",decimalFormat.format(openedStoreOrder.calcTotalDeliveryPrice()));
             jsonObject.put("amountOfItemsPurchased",decimalFormat.format(openedStoreOrder.calcTotalAmountOfItemsByMeasureType()));
             jsonObject.put("totalPriceOfItems" ,decimalFormat.format(openedStoreOrder.calcTotalPriceOfItemsNotFromSale()));
-            System.out.println("!!!!!!!");
-            System.out.println(jsonObject);
             jsonArray.add(i,jsonObject);
             i++;
         }

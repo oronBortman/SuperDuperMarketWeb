@@ -47,13 +47,6 @@ export function createEmptyTableWithBorder(idOfTable, idOfTableBody)
             '</div>';
 }
 
-export function appendHTMLToMakeAndOrderBody(itemElement)
-{
-    var makeOrderBody = $("#" + ID_OF_MAKE_ORDER_BODY);
-    $(itemElement).appendTo(makeOrderBody);
-
-}
-
 export function appendHTMLToElement(htmlToAppend, IdOfElementToAppendTo)
 {
     var elementToAppendTo = $("#" + IdOfElementToAppendTo);

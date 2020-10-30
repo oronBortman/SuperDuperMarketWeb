@@ -44,10 +44,6 @@ public class GeneralMethods {
             closedStoreOrderList = orderManager.getClosedStoreOrderListByIDListOfOrders(listOfSerialIDOfClosedStoreOrders);
            // System.out.println("D3");
         }
-        for(ClosedStoreOrder closedStoreOrder : closedStoreOrderList)
-        {
-            System.out.println("Serial id of order:" + closedStoreOrder.getSerialNumber());
-        }
         return closedStoreOrderList;
     }
 

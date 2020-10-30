@@ -1,8 +1,4 @@
-
 var CHARGE_MONEY_URL = buildUrlWithContextPath("charge-money");
-
-var detailsOnZoneJSONFormat = JSON.parse(localStorage.getItem('detailsOnZone'));
-//var zoneName = detailsOnZoneJSONFormat.zoneName;
 
 const ID_OF_CHARGING_MONEY_TEXT_FIELD = 'chargingMoneyTextField';
 const ID_OF_DATE_OF_CHARGING_MONEY = 'dateOfChargingMoney';
@@ -23,24 +19,20 @@ export function setChargingMoneyButtonEvent() { // onload...do
 
         if(date === "")
         {
-            //alert("date is not selected!");
             $("#" + ID_OF_DATE_ERROR).text("Error:field is empty!");
         }
         else if(amountOfMoneyToCharge === '')
         {
-            //  alert('PPK is empty')
             $("#" + ID_OF_MONEY_ERROR).css('color', 'red');
             $("#" + ID_OF_MONEY_ERROR).text("Error: field is empty!");
         }
         else if(isNaN(amountOfMoneyToCharge))
         {
-            //  alert("You didn't enter a number in PPK");
             $("#" + ID_OF_MONEY_ERROR).css('color', 'red');
             $("#" + ID_OF_MONEY_ERROR).text("Error: You didn't enter a number");
         }
         else if(amountOfMoneyToCharge < 0)
         {
-            //   alert("PPK x needs to be a non-negative number");
             $("#" + ID_OF_MONEY_ERROR).css('color', 'red');
             $("#" + ID_OF_MONEY_ERROR).text("Error: Needs to be a non-negative number");
         }
@@ -67,7 +59,6 @@ export function chargingMoneyToCustomer(amountOfMoneyToCharge, date)
             $("#" + ID_OF_RESULT_OF_CHARGING_MONEY).css('color', 'green');
             $("#" + ID_OF_RESULT_OF_CHARGING_MONEY).text("Charged money to account successfully");
             console.log(r);
-
         }
     });
 }

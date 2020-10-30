@@ -76,28 +76,23 @@ export function setAddStoreToZoneButtonEvent()
         var coordinateY = $('#' + ID_OF_VALUE_OF_COORDINATE_Y_CHOSEN).text();
         var PPK = $('#' + ID_OF_PPK_TEXT_FIELD).val();
 
-      //  alert('storeName:' + storeName + ' coordinateX:' + coordinateX + ' coordinateY:' + coordinateY + 'PPK:' + PPK);
         if(storeName === '')
         {
-          //  alert('storeName is empty');
             $("#" + ID_OF_ADD_STORE_ERROR).css('color', 'red');
             $("#" + ID_OF_ADD_STORE_ERROR).text("Error: Store name field is empty");
         }
         else if(PPK === '')
         {
-          //  alert('PPK is empty')
             $("#" + ID_OF_ADD_STORE_ERROR).css('color', 'red');
             $("#" + ID_OF_ADD_STORE_ERROR).text("Error: PPK field is empty");
         }
         else if(isNaN(PPK))
         {
-          //  alert("You didn't enter a number in PPK");
             $("#" + ID_OF_ADD_STORE_ERROR).css('color', 'red');
             $("#" + ID_OF_ADD_STORE_ERROR).text("Error: You didn't enter a number in PPK");
         }
         else if(PPK < 0)
         {
-         //   alert("PPK x needs to be a non-negative number");
             $("#" + ID_OF_ADD_STORE_ERROR).css('color', 'red');
             $("#" + ID_OF_ADD_STORE_ERROR).text("Error: PPK x needs to be a non-negative number");
         }
@@ -111,12 +106,11 @@ export function setAddStoreToZoneButtonEvent()
                 timeout: 4000,
                 error: function (e) {
                     console.error(e);
-                    alert('error in setAddStoreToZoneButtonEvent\n' + e);
+                  //  alert('error in setAddStoreToZoneButtonEvent\n' + e);
                 },
                 success: function (r) {
                     if(r["thereIsAlreadyStoreInLocation"] === "true")
                     {
-                       // alert("Can't create store because there is already a store in these coordinates!");
                         $("#" + ID_OF_ADD_STORE_ERROR).css('color', 'red');
                         $("#" + ID_OF_ADD_STORE_ERROR).text("Error: Can't create store because there is already a store in these coordinates!");
                     }
@@ -229,17 +223,14 @@ export function createChooseItemsDropDownListHTML()
     return createEmptyDropDownListHTML(forName, headline, ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST)
 }
 
-//The values in here are good
 export function setItemsListInItemDropDown(itemsList)
 {
     var chooseItemsDropDownList = $("#"+ ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST);
     $.each(itemsList || [], function(index, item) {
         var itemID = item["serialNumber"];
         var itemName = item["name"];
-        //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
         var itemStr =JSON.stringify(item);
         console.log("Adding item #" + itemID + ": " + itemName);
-        // alert("Adding item #" + itemStr + ": " + itemName + "\n" + itemJson);
         $("<option value='" + itemStr + "'>" + "Item serialID: " + itemID + ", Item name: '" + itemName + "'</option>").appendTo(chooseItemsDropDownList);
         if(index === 0)
         {
@@ -275,8 +266,6 @@ export function emptyItemElement()
     $( "#" + ID_OF_ITEM_ELEMENT ).empty();
 }
 
-//  item["serialID"];
-// item["price"];
 export function setDropDownItemsListEvent()
 {
     $('#' + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST).change(function() {
@@ -285,38 +274,30 @@ export function setDropDownItemsListEvent()
 }
 
 export function setAddItemToStoreButtonClickedEvent() {
-    //   alert("in getItemsListFromServerAndSetTheItemsList: " + orderType);
     $("#" + ID_OF_ADD_ITEM_TO_ORDER).click(function () {
         var price = $('#' + ID_OF_PRICE_TEXT_FIELD).val();
         var itemStr = $('#' + ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST).val();
         var itemJSON = JSON.parse(itemStr);
         var serialID = itemJSON["serialNumber"];
-     //   alert('price: ' + price + 'serialID: ' + serialID);
         if(price === '')
         {
             $("#" + ID_OF_PRICE_ERROR).css('color', 'red');
             $('#' + ID_OF_PRICE_ERROR).text("Error: Price field is empty!");
         }
         else if (isNaN(price)) {
-           // alert('Error:You didnt entered a positive number in price text field!');
             $("#" + ID_OF_PRICE_ERROR).css('color', 'red');
             $('#' + ID_OF_PRICE_ERROR).text("Error: You didn't entered a positive number in price text field!");
         }
         else if(price < 0) {
-            //alert('Error:You didnt entered a positive number in price text field!');
             $("#" + ID_OF_PRICE_ERROR).css('color', 'red');
             $('#' + ID_OF_PRICE_ERROR).text("Error: Price can't be negative!");
         }
         else
         {
-           // alert('price is good');
             var item = {};
             item["serialNumber"] = serialID;
             item["price"] = price;
-           // alert('itemChosenForStoreArry before push:' + JSON.stringify(itemsChosenForStoreArray));
             itemsChosenForStoreArray.push(item);
-            //alert(itemsChosenForStoreArray);
-         //   alert(JSON.stringify(itemsChosenForStoreArray));
             emptyElementByID(ID_OF_CHOOSE_ITEMS_IN_DROP_DOWN_LIST);
             enableElement(ID_OF_ADD_A_NEW_STORE_BUTTON);
             getItemsListFromServerAndSetTheItemsList();
@@ -325,32 +306,8 @@ export function setAddItemToStoreButtonClickedEvent() {
     });
 }
 
-     //   alert("Inside setAddItemToOrderButtonClickedEvent and value are: orderType:"+ orderType + " serialIDOfITem:" + serialIDOfItem + " amountOfItem:" + amountOfItem)
-      /*  $.ajax({
-            method: 'POST',
-            data: {"orderType":orderType, "serialIDOfItem":serialIDOfItem, "amountOfItem":amountOfItem},
-            url: ADD_ITEM_TO_ORDER,
-            dataType: "json",
-            timeout: 4000,
-            error: function (e) {
-                console.error(e);
-                alert('error in  setAddItemToOrderButtonClickedEvent\n' + e);
-            },
-            success: function (r) {
-                if(r.length == 0)
-                {
-                    disableElement(ID_OF_ADD_ITEM_TO_ORDER);
-                }
-                enableElement(ID_OF_NEXT_BUTTON); // need to execute just after adding the first item - to fix late
-                emptyChooseItemsDropDownList();
-                setItemsListInItemDropDownInOrder(r, orderType);
-            }
-        })
-    })*/
-
 export function getItemsListFromServerAndSetTheItemsList()
 {
- //   alert("in getItemsListFromServerAndSetTheItemsList: " + orderType);
     $.ajax({
         method: 'GET',
         data: {"zoneName":zoneName},

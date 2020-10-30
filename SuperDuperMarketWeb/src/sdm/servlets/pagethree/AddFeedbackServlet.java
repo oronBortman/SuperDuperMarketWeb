@@ -2,10 +2,8 @@ package sdm.servlets.pagethree;
 
 import com.google.gson.Gson;
 import logic.AlertOnFeedback;
-import logic.Customer;
 import logic.Seller;
 import logic.Store;
-import logic.order.CustomerOrder.ClosedCustomerOrder;
 import logic.order.CustomerOrder.Feedback;
 import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.users.User;
@@ -23,7 +21,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 
-import static sdm.constants.Constants.CUSTOMER;
 import static sdm.general.GeneralMethods.*;
 
 @WebServlet("/add-feedback")
@@ -32,9 +29,7 @@ public class AddFeedbackServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //returning JSON objects, not HTML
-        // data:{"storeID" : storeID,"feedbackText":feedbackText,"grade":grade},
         response.setContentType("application/json");
-        System.out.println("In AddFeedbackServlet");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ServletContext servletContext = getServletContext();
@@ -50,7 +45,6 @@ public class AddFeedbackServlet extends HttpServlet {
 
             Integer gradeInt = Integer.parseInt(gradeStr);
             Integer storeIDInt = Integer.parseInt(storeIDStr);
-            System.out.println("There are the parameters are: grad:" + gradeInt + " storeID:" + storeIDStr + " feedbackText:" + feedbackText);
             Store store = zone.getStoreBySerialID(storeIDInt);
             if(store == null)
             {
@@ -67,7 +61,6 @@ public class AddFeedbackServlet extends HttpServlet {
             }
             else
             {
-                System.out.println(user.getUserName() + " " + openedCustomerOrder.getDateStr() + " " + gradeInt + " " + feedbackText);
                 Feedback feedback = new Feedback(user.getUserName(),openedCustomerOrder.getDateStr(), gradeInt, feedbackText);
                 store.addFeedback(feedback);
                 //Add feedback alert to seller

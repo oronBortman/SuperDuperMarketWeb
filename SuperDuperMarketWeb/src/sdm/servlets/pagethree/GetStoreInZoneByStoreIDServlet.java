@@ -44,8 +44,8 @@ public class GetStoreInZoneByStoreIDServlet extends HttpServlet {
                 JSONArray jsonArray = readingFromStoresListToJsonObject(storeList);
                 String json = gson.toJson(jsonArray);
                 out.println(json);
-                System.out.println("This is the list of stores!!");
-                System.out.println(json);
+                //System.out.println("This is the list of stores!!");
+               // System.out.println(json);
                 out.flush();
             }
             else

@@ -2,6 +2,7 @@ package logic.discount;
 
 import jaxb.schema.generated.SDMDiscount;
 import jaxb.schema.generated.ThenYouGet;
+import logic.order.itemInOrder.OrderedItemFromStore;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,9 +26,10 @@ public class Discount {
         this.name = name;
     }
 
-    public boolean checkIfDiscountContainsItemFromListOfItems(Collection<Integer> listOfItems)
+    public boolean checkIfDiscountContainsItemFromListOfItems(Collection<OrderedItemFromStore> listOfItems)
     {
-        return listOfItems.stream().filter(x-> ifYouBuySDM.checkItemIDEqualTo(x)).collect(Collectors.toList()).isEmpty() == false;
+        return !listOfItems.stream().filter(x -> (ifYouBuySDM.checkItemIDEqualTo(x.getSerialNumber()) && ifYouBuySDM.getQuantity() == x.getTotalAmountOfItemOrderedByTypeOfMeasure()))
+                .collect(Collectors.toList()).isEmpty();
     }
 
     public IfYouBuySDM getIfYouBuySDM() {

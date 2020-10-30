@@ -80,8 +80,6 @@
             <div class="col-xs-12">
                 <h4>Make An Order</h4>
                 <button name="makeANewOrderButton" type="button" id="makeANewOrderButton">Make a new order</button>
-                <!-- <button data-toggle="collapse" id="makeANewOrderButton" data-target="#makeOrderBody">Make a new order</button>-->
-                <!-- <div id="makeOrderBody" class="collapse"></div>-->
                 <br>
                 <div class="container" id="makeOrderBody"></div>
             </div>
@@ -114,7 +112,8 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <h4>Show orders in seller's stores</h4>
+                <h4>Show details on items in order from store</h4>
+                <p id="infoOnStoreOrderID"></p>
                 <div class="table-responsive" table="tableWithBorder">
                     <table id="specificStoreOrderTable">
                         <thead>
@@ -163,6 +162,7 @@
             <div class="col-xs-12">
                 <h4>Show items in customer order</h4>
                 <div class="table-responsive" table="tableWithBorder">
+                    <p id="infoOnCustomerOrderID"></p>
                     <table id="specificCustomerOrderTable">
                         <thead>
                         <tr class='withBorder'><th class='withBorder'>Serial ID</th>
@@ -187,6 +187,8 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="table-responsive" table="tableWithBorder">
+                    <h4>Feedbacks List</h4>
+                    <br>
                     <table id="feedbacksTable">
                         <thead>
                         <tr>

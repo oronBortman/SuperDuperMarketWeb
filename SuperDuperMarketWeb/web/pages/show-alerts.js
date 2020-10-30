@@ -1,4 +1,4 @@
-import {emptyElementByID} from "./mainstorescreen/general-functions.js";
+var alertVersion = 0;
 
 var GET_ALERTS_URL = buildUrlWithContextPath("get-alerts");
 
@@ -6,7 +6,7 @@ export function getAlertsFromServerAndUpdateOwner()
 {
     $.ajax({
         method:'GET',
-        data:{},
+        data:{'alertVersion':alertVersion},
         url: GET_ALERTS_URL,
         dataType: "json",
         timeout: 4000,
@@ -17,14 +17,17 @@ export function getAlertsFromServerAndUpdateOwner()
         success: function(r) {
             console.log("Succesfully!!!");
             console.log(r);
-            emptyElementByID("alertsArea");
-            appendToAlertsArea(r);
+            var alertList = r["alertList"];
+            var alertVersionFromServer = r["alertVersion"];
+            if (alertVersionFromServer !== alertVersion) {
+                alertVersion = alertVersionFromServer;
+                appendToAlertsArea(alertList);
+            }
         }
     });
 }
 
 export function appendToAlertsArea(alerts) {
-//    $("#chatarea").children(".success").removeClass("success");
 
     // add the relevant entries
     $.each(alerts || [], appendAlertEntry);

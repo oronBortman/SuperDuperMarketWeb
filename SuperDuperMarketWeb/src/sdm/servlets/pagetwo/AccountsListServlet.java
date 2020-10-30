@@ -1,7 +1,6 @@
 package sdm.servlets.pagetwo;
 
 import com.google.gson.Gson;
-import logic.users.Account;
 import logic.users.ActionOnAccount;
 import logic.users.User;
 import logic.users.UserManager;
@@ -15,9 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @WebServlet("/accounts-list")
 public class AccountsListServlet extends HttpServlet {
@@ -30,11 +27,9 @@ public class AccountsListServlet extends HttpServlet {
             Gson gson = new Gson();
             UserManager userManager = ServletUtils.getUserManager(request.getServletContext());
             User user = userManager.getUserByName(SessionUtils.getUsername(request));
-            Set<ActionOnAccount> historyOfActionsOnAccountSet = user.getAccount().getHistoryOfActionsOnAccountSet();
+            List<ActionOnAccount> historyOfActionsOnAccountSet = user.getAccount().getHistoryOfActionsOnAccountList();
             String json = gson.toJson(historyOfActionsOnAccountSet);
             out.println(json);
-            //System.out.println("AAAAA");
-           // System.out.println(json);
             out.flush();
         }
     }

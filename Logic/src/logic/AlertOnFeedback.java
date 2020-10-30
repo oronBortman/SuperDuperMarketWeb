@@ -8,6 +8,7 @@ public class AlertOnFeedback implements Alert {
     public AlertOnFeedback(Feedback feedback, Store store)
     {
         this.feedback=feedback;
+        this.store = store;
     }
 
     public Feedback getFeedback() {

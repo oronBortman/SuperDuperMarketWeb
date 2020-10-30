@@ -50,7 +50,6 @@ export function setChoosingStoreOrderDropDownListEvent()
 {
     $('#' + ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST).change(function () {
         var storeOrderStr = $('#' + ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST).val();
-        //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
         var storeOrderJSON =JSON.parse(storeOrderStr);
         var itemsListJSON = storeOrderJSON["itemsList"];
         buildTableBodyHTMLAndUpdateStoresOrderTable(itemsListJSON);
@@ -61,12 +60,10 @@ export function setChoosingStoreOrderDropDownListEvent()
 export function setNextButtonEvent(idOfMakeAnOrderContainer)
 {
     $('#' + ID_OF_NEXT_BUTTON).click(function () {
-      //  alert('Clicked On next button!');
         initiateRateStore(idOfMakeAnOrderContainer);
     });
 }
 
-//The values in here are good
 export function setStoreOrdersListInDropDownInOrder(storeOrdersList)
 {
     var chooseStoreOrdersDropDownListElement = $("#"+ ID_OF_CHOOSE_STORE_ORDER_IN_DROP_DOWN_LIST);
@@ -74,11 +71,7 @@ export function setStoreOrdersListInDropDownInOrder(storeOrdersList)
         var storeID = storeOrder["serialNumber"];
         var storeName = storeOrder["name"];
         var itemsList = storeOrder["itemsList"];
-        //alert("in setItemsListInItemDropDownInOrder and values are: itemID:" + itemID +  " itemName:" + itemName + " itemPrice:" + itemPrice +  "  itemTypeOfMeasure:" +itemTypeOfMeasure)
         var storeOrderStr =JSON.stringify(storeOrder);
-        //        $("<option value='" + discountStr + "'>" + discountName + "</option>").appendTo(discountDropDownList);
-      //  console.log("Adding storeOrder #" + storeID + ": " + itemsListStr);
-   //     alert("Adding store #" + storeName + ": " + storeID + "\n" + itemsListStr);
         $("<option value='" + storeOrderStr + "'>" + "storeID: " + storeID + ", Store Name: '" + storeName + "'</option>").appendTo(chooseStoreOrdersDropDownListElement);
         if(index === 0)
         {
@@ -110,26 +103,6 @@ export function createStoreStatusHTML(storeOrder)
         '<p>DeliveryCost: ' + deliveryCost + '</p>' +
         '<p>Date: ' + date + '</p>';
 }
-/*
-0:
-serialNumber:1
-name: baba store
-ownerName:
-PPK:
-distanceToCustomer:
-deliveryCost
-date:
-
-itemsList{
-    var serialID = itemInOrder["serialID"];
-     var itemName = itemInOrder["itemName"];
-    var measureType = itemInOrder["measureType"];
-    var amount = itemInOrder["amount"];
-    var pricePerUnit = itemInOrder["pricePerUnit"];
-    var totalPrice = itemInOrder["totalPrice"];
-    var boughtOnSale = itemInOrder["boughtOnSale"];
-}
-*/
 
 export function generateFirstRowInDiscountsHTMLTable()
 {
