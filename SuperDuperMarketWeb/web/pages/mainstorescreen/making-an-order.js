@@ -163,7 +163,7 @@ function setNextButtonInMakeAnOrderElement(idOfMakeAnOrderContainer) { // onload
             timeout: 4000,
             error: function (e) {
                 console.error(e);
-                alert('error in checkIfLocationUSED\n' + e);
+             //   alert('error in checkIfLocationUSED\n' + e);
             },
             success: function (r) {
                 if(r["thereIsAlreadyStoreInLocation"] === "true")
@@ -221,7 +221,7 @@ function OpeningANewStaticOrderInServer(date, storeIDSelected, coordinateX, coor
         timeout: 4000,
         error: function(e) {
             console.error(e);
-            alert('error in OpeningANewDynamic\n' + e);
+         //   alert('error in OpeningANewDynamic\n' + e);
         },
         success: function(r) {
             console.log("Succesfully!!!");
@@ -240,7 +240,7 @@ function OpeningANewDynamicOrderInServer(date,coordinateX, coordinateY)
         timeout: 4000,
         error: function(e) {
             console.error(e);
-            alert('error in OpeningANewDynamic\n' + e);
+           // alert('error in OpeningANewDynamic\n' + e);
         },
         success: function(r) {
             console.log("Succesfully!!!");

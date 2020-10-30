@@ -215,7 +215,7 @@ export function setAddItemToOrderButtonClickedEvent(orderType, serialIDOfItem)
             timeout: 4000,
             error: function (e) {
                 console.error(e);
-                alert('error in  setAddItemToOrderButtonClickedEvent\n' + e);
+           //     alert('error in  setAddItemToOrderButtonClickedEvent\n' + e);
             },
             success: function (r) {
                 if(r.length == 0)
@@ -317,7 +317,7 @@ export function getItemsListFromServerAndSetTheItemsList(orderType)
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  getItemsListFromServerAndSetTheItemsList\n' + e);
+           // alert('error in  getItemsListFromServerAndSetTheItemsList\n' + e);
         },
         success: function (r) {
             if(r.length == 0)
@@ -339,7 +339,7 @@ export function activateDynamicAlgorithm()
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  getItemsListFromServerAndSetTheItemsList\n' + e);
+          // alert('error in  getItemsListFromServerAndSetTheItemsList\n' + e);
         },
         success: function (r) {
         }

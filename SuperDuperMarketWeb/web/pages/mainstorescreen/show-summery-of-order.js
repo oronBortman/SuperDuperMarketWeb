@@ -27,7 +27,7 @@ export function initiateShowingSummeryOfOrder(idOfMakeAnOrderContainer)
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  initiateTheChoosingItemDropDownInOrder\n' + e);
+          //  alert('error in  initiateTheChoosingItemDropDownInOrder\n' + e);
         },
         success: function (r) {
             emptyElementByID(idOfMakeAnOrderContainer);

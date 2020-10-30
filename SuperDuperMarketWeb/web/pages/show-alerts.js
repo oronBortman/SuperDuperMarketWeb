@@ -12,7 +12,7 @@ export function getAlertsFromServerAndUpdateOwner()
         timeout: 4000,
         error: function(e) {
             console.error(e);
-            alert('error in getAlertsFromServerAndUpdateOwner\n' + e);
+          //  alert('error in getAlertsFromServerAndUpdateOwner\n' + e);
         },
         success: function(r) {
             console.log("Succesfully!!!");

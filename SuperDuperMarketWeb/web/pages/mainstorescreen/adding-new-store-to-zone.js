@@ -316,7 +316,7 @@ export function getItemsListFromServerAndSetTheItemsList()
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  getItemsListFromServerAndSetTheItemsList\n' + e);
+            //alert('error in  getItemsListFromServerAndSetTheItemsList\n' + e);
         },
         success: function (r) {
             let i;
@@ -331,7 +331,6 @@ export function getItemsListFromServerAndSetTheItemsList()
                     r = r.filter(function(x) { return x !== null });
                 }
             }
-            alert('getItemsListFromServerAndSetTheItemsList\n' + JSON.stringify(r));
             setItemsListInItemDropDown(r);
         }
     })

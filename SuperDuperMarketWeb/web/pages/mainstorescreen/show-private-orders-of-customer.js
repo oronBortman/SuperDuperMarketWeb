@@ -20,7 +20,7 @@ export function initiateShowPrivateOrdersOfCustomer() {
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  initiateTheChoosingItemDropDownInOrder\n' + e);
+           // alert('error in  initiateTheChoosingItemDropDownInOrder\n' + e);
         },
         success: function (r) {
             emptyElementByID(ID_OF_CUSTOMER_ORDERS_TABLE_BODY);

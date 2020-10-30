@@ -35,7 +35,7 @@ export function initiateRateStore(idOfMakeAnOrderContainer)
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  initiateTheChoosingItemDropDownInOrder\n' + e);
+           // alert('error in  initiateTheChoosingItemDropDownInOrder\n' + e);
         },
         success: function (r) {
             appendHTMLToElement(generateInformingUserAboutFeedbackOptionHTML(), idOfMakeAnOrderContainer);
@@ -82,7 +82,7 @@ export function closeOrderAndAddToHistory(idOfMakeAnOrderContainer)
         timeout: 4000,
         error: function(e) {
             console.error(e);
-            alert('error in closeOrderAndAddToHistory\n' + e);
+          //  alert('error in closeOrderAndAddToHistory\n' + e);
         },
         success: function(r) {
             console.log("Succesfully!!!");
@@ -138,7 +138,7 @@ export function setAddFeedbackButtonEvent()
             timeout: 4000,
             error: function(e) {
                 console.error(e);
-                alert('error in setAddFeedbackButtonEvent\n' + e);
+              //  alert('error in setAddFeedbackButtonEvent\n' + e);
             },
             success: function(r) {
                 console.log("Succesfully!!!");
@@ -241,7 +241,7 @@ export function generateChooseGradeMessageHTML()
 export function setStoreOrdersListInDropDownInOrder(storeOrdersList)
 {
     var storeOrdersListString = JSON.stringify(storeOrdersList);
-    alert("in setStoreOrdersListInDropDownInOrder and the storeOrdersList json is: " + storeOrdersListString);
+   // alert("in setStoreOrdersListInDropDownInOrder and the storeOrdersList json is: " + storeOrdersListString);
     $.each(storeOrdersList || [], function(index, storeOrder) {
         var storeID = storeOrder["serialNumber"];
         var storeName = storeOrder["name"];

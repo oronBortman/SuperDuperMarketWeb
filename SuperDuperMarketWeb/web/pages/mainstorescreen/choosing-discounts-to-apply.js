@@ -39,7 +39,7 @@ export function prepareAndInitiateChoosingDiscountsToApply(idOfMakeAnOrderContai
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  postToServerTheChosenOneOfDiscount\n' + e);
+            //alert('error in  postToServerTheChosenOneOfDiscount\n' + e);
         },
         success: function (r) {
             initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
@@ -58,7 +58,7 @@ export function initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer)
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  getDiscountJSONFromServer\n' + e);
+           // alert('error in  getDiscountJSONFromServer\n' + e);
             return("error");
         },
         success: function (r) {
@@ -158,7 +158,7 @@ export function postToServerTheChosenOneOfDiscount(discountName, itemSerialIDFro
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  postToServerTheChosenOneOfDiscount\n' + e);
+          //  alert('error in  postToServerTheChosenOneOfDiscount\n' + e);
         },
         success: function (r) {
             initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);
@@ -178,7 +178,7 @@ export function postToServerTheChosenAllOrNothingDiscount(discountName, idOfMake
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  postToServerTheChosenAllOrNothingDiscount\n' + e);
+        //    alert('error in  postToServerTheChosenAllOrNothingDiscount\n' + e);
         },
         success: function (r) {
             initiateChoosingDiscountsToApply(idOfMakeAnOrderContainer);

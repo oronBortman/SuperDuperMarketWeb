@@ -45,7 +45,7 @@ export function setStoresTable()
         timeout: 4000,
         error: function (e) {
             console.error(e);
-            alert('error in  setStoresTable\n' + e);
+          //  alert('error in  setStoresTable\n' + e);
         },
         success: function (r) {
             appendHTMLToElement(generateFirstRowInStoresHTMLTable(),ID_OF_TABLE_BODY);

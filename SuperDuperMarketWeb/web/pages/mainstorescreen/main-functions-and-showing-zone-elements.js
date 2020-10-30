@@ -143,7 +143,7 @@ function ajaxStoresList() {
         },
         error: function(e) {
             console.error(e);
-            alert('error in ajaxStoresList\n' + e);
+           // alert('error in ajaxStoresList\n' + e);
         }
     });
 }
@@ -160,7 +160,7 @@ function ajaxItemsInZoneList() {
         },
         error: function(e) {
             console.error(e);
-            alert('error in ajaxItemsInZoneList\n' + e);
+           // alert('error in ajaxItemsInZoneList\n' + e);
         }
     });
 }

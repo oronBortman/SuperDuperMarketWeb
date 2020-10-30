@@ -52,7 +52,7 @@ export function chargingMoneyToCustomer(amountOfMoneyToCharge, date)
         timeout: 4000,
         error: function(e) {
             console.error(e);
-            alert('error in ChargingMoney\n' + e);
+           // alert('error in ChargingMoney\n' + e);
         },
         success: function(r) {
             console.log("Succesfully!!!");
