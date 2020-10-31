@@ -39,7 +39,6 @@ public class Zone {
     private Map<Integer, Item> itemsSerialIDMap;
     private Map<Integer, ClosedCustomerOrder> ordersSerialIDMap;
     private List<Discount> discounts;
-    private static Integer currentOrderSerialIDInSDK = 1;
 
     public Zone(SuperDuperMarketDescriptor superDuperMarketDescriptor, Seller zoneOwner) throws FileNotFoundException, JAXBException, DuplicateItemSerialIDException, DuplicateStoreSerialIDException, InvalidCoordinateYOfStoreException, StoreLocationIsIdenticalToStoreException, InvalidCoordinateXOfStoreException, ItemWithSerialIDNotExistInSDMException, StoreNotExistException, DuplicateItemSerialIDInStoreException, ItemIDInDiscountNotExistInAStoreException, ItemIDInDiscountNotExistInSDMException, DuplicateDiscountNameException, ItemIDNotExistInAStoreException {
         this.zoneOwner = zoneOwner;
@@ -49,7 +48,6 @@ public class Zone {
         itemsSerialIDMap = new HashMap<>();
         ordersSerialIDMap = new HashMap<>();
         discounts = new ArrayList<>();
-        currentOrderSerialIDInSDK = 1;
         List<SDMStore> sdmStoreList = superDuperMarketDescriptor.getSDMStores().getSDMStore();
         List<SDMItem> sdmItemList = superDuperMarketDescriptor.getSDMItems().getSDMItem();
         addListOfItemsToItemsSerialIDMapFromXml(sdmItemList);
@@ -105,10 +103,6 @@ public class Zone {
         return avg;
     }
 
-
-    public static Integer getCurrentOrderSerialIDInSDK() {
-        return currentOrderSerialIDInSDK;
-    }
 
     public ClosedCustomerOrder getOrderBySerialID(Integer orderSerialID)
     {

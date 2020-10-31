@@ -190,9 +190,9 @@ public class OpenedStoreOrder extends StoreOrder{
     }
 
 
-    public ClosedStoreOrder closeOrder()
+    public ClosedStoreOrder closeOrder(Integer serialID)
     {
-        ClosedStoreOrder closedStoreOrder = new ClosedStoreOrder(this);
+        ClosedStoreOrder closedStoreOrder = new ClosedStoreOrder(this,serialID);
         getStoreUsed().addClosedOrderToHistory(closedStoreOrder);
         return closedStoreOrder;
     }

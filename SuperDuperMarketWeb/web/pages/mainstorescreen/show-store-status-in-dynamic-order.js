@@ -23,7 +23,7 @@ export function initiateShowStoresStatusTable(idOfMakeAnOrderContainer)
     emptyElementByID(idOfMakeAnOrderContainer);
     appendHTMLToElement(createEmptyTableWithBorder(ID_OF_TABLE, ID_OF_TABLE_BODY), idOfMakeAnOrderContainer);
     setStoresTable();
-    appendHTMLToElement(createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
+    appendHTMLToElement('<br><br>'+ createButton(ID_OF_NEXT_BUTTON,"Next"),idOfMakeAnOrderContainer);
     appendHTMLToElement('<br><br>',idOfMakeAnOrderContainer);
     setNextButtonEvent(idOfMakeAnOrderContainer);
 }
@@ -68,7 +68,6 @@ export function generateFirstRowInStoresHTMLTable()
         "<th class='withBorder'>amountOfItemsPurchased</th>" +
         "<th class='withBorder'>totalPriceOfItems</th></tr>";
 }
-
 
 export function generateRowInStoresHTMLTable(store)
 {

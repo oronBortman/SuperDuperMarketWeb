@@ -1,5 +1,6 @@
 package logic.order;
 
+import logic.Store;
 import logic.order.CustomerOrder.ClosedCustomerOrder;
 import logic.order.StoreOrder.ClosedStoreOrder;
 
@@ -12,42 +13,40 @@ import java.util.stream.Stream;
 
 public class OrderManager {
     Map<Integer, ClosedCustomerOrder> closedCustomerOrderMap;
-    //Map<Integer, ClosedStoreOrder> closedStoreOrderMap;
 
     public OrderManager()
     {
         closedCustomerOrderMap = new HashMap<>();
-    //    closedStoreOrderMap = new HashMap<>();
     }
 
     public synchronized Map<Integer, ClosedCustomerOrder> getClosedCustomerOrderMap() {
         return closedCustomerOrderMap;
     }
 
-   /* public synchronized Map<Integer, ClosedStoreOrder> getClosedStoreOrderMap() {
-        return closedStoreOrderMap;
-    }*/
-
-    public synchronized List<ClosedStoreOrder> getClosedStoreOrderListByIDListOfOrders(List<Integer> orderSerialIdList)
+    public synchronized List<ClosedStoreOrder> getClosedStoreOrderListByStoreID(Store store)
     {
+        List<Integer> orderSerialIdList = store.getListOrdersSerialID();
+        System.out.println("Number of orders from store!!!!!:" + store.getSerialNumber() + ":" + orderSerialIdList.size());
         List<ClosedStoreOrder> closedStoreOrderList = new ArrayList<>();
-       // System.out.println("E1");
         if(orderSerialIdList != null)
         {
             for(Integer orderSerialID : orderSerialIdList)
             {
-               // System.out.println("E2");
+                System.out.println("Thee orderSerialID!" + orderSerialID);
                 if(closedCustomerOrderMap.containsKey(orderSerialID))
                 {
-                  //  System.out.println("E3");
                     ClosedCustomerOrder closedCustomerOrder = closedCustomerOrderMap.get(orderSerialID);
-                  //  System.out.println("E4");
-                    closedStoreOrderList = Stream.concat(closedStoreOrderList.stream(), closedCustomerOrder.getListOfClosedStoreOrders().stream()).collect(Collectors.toList());
+                    closedStoreOrderList = Stream.concat(closedStoreOrderList.stream(), closedCustomerOrder.getListOfClosedStoreOrdersByStoreID(store.getSerialNumber()).stream()).collect(Collectors.toList());
                 }
             }
-        }
-      //  System.out.println("E5");
 
+            System.out.println("Number of orders from store$$$$$:" + closedStoreOrderList);
+            for(ClosedStoreOrder closedStoreOrder : closedStoreOrderList)
+            {
+                System.out.println("StoreOrder ID:" + closedStoreOrder.getSerialNumber());
+                System.out.println("total price of items: " + closedStoreOrder.calcTotalPriceOfItems() + " total delivery price: " + closedStoreOrder.calcTotalDeliveryPrice());
+            }
+        }
         return closedStoreOrderList;
 
     }

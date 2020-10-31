@@ -8,9 +8,9 @@ public class ClosedStoreOrder extends StoreOrder{
 
     private Integer serialNumber;
 
-    public ClosedStoreOrder(StoreOrder storeOrder) {
+    public ClosedStoreOrder(StoreOrder storeOrder, Integer serialNumber) {
         super(storeOrder);
-        this.serialNumber = Zone.getCurrentOrderSerialIDInSDK();
+        this.serialNumber = serialNumber;
     }
 
     public void setSerialNumber(Integer serialNumber) {

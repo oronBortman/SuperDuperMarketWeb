@@ -67,7 +67,7 @@ public class StoreOrder extends Order {
         boolean itemAlreadyExistsInOrder=false;
         if(orderedItemsNotFromSale != null)
         {
-            itemAlreadyExistsInOrder = orderedItemsNotFromSale.containsKey(serialIDOfItem);
+            itemAlreadyExistsInOrder = orderedItemsNotFromSale.containsKey(serialIDOfItem) || orderedItemsFromSale.containsKey(serialIDOfItem);
         }
         return itemAlreadyExistsInOrder;
     }

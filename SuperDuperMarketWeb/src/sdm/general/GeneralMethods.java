@@ -2,6 +2,7 @@ package sdm.general;
 
 import logic.Customer;
 import logic.Seller;
+import logic.Store;
 import logic.order.CustomerOrder.OpenedCustomerOrder;
 import logic.order.OrderManager;
 import logic.order.StoreOrder.ClosedStoreOrder;
@@ -29,20 +30,17 @@ public class GeneralMethods {
         return ServletUtils.getOrderManager(servletContext);
     }
 
-    public static List<ClosedStoreOrder> getClosedStoreOrderListByIDListOfOrders(ServletContext servletContext, List<Integer> listOfSerialIDOfClosedStoreOrders)
+    public static List<ClosedStoreOrder> getClosedStoreOrderListByIDListOfOrders(ServletContext servletContext, Store store)
     {
         List<ClosedStoreOrder> closedStoreOrderList = new ArrayList<>();
         OrderManager orderManager = getOrderManagerByServletContext(servletContext);
-       // System.out.println("D1");
         if(orderManager == null)
         {
             System.out.println("Order manager is null!!");
         }
         else
         {
-           // System.out.println("D2");
-            closedStoreOrderList = orderManager.getClosedStoreOrderListByIDListOfOrders(listOfSerialIDOfClosedStoreOrders);
-           // System.out.println("D3");
+            closedStoreOrderList = orderManager.getClosedStoreOrderListByStoreID(store);
         }
         return closedStoreOrderList;
     }

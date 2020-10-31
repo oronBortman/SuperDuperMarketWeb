@@ -8,6 +8,7 @@ import logic.order.StoreOrder.StoreOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toCollection;
 
@@ -79,6 +80,12 @@ public class ClosedCustomerOrder extends Order {
         return new ArrayList<>(closedStoresOrderMapByStoreSerialID.values());
     }
 
+    public List<ClosedStoreOrder> getListOfClosedStoreOrdersByStoreID(Integer serialNumberOfStore)
+    {
+        // return new ArrayList<>(closedStoresOrderMapByStoreSerialID.values());
+        return closedStoresOrderMapByStoreSerialID.values().stream().filter(x->x.getStoreUsed().getSerialNumber() == serialNumberOfStore).collect(Collectors.toList());
+    }
+
     public void setSerialNumber(Integer serialNumber) {
         this.serialNumber = serialNumber;
     }
@@ -119,6 +126,14 @@ public class ClosedCustomerOrder extends Order {
     }
 
     public boolean checkIfItemAlreadyExistsInOrder(int serialIDOfItem) {
-        return false;
+        boolean itemExistsInOrder = false;
+        for(ClosedStoreOrder closedStoreOrder : closedStoresOrderMapByStoreSerialID.values())
+        {
+            if(closedStoreOrder.checkIfItemAlreadyExistsInOrder(serialIDOfItem))
+            {
+                itemExistsInOrder=true;
+            }
+        }
+        return itemExistsInOrder;
     }
 }

@@ -66,7 +66,7 @@ public class GetStoreInZoneByStoreIDServlet extends HttpServlet {
         int i=0;
         for(Store store : storeList)
         {
-            List<ClosedStoreOrder> closedStoreOrderList = GeneralMethods.getClosedStoreOrderListByIDListOfOrders(servletContext,store.getListOrdersSerialID());
+            List<ClosedStoreOrder> closedStoreOrderList = GeneralMethods.getClosedStoreOrderListByIDListOfOrders(servletContext,store);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("serialNumber", store.getSerialNumber());
             jsonObject.put("name", store.getName());
